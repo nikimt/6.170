@@ -56,7 +56,7 @@ router.get("/board", function(req, res){
             }
             else{
                 setSessionIdentifier(req, boardId);
-                res.status(200).json({success: false, data: data});
+                res.status(200).json({success: true, data: data});
             }
         });
     }
@@ -73,6 +73,7 @@ router.post("/boards/:boardId/ideas", function(req, res){
     createIdea(boardId, ideaText, userId); // TODO: implement, replace with callback
 });
 
+/** DELETE request handler for removing an idea. */
 router.delete("/boards/:boardId/ideas/:ideaId", function(req, res){
     var boardId = req.params.boardId;
     var ideaId = req.params.ideaId;
