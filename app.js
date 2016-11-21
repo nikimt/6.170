@@ -36,7 +36,7 @@ app.use("/semantic", express.static('semantic'));
 // set up a secret to encrypt cookies
 app.use(session({ secret : '6170', resave : true, saveUninitialized : true }));
 
-app.use('/', idea_routes);
+app.use('/', board_routes);
 
 ////////////////////////////////////////////////////////////////
 // ERROR HANDLING
