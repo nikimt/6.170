@@ -1,11 +1,9 @@
-var mongoose = require("mongoose");
+// MongoDB data model for Idea
 
-// Idea is the model for storing idea objects.
-var ideaSchema = mongoose.Schema({
-    content: {
-        type: String,
-        required: [true, "Needs content"]
-    }
+var mongoose = require('mongoose')
+
+var ideaScheme = new mongoose.Schema({
+  text: { type: String }
 });
 
-module.exports = mongoose.model("Idea", ideaSchema);
+module.exports = mongoose.model('Idea', ideaScheme);
