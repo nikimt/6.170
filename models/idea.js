@@ -4,7 +4,7 @@ var mongoose = require('mongoose')
 
 var ideaSchema = new mongoose.Schema({
     boardId: {
-        type: Number,
+        type: String,
         required: [true, 'Needs to be associated with a board']
     },
     content: { 
@@ -40,6 +40,12 @@ ideaSchema.path("content").validate(function(value) {
 
     return (value >= min_content_len) && (value <= max_content_len);
 }, "Invalid Content length");
+
+ideaSchema.path("boardId").validate(function(value) {
+    // This validates that the length of content is between min_content_len
+    // and max_content_len
+    return (value >= 0) && (value <= 6);
+}, "Invalid boardId length");
 
 
 var ideaModel = mongoose.model('Idea', ideaSchema);

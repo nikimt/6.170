@@ -3,12 +3,16 @@
 var mongoose = require('mongoose')
 
 var boardSchema = new mongoose.Schema({
+    boardId: {
+        type: String,
+        required: [true, 'Board needs a secret code']
+    },
     moderator: { 
         type: String,
         required: [true, 'Needs a moderator']
     },
     ideas: {
-        type: [IdeaSchema],
+        type: [String],
         default: []
     },
     date: { 
@@ -16,6 +20,13 @@ var boardSchema = new mongoose.Schema({
         default: Date.now 
     },
 });
+
+// -------- Validators --------
+boardSchema.path("boardId").validate(function(value) {
+    // This validates that the length of content is between min_content_len
+    // and max_content_len
+    return (value >= 0) && (value <= 6);
+}, "Invalid boardId length");
 
 var boardModel = mongoose.model('board', boardSchema);
 
@@ -46,20 +57,16 @@ var Boards = (function(boardModel) {
     //
     // Returns an board if the board exists, otherwise an error.
     that.findBoard = function(boardId, callback) {
-        if (boardId.match(/^[0-9a-fA-F]{24}$/)) {
-            boardModel.findOne({ _id: boardId }, function(err, result) {
-                if (err) {
-                    callback({ msg: err });
-                }
-                if (result !== null) {
-                    callback(null, result);
-                } else {
-                    callback({ msg: 'No such board!' });
-                }
-            });
-        } else {
-            callback({ msg: 'No such board!' });
-        }
+        boardModel.findOne({ boardId: boardId }, function(err, result) {
+            if (err) {
+                callback({ msg: err });
+            }
+            if (result !== null) {
+                callback(null, result);
+            } else {
+                callback({ msg: 'No such board!' });
+            }
+        });
     }
 
     // Exposed function that takes a boardId (as a string) and 
