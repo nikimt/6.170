@@ -35,5 +35,19 @@ export default {
             uri : BASE_URL + `/${boardId}/ideas/${ideaId}`,
             method: 'DELETE',
         });
+    },
+
+    addUpvoteToIdea : (boardId, ideaId) => {
+        return request({
+            uri : BASE_URL + `/${boardId}/ideas/${ideaId}/upvote`,
+            method: 'PUT',
+        });
+    },
+
+    removeUpvoteFromIdea : (boardId, ideaId) => {
+        return request({
+            uri : BASE_URL + `/${boardId}/ideas/${ideaId}/upvote`,
+            method: 'DELETE',
+        });
     }
 }

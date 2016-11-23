@@ -113,7 +113,14 @@ router.put("/boards/:boardId/ideas/:ideaId/upvote", function(req, res){
     var boardId = req.params.boardId;
     var ideaId = req.params.ideaId;
     var userId = getIdentifierFromRequest(req);
-    addUpvoteToIdea(boardId, ideaId, userId); // TODO: implement, replace with callback
+    ideas.addUpvoteToIdea(ideaId, function(err){
+       if (err) {
+          res.status(400).json({success: false});
+       }
+       else{
+          res.status(200).json({success: true});
+       }
+    });
 });
 
 /** DELETE request handler for removing the upvote on an idea. */
@@ -121,7 +128,14 @@ router.delete("/boards/:boardId/ideas/:ideaId/upvote", function(req, res){
     var boardId = req.params.boardId;
     var ideaId = req.params.ideaId;
     var userId = getIdentifierFromRequest(req);
-    removeUpvoteFromIdea(boardId, ideaId, userId); // TODO: implement, replace with callback
+    ideas.removeUpvoteFromIdea(ideaId, function(err){
+       if (err) {
+          res.status(400).json({success: false});
+       }
+       else{
+          res.status(200).json({success: true});
+       }
+    });
 });
 
 /** PUT request handler for flagging an idea. */

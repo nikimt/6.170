@@ -138,6 +138,36 @@ var Ideas = (function(ideaModel) {
         });
     }
 
+    // Exposed function that takes an ideaId and a callback.
+    //
+    // If the ideaId exists, we increment the upvote count of the idea 
+    // corresponding to that Id in the _store by +1. Otherwise, we return
+    // an error.
+    that.addUpvoteToIdea = function(ideaId, callback) {
+        ideaModel.update({ _id: ideaId }, { $inc: { "meta.upvote_count": 1 } }, function(err, result) {
+            if (err) {
+                callback({ msg: err });
+            } else {
+                callback(null);
+            }
+        });
+    }
+
+    // Exposed function that takes an ideaId and a callback.
+    //
+    // If the ideaId exists, we increment the upvote count of the idea 
+    // corresponding to that Id in the _store by -1. Otherwise, we return
+    // an error.
+    that.removeUpvoteFromIdea = function(ideaId, callback) {
+        ideaModel.update({ _id: ideaId }, { $inc: { "meta.upvote_count": -1 } }, function(err, result) {
+            if (err) {
+                callback({ msg: err });
+            } else {
+                callback(null);
+            }
+        });
+    }
+
     Object.freeze(that);
     return that;
 
