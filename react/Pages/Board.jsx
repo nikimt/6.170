@@ -2,7 +2,7 @@ import { Component } from 'react';
 import React from 'react';
 import { IndexLink, Link, withRouter } from 'react-router';
 
-class Board extends Component {
+export default class Board extends Component {
     constructor(props){
         super(props);
         this.updateSearchText = this.updateSearchText.bind(this);
@@ -58,9 +58,7 @@ class Board extends Component {
 }
 
 Board.propTypes = {
-    currentUser : React.PropTypes.any,
-    logoutCallback : React.PropTypes.func,
-    findUserCallback : React.PropTypes.func
+    ideas : React.PropTypes.arrayOf(React.PropTypes.shape({
+        content: React.PropTypes.string.isRequired,
+    })).isRequired
 };
-
-export default withRouter(Board);
