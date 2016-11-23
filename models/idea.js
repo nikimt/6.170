@@ -7,6 +7,10 @@ var ideaSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Needs to be associated with a board']
     },
+    creatorId: {
+        type: String,
+        required: [true, 'Needs to be associated with a creator']
+    },
     content: { 
         type: String,
         required: [true, 'Needs Content']
@@ -56,7 +60,9 @@ var Ideas = (function(ideaModel) {
 
     // Exposed function that takes an idea and a callback.
     // Expects the idea in the form of:
-    //   {'content': 'someContent'}
+    //   {'content': 'someContent',
+    //    'boardId': 'boardId',
+    //    'creator': 'userId'}
     //
     // If the idea has an appropriate content length, we
     // allow it to be put in the _store, (with the addition
@@ -66,6 +72,8 @@ var Ideas = (function(ideaModel) {
         if (idea.content.length <= max_content_len) {
             var idea = new ideaModel({
                 content: idea.content,
+                boardId: idea.boardId,
+                creatorId: idea.creatorId
             });
 
             idea.save(function(err, newIdea) {
