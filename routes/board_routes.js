@@ -65,7 +65,7 @@ router.get("/boards/:boardId", function(req, res){
     var boardId = req.params.boardId;
     var CODE_LENGTH = 6;
     if (boardId && boardId.length == CODE_LENGTH){
-        ideas.findIdeasByBoard(boardId, function(data, err){
+        boards.getBoardIdeas(boardId, function(err, data){
             if (err){
                 res.status(404).json({success: false});
             }

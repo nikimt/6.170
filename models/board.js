@@ -14,7 +14,8 @@ var boardSchema = new mongoose.Schema({
         required: [true, 'Needs a moderator']
     },
     ideas: {
-        type: [String],
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Idea',
         default: []
     },
     date: { 
@@ -88,11 +89,29 @@ var Boards = (function(boardModel) {
         });
     }
 
+    // Exposed function that takes a boardId (as a string) and 
+    // a callback.
+    //
+    // If there are boards associated with the moderatorId, returns
+    // an array of board objects, otherwise an error.
+    that.getBoardIdeas = function(boardId, callback) {
+        boardModel.findOne({ boardId: boardId }, function(err, result) {
+            if (err) {
+                callback({ msg: err });
+            }
+            if (result !== null) {
+                callback(null, result.ideas);
+            } else {
+                callback({ msg: 'No such board!' });
+            }
+        });
+    }
+
     // Exposed function that takes an boardId and a callback.
     //
     // If the boardId exists, we delete the board corresponding to
     // that Id in the _store. Otherwise, we return an error.
-    that.removeboard = function(boardId, callback) {
+    that.removeBoard = function(boardId, callback) {
         boardModel.findOne({ _id: boardId }, function(err, result) {
             if (err) callback({ msg: err });
             if (result !== null) {

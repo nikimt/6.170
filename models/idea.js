@@ -113,7 +113,7 @@ var Ideas = (function(ideaModel) {
     // an array of idea objects, otherwise an error.
     that.findIdeasByBoard = function(boardId, callback) {
         ideaModel.find({ boardId: boardId }).sort('-date').exec(function(err, result) {
-            if (err) callback({ msg: err });
+            if (err) callback(err, { msg: err });
             if (result.length > 0) {
                 callback(null, result);
             } else {
