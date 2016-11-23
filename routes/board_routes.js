@@ -1,7 +1,15 @@
 var express = require('express');
 var session = require('express-session');
 
+var boards = require('../models/board.js');
+var ideas = require('../models/idea.js');
+
 var router = express.Router();
+
+var getIdentifierFromRequest = function(req, boardId){
+    setSessionIdentifier(req, boardId);
+    return req.session.identifiers[boardId];
+}
 
 /** 
   * Ensures that a user has a unique, anonymous identifier for each board they contribute to.
@@ -15,62 +23,71 @@ var setSessionIdentifier = function(req, boardId){ // TODO: move to separate fil
         req.session.identifiers = {};
     }
     if (req.session.identifiers[boardId] == null){
-        req.session.identifiers[boardId] = updateAnonymousCount(boardId); // TODO: implement
+        req.session.identifiers[boardId] = Math.floor(Math.random()*999999999); // TODO: replace with unique id
     }
 }
 
 /**
-  * POST request handler for the creation of new boards. 
+  * POST request handler for the creation of new boards.
   *
   * Returns JSON object to client with the following information:
   *     success: true if board successfully created, else false
-  *     id: the permanent id of the new board
+  *     id: the six-character id of the new board
   */
 router.post("/boards", function(req, res){
     var secured = req.body.secured;
-    var board = createBoard(); // TODO: implement, replace with callback
-    res.status(201).json({success: true, id: boardId});
+    var board = boards.addBoard({moderator: "0"}, function(err, board){
+        if (err){
+            res.status(500).json({success: false});
+        }
+        else{
+            res.status(201).json({success: true, id: board.boardId});
+        }
+    });
 });
 
 /**
   * GET request handler for retrieving a board.
   *
-  * (In the future) Sends JSON response with the following (tentative) information:
+  * Sends JSON response with the following information:
   *     success: true if board data successfully retrieved, else false
   *     data: if successful, a JSON object with the following data about the retrieved board:
-  *         name: the name of the board
   *         ideas: array of JSON objects representing ideas, each with the following data:
-  *             text: the actual text of the idea
-  *             id: the unique identifier for the idea
-  *             upvotes: number of upvotes the idea has
-  *             flags: number of flags the idea has
+  *             content: the actual textual content of the idea
+  *             boardId: the id of the board the idea is associated with
+  *             _id: the unique identifier for the idea
+  *             meta: JSON object
+  *                 upvote_count: number of upvotes an idea has
+  *                 flag: true if idea has a flag, else false
+  *             date: Date of idea creation
   */
-router.get("/board", function(req, res){
-    var boardId = req.query.id;
+router.get("/boards/:boardId", function(req, res){
+    var boardId = req.params.boardId;
     var CODE_LENGTH = 6;
     if (boardId && boardId.length == CODE_LENGTH){
-        getBoardData(boardId, function(data, err){
+        ideas.findIdeasByBoard(boardId, function(data, err){
             if (err){
-                // ...
                 res.status(404).json({success: false});
             }
             else{
                 setSessionIdentifier(req, boardId);
-                res.status(200).json({success: true, data: data});
+                res.status(200).json({success: true, data: {ideas: data}});
             }
         });
     }
     else{
-        res.status(404).json({success: false});
+        res.status(400).json({success: false});
     }
 });
 
 /** POST request handler for posting an idea to a board. */
 router.post("/boards/:boardId/ideas", function(req, res){
     var boardId = req.params.boardId;
-    var ideaText = req.body.idea;
+    var ideaText = req.body.content;
     var userId = getIdentifierFromRequest(req);
-    createIdea(boardId, ideaText, userId); // TODO: implement, replace with callback
+    ideas.addIdea({boardId: boardId, content: ideaText, creator: userId}, function(err, idea){
+        res.status(201).json({success: true});
+    });
 });
 
 /** DELETE request handler for removing an idea. */
@@ -78,7 +95,14 @@ router.delete("/boards/:boardId/ideas/:ideaId", function(req, res){
     var boardId = req.params.boardId;
     var ideaId = req.params.ideaId;
     var userId = getIdentifierFromRequest(req);
-    deleteIdea(boardId, ideaId, userId); // TODO: implement, replace with callback
+    ideas.removeIdea(ideaId, function(err){
+       if (err){
+           res.status(400).json({success: false});
+       }
+       else{
+           res.status(200).json({success: true});
+       }
+    });
 });
 
 /** PUT request handler for upvoting an idea. */
