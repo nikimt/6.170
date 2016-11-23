@@ -14,16 +14,26 @@ var getRandomCharacter = function(){
 	return CODE_SYMBOLS[Math.floor(Math.random()*alphabet.length)];
 }
 
-/** Returns a unique (not currently in use) code to associate with a particular board */
-var getUniqueCode = function(){
-	var CODE_LENGTH = 6;
-	var code;
-	do{
-		code = "";
-		for (int i=0; i<CODE_LENGTH; i++){
-			code += getRandomCharacter;
-		}
-	} while codeInUse(code);
-	// TODO: fail after certain number of attempts for extreme edge case of no remaining codes
-	return code;
-}
+var CodeGenerator = (function(){
+    
+    var that = {}
+    
+    /** Returns a unique (not currently in use) code to associate with a particular board */
+    that.getUniqueCode = function(){
+        var CODE_LENGTH = 6;
+        var code;
+        do{
+            code = "";
+            for (int i=0; i<CODE_LENGTH; i++){
+                code += getRandomCharacter;
+            }
+        } while codeInUse(code);
+        // TODO: fail after certain number of attempts for extreme edge case of no remaining codes
+        return code;
+    }
+    
+    Object.freeze(that);
+    return that;
+})();
+
+module.exports = CodeGenerator;

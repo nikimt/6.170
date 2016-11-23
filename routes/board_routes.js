@@ -80,7 +80,10 @@ router.get("/boards/:boardId", function(req, res){
     }
 });
 
-/** POST request handler for posting an idea to a board. */
+/** 
+  * POST request handler for posting an idea to a board.
+  * Text content for the idea should be sent in "content" field of request body
+  */
 router.post("/boards/:boardId/ideas", function(req, res){
     var boardId = req.params.boardId;
     var ideaText = req.body.content;

@@ -4,8 +4,7 @@ var express = require('express');
 var exphbs  = require('express-handlebars');
 var session = require('express-session');
 
-var helpers = require('./lib/helpers');
-var idea_routes = require('./routes/idea_routes');
+var board_routes = require('./routes/board_routes');
 
 ////////////////////////////////////////////////////////////////
 // DATABASE SETUP

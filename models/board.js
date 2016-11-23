@@ -1,6 +1,7 @@
 // MongoDB data model for Board
 
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
+var codeGenerator = require('../utils/board_code.js');
 
 var boardSchema = new mongoose.Schema({
     boardId: {
@@ -44,6 +45,7 @@ var Boards = (function(boardModel) {
     that.addBoard = function(board, callback) {
         var board = new boardModel({
             moderator: board.moderator,
+            boardId: codeGenerator.getUniqueCode();
         });
 
         board.save(function(err, newboard) {
