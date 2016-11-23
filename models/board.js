@@ -6,6 +6,7 @@ var codeGenerator = require('../utils/board_code.js');
 var boardSchema = new mongoose.Schema({
     boardId: {
         type: String,
+        unique: true,
         required: [true, 'Board needs a secret code']
     },
     moderator: { 
