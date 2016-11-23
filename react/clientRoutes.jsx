@@ -24,9 +24,6 @@ export default (
             <IndexRoute component={Index}/>
             <Route path="boards"
                    component={Board} />
-            <Route path="users/:username"
-                   component={Profile}
-                   onEnter={authCheck} />
             <Route path="*"
                    component={NotFound} />
         </Route>

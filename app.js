@@ -24,6 +24,8 @@ var app = express();
 //     helpers: helpers,
 // }));
 
+app.set('view engine', 'react');
+
 app.use(cookieParser());
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -38,16 +40,16 @@ app.use('/', board_routes);
 ////////////////////////////////////////////////////////////////
 // ERROR HANDLING
 
-app.use(function(req, res, next) {
-    // 404 error
-    res.status(404);
-    res.render('error', {error: 'Page Not Found'});
-});
+// app.use(function(req, res, next) {
+//     // 404 error
+//     res.status(404);
+//     res.render('error', {error: 'Page Not Found'});
+// });
 
-app.use(function(req, res, next) {
-    res.status(500);
-    res.render('error', {error: 'Unknown Error'});
-});
+// app.use(function(req, res, next) {
+//     res.status(500);
+//     res.render('error', {error: 'Unknown Error'});
+// });
 
 ///////////////////////////////////////////////////////////////
 
