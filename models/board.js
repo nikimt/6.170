@@ -28,7 +28,7 @@ var boardSchema = new mongoose.Schema({
 boardSchema.path("boardId").validate(function(value) {
     // This validates that the length of content is between min_content_len
     // and max_content_len
-    return (value >= 0) && (value <= 6);
+    return (value.length >= 0) && (value.length <= 6);
 }, "Invalid boardId length");
 
 var boardModel = mongoose.model('board', boardSchema);
@@ -51,7 +51,7 @@ var Boards = (function(boardModel) {
         });
 
         board.save(function(err, newboard) {
-            if (err) callback({ msg: err});
+            if (err) callback(err, { msg: err});
             callback(null, newboard);
         });
     }
