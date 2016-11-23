@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import React from 'react';
-// import { IndexLink, Link, withRouter } from 'react-router';
 
 export default class Board extends Component {
     constructor(props){
@@ -9,19 +8,25 @@ export default class Board extends Component {
 
     render(){
         return (
-            <div class="ui menu secondary pointing inverted fixed top sticky main-header">
+            <div>
+            <div className="ui menu secondary pointing inverted fixed top sticky main-header">
 
-                <img class="logo" src="../images/logo long.jpg"></img>
-                <a class="toc item">
-                    <i class="sidebar icon"></i>
+                <img className="logo" src="../images/logo long.jpg"></img>
+                <a className="toc item">
+                    <i className="sidebar icon"></i>
                 </a>
-                <div class="right menu">
-                    <a class="item">code00</a>
+                <div className="right menu">
+                    <a className="item">code00</a>
                 </div>
             </div>
 
-            <div class="ui text container board-ideas">
+            <div className="ui text container board-ideas">
                 { this.props.ideas.map((idea) => { return <Idea idea={idea}/>})}
+            </div>
+
+            <div className="circular ui icon button add-button float right">
+                <i class="icon plus"></i>
+            </div>
             </div>
         )
     }

@@ -1,7 +1,7 @@
 import { Component, PropTypes } from 'react';
 import React from 'react';
-import TweetFeed from '../Elements/TweetFeed.jsx';
-import TweetForm from '../Elements/TweetForm.jsx';
+// import TweetFeed from '../Elements/TweetFeed.jsx';
+// import TweetForm from '../Elements/TweetForm.jsx';
 
 
 class Global extends Component {
