@@ -19,12 +19,10 @@ db.once('open', function (callback) {
 
 var app = express();
 
-app.engine('handlebars', exphbs({
-    defaultLayout: 'main',
-    helpers: helpers,
-}));
-
-app.set('view engine', 'handlebars');
+// app.engine('handlebars', exphbs({
+//     defaultLayout: 'main',
+//     helpers: helpers,
+// }));
 
 app.use(cookieParser());
 app.use(bodyParser.json()); // support json encoded bodies

@@ -16,7 +16,7 @@ var getRandomCharacter = function(){
 
 var CodeGenerator = (function(){
     
-    var that = {}
+    var that = {};
     
     /** Returns a unique (not currently in use) code to associate with a particular board */
     that.getUniqueCode = function(){
@@ -24,10 +24,10 @@ var CodeGenerator = (function(){
         var code;
         do{
             code = "";
-            for (int i=0; i<CODE_LENGTH; i++){
+            for (i = 0; i < CODE_LENGTH; i++){
                 code += getRandomCharacter;
             }
-        } while codeInUse(code);
+        } while (codeInUse(code));
         // TODO: fail after certain number of attempts for extreme edge case of no remaining codes
         return code;
     }

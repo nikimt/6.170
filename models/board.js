@@ -46,7 +46,7 @@ var Boards = (function(boardModel) {
     that.addBoard = function(board, callback) {
         var board = new boardModel({
             moderator: board.moderator,
-            boardId: codeGenerator.getUniqueCode();
+            boardId: codeGenerator.getUniqueCode()
         });
 
         board.save(function(err, newboard) {
