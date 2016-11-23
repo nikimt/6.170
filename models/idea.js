@@ -42,13 +42,13 @@ ideaSchema.path("content").validate(function(value) {
     // This validates that the length of content is between min_content_len
     // and max_content_len
 
-    return (value >= min_content_len) && (value <= max_content_len);
+    return (value.length >= min_content_len) && (value.length <= max_content_len);
 }, "Invalid Content length");
 
 ideaSchema.path("boardId").validate(function(value) {
     // This validates that the length of content is between min_content_len
     // and max_content_len
-    return (value >= 0) && (value <= 6);
+    return (value.length >= 0) && (value.length <= 6);
 }, "Invalid boardId length");
 
 
@@ -77,7 +77,7 @@ var Ideas = (function(ideaModel) {
             });
 
             idea.save(function(err, newIdea) {
-                if (err) callback({ msg: err});
+                if (err) callback(err, { msg: err});
                 callback(null, newIdea);
             });
         } else {
@@ -104,6 +104,14 @@ var Ideas = (function(ideaModel) {
         } else {
             callback({ msg: 'No such idea!' });
         }
+    }
+
+    // Exposed function that takes an array of ideaId (as strings) and
+    // a callback.
+    //
+    // Returns an array of the ideas if they exist, otherwise an error.
+    that.findIdeasByIds = function(ideaIds, callback) {
+        ideaModel.find({ '_id': { $in: ideaIds } }, callback);
     }
 
     // Exposed function that takes a boardId (as a string) and 

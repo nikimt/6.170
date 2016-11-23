@@ -88,8 +88,17 @@ router.post("/boards/:boardId/ideas", function(req, res){
     var boardId = req.params.boardId;
     var ideaText = req.body.content;
     var userId = getIdentifierFromRequest(req);
-    ideas.addIdea({boardId: boardId, content: ideaText, creatorId: userId}, function(err, idea){
+    var idea = {
+      boardId: boardId,
+      content: ideaText,
+      creatorId: userId
+    }
+    boards.addIdeaToBoard(boardId, idea, function(err, idea){
+      if (err) {
+        res.status(400).json({success: false});
+      } else{
         res.status(201).json({success: true});
+      }
     });
 });
 

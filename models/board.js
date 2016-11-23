@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var codeGenerator = require('../utils/board_code.js');
+var ideas = require('../models/idea.js');
 
 var boardSchema = new mongoose.Schema({
     boardId: {
@@ -96,14 +97,36 @@ var Boards = (function(boardModel) {
     // an array of board objects, otherwise an error.
     that.getBoardIdeas = function(boardId, callback) {
         boardModel.findOne({ boardId: boardId }, function(err, result) {
-            if (err) {
-                callback({ msg: err });
-            }
+            if (err) callback({ msg: err });
             if (result !== null) {
-                callback(null, result.ideas);
+                ideas.findIdeasByIds(result.ideas, function(err, result) {
+                    if (err) callback(err, { msg: err });
+                    else {
+                        callback(null, result);
+                    }
+                });
             } else {
                 callback({ msg: 'No such board!' });
             }
+        });
+    }
+
+    // Exposed function that takes a boardId (as a string) and
+    // a callback.
+    //
+    // If there are boards associated with the moderatorId, returns
+    // an array of board objects, otherwise an error.
+    that.addIdeaToBoard = function(boardId, idea, callback) {
+        ideas.addIdea(idea, function(err, result) {
+            if (err) { callback(err, { msg: err }) }
+
+            boardModel.update({ boardId: boardId },
+                { $push: { "ideas": result } }, function(err, result) {
+                    if (err) { callback(err, { msg: err }) }
+                    else {
+                        callback(null);
+                    }
+            });
         });
     }
 
