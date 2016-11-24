@@ -1,0 +1,53 @@
+<div class="navbar-section">
+	<!--Navbar, includes a collapsing navbar-->
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+		    <div class="navbar-header">
+		    	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+		        	<span class="icon-bar"></span>
+		        	<span class="icon-bar"></span>
+		        	<span class="icon-bar"></span>                        
+		      	</button>
+			<div class="navbar-header">
+				<a href="/" class="navbar-brand"><span class="glyphicon glyphicon-globe"></span>  Ideate</a>
+			</div>	
+		    </div>
+		    <div class="collapse navbar-collapse" id="myNavbar">
+		    	<ul class="nav navbar-nav navbar-right">
+		      	</ul>
+			</div>
+		</div>
+	</nav>
+</div>
+
+<a ng-href="/boards/{{ idea.boardId }}" class="btn btn-default">Back To Board</a>
+<div class="page-header">
+	<div class="home-text"><h3>Create Idea</h3></div>
+</div>
+
+<form class="form-horizontal" ng-submit="idea.saveIdea()">
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Idea Content</label>
+		<div class="col-sm-6">
+			<input type="text" class="form-control home-text" ng-model="idea.ideaData.text">
+		</div>
+	</div>
+	
+	<div class="form-group">
+	<div class="col-sm-offset-2 col-sm-6">
+		<button type="submit" class="btn btn-success btn-lg btn-block">Create Idea</button>
+	</div>
+	</div>
+
+</form>
+
+<div class="row show-hide-message" ng-show="idea.message">
+	<div class="col-sm-6 col-sm-offset-2">
+		
+		<div class="alert alert-warning">
+			{{ idea.message }}
+		</div>
+
+	</div>
+</div>

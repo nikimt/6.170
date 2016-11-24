@@ -1,0 +1,62 @@
+<div style="margin-bottom: 50px;">
+	<img src="../../../assets/img/home header.jpg" width="100%" height="300px">
+</div>
+<div class="container">
+
+	<div class="row">
+
+    	<div class="col-md-3">
+    		<img src="../../../assets/img/new board icon.jpg" class="center-block" width="200px" height="200px">
+            <a href="#" ng-click="board.createBoard()" class="btn btn-primary center-block">Create a New Board</a>
+    	</div>
+
+        <div class="col-md-3" ng-if="!board.create"></div>
+
+        <div class="col-md-3" ng-if="board.create">
+            <div class="home-text">
+                Awesome, let those ideas flow!
+                Your code is <b>{{ board.boardCode }}</b>
+                Now check out your 
+                <a ng-href="/boards/{{ board.boardCode }}" class="btn btn-warning">board</a>
+            </div>
+        </div>
+
+        <div class="col-md-3" ng-if="!board.join"></div>
+
+        <div class="col-md-3" ng-if="board.join">
+            <form class="form-horizontal" ng-submit="board.getBoard()">
+                
+                <div class="form-group home-text">
+                    <label class="control-label">Board Code</label>
+                    <div>
+                        <input type="text" class="form-control home-text" ng-model="board.boardData">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                <div class="home-text">
+                    <button type="submit" class="btn btn-success btn-lg btn-block">Join Board</button>
+                </div>
+                </div>
+
+            </form>
+
+            <div class="home-text" ng-if="board.successfulCode == 'true'">
+                Valid Code! Now you can join the <a ng-href="/boards/{{ board.boardData }}" class="btn btn-warning">board</a>
+            </div>
+
+            <div class="home-text" ng-if="board.successfulCode == 'false'">
+                Invalid Code
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <img src="../../../assets/img/join board icon.jpg" class="center-block" width="200px" height="200px">
+            <a href="#" ng-click="board.joinBoard()" class="btn btn-primary center-block">Join a Board</a>
+        </div>
+
+    </div>
+</div>
+<div id="footer" style="margin-top: 50px;">
+	<img src="../../../assets/img/home footer.jpg" width="100%" height="40px" style="position: fixed; bottom:0;">
+</div>
