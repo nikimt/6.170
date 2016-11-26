@@ -38,18 +38,18 @@ var ideaSchema = new mongoose.Schema({
 var max_content_len = 140;
 var min_content_len = 1;
 
-// ideaSchema.path("content").validate(function(value) {
-//     // This validates that the length of content is between min_content_len
-//     // and max_content_len
+ideaSchema.path("content").validate(function(value) {
+    // This validates that the length of content is between min_content_len
+    // and max_content_len
 
-//     return (value >= min_content_len) && (value <= max_content_len);
-// }, "Invalid Content length");
+    return (value.length >= min_content_len) && (value.length <= max_content_len);
+}, "Invalid Content length");
 
-// ideaSchema.path("boardId").validate(function(value) {
-//     // This validates that the length of content is between min_content_len
-//     // and max_content_len
-//     return (value >= 0) && (value <= 6);
-// }, "Invalid boardId length");
+ideaSchema.path("boardId").validate(function(value) {
+    // This validates that the length of content is between min_content_len
+    // and max_content_len
+    return (value.length >= 0) && (value.length <= 6);
+}, "Invalid boardId length");
 
 
 var ideaModel = mongoose.model('Idea', ideaSchema);
@@ -109,6 +109,21 @@ var Ideas = (function(ideaModel) {
         }
     }
 
+    // Exposed function that takes an array of ideaIds (as strings) and
+    // a callback.
+    //
+    // Returns an array of ideas if the ideaIds exist, otherwise an error.
+    that.findIdeasByIds = function(ideaIds, callback) {
+        ideaModel.find({ _id: { $in: ideaIds } }, function(err, result) {
+            if (err) callback({ msg: err });
+            if (result !== null) {
+                callback(null, result);
+            } else {
+                callback({ msg: 'No such ideas!' });
+            }
+        });
+    }
+
     // Exposed function that takes a boardId (as a string) and 
     // a callback.
     //
@@ -161,25 +176,34 @@ var Ideas = (function(ideaModel) {
             if(err){
                 res.send(err)
             } else {
-                if(idea.meta.flag){
-                    ideaModel.update({ _id: ideaId }, {"meta.flag": false}, function(err, result){
-                        if(err){
-                            callback({msg:err});
-                        } else {
+                ideaModel.update({ _id: ideaId }, {"meta.flag": !idea.meta.flag}, function(err, result){
+                    if(err){
+                        callback({ msg: err });
+                    } else {
 
-                            callback(null);
-                        }
-                    })                    
-                } else {
-                    ideaModel.update({ _id: ideaId }, {"meta.flag": true}, function(err, result){
-                        if(err){
-                            callback({msg:err});
-                        } else {
+                        callback(null);
+                    }
+                });
 
-                            callback(null);
-                        }
-                    }) 
-                }
+                // if(idea.meta.flag){
+                //     ideaModel.update({ _id: ideaId }, {"meta.flag": false}, function(err, result){
+                //         if(err){
+                //             callback({msg:err});
+                //         } else {
+
+                //             callback(null);
+                //         }
+                //     })                    
+                // } else {
+                //     ideaModel.update({ _id: ideaId }, {"meta.flag": true}, function(err, result){
+                //         if(err){
+                //             callback({msg:err});
+                //         } else {
+
+                //             callback(null);
+                //         }
+                //     }) 
+                // }
             }
         })
     }

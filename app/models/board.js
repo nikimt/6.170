@@ -108,8 +108,8 @@ var Boards = (function(boardModel) {
     // Exposed function that takes a boardId (as a string) and 
     // a callback.
     //
-    // If there are boards associated with the moderatorId, returns
-    // an array of board objects, otherwise an error.
+    // If there are ideas associated with the boardId, returns
+    // an array of idea object ids, otherwise an error.
     that.getBoardIdeas = function(boardId, callback) {
         boardModel.findOne({ boardId: boardId }, function(err, result) {
             if (err) {

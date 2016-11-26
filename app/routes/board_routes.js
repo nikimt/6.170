@@ -74,18 +74,48 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var CODE_LENGTH = 6;
       if (boardId && boardId.length == CODE_LENGTH){
-          ideas.findIdeasByBoard(boardId,function(err,data){
-            if(err){
-              res.status(404).json({success:false, err: err});
-            } else {
-              setSessionIdentifier(req, boardId);
-              res.status(200).json({success: true, data: {ideas: data}});
-            }
-          });
-        } else {
-          res.status(400).json({success:false})
-        }
-      });
+        boards.getBoardIdeas(boardId, function(err, data) {
+          if (err) {
+            res.status(404).json({ success: false });
+          } else {
+            ideas.findIdeasByIds(result, function(err, data) {
+              if (err) {
+                res.status(404).json({ success: false });
+              } else {
+                setSessionIdentifier(req, boardId);
+                res.status(200).json({success: true, data: {ideas: data}});
+              }
+            })
+          }
+        });
+      }
+  });
+      //     ideas.findIdeasByBoard(boardId,function(err,data){
+      //       if(err){
+      //         res.status(404).json({success:false, err: err});
+      //       } else {
+      //         setSessionIdentifier(req, boardId);
+      //         res.status(200).json({success: true, data: {ideas: data}});
+      //       }
+      //     });
+      //   } else {
+      //     res.status(400).json({success:false})
+      //   }
+      // });
+  //           boards.getBoardIdeas(boardId, function(err, data){
+  //             if (err){
+  //                 res.status(404).json({success: false});
+  //             }
+  //             else{
+  //                 setSessionIdentifier(req, boardId);
+  //                 res.status(200).json({success: true, data: {ideas: data}});
+  //             }
+  //         });
+  //     }
+  //     else{
+  //         res.status(400).json({success: false});
+  //     }
+  // });
 
     router.get("/boards/validate/:boardId", function(req, res){
       var boardId = req.params.boardId;
@@ -108,22 +138,6 @@ module.exports = function(app,express) {
           res.json({success:false})
         }
       });
-
-
-  //         boards.getBoardIdeas(boardId, function(err, data){
-  //             if (err){
-  //                 res.status(404).json({success: false});
-  //             }
-  //             else{
-  //                 setSessionIdentifier(req, boardId);
-  //                 res.status(200).json({success: true, data: {ideas: data}});
-  //             }
-  //         });
-  //     }
-  //     else{
-  //         res.status(400).json({success: false});
-  //     }
-  // });
 
   /** 
     * POST request handler for posting an idea to a board.
