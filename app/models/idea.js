@@ -156,6 +156,21 @@ var Ideas = (function(ideaModel) {
         });
     }
 
+    // Exposed function that takes an array of ideaIds and a callback.
+    //
+    // If the ideaIds exist, we delete the ideas corresponding to
+    // those Ids in the _store. Otherwise, we return an error.
+    that.removeIdeasByIds = function(ideaIds, callback) {
+        ideaModel.remove({ _id: { $in: ideaIds } }, function(err, result) {
+            if (err) callback({ msg: err });
+            if (result !== null) {
+                callback(null);
+            } else {
+                callback({ msg: 'No such idea!'});
+            }
+        });
+    }
+
     // Exposed function that takes an ideaId and a callback.
     //
     // If the ideaId exists, we increment the upvote count of the idea 

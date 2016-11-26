@@ -57,30 +57,6 @@ var Boards = (function(boardModel) {
         });
     }
 
-    // Exposed function that takes an board, an idea, and a callback.
-    // Expects the idea in the form of:
-    //   {'content': 'someContent',
-    //    'boardId': 'boardId',
-    //    'creator': 'userId'}
-    //
-    // We put the board in the _store, (with the addition
-    // of a UUID and Date()). If error, we send an error message
-    // back to the router.
-    that.addIdeaToBoard = function(boardId, idea, callback) {
-        console.log(idea.content)
-        ideas.addIdea(idea, function(err, result) {
-            if (err) { callback(err, { msg: err }) }
-
-            boardModel.update({ boardId: boardId },
-                { $push: { "ideas": result } }, function(err, result) {
-                    if (err) { callback(err, { msg: err }) }
-                    else {
-                        callback(null);
-                    }
-            });
-        });
-    }
-
     // Exposed function that takes an boardId (as a string) and
     // a callback.
     //
@@ -125,9 +101,61 @@ var Boards = (function(boardModel) {
                 callback({ msg: err });
             }
             if (result !== null) {
-                callback(null, result.ideas);
+                ideas.findIdeasByIds(result.ideas, function(err, result) {
+                    if (err) {
+                        callback({ msg: err });
+                    } else {
+                        callback(null, result);
+                    }
+                });
             } else {
                 callback({ msg: 'No such board!' });
+            }
+        });
+    }
+
+    // Exposed function that takes an board, an idea, and a callback.
+    // Expects the idea in the form of:
+    //   {'content': 'someContent',
+    //    'boardId': 'boardId',
+    //    'creator': 'userId'}
+    //
+    // We put the board in the _store, (with the addition
+    // of a UUID and Date()). If error, we send an error message
+    // back to the router.
+    that.addIdeaToBoard = function(boardId, idea, callback) {
+        ideas.addIdea(idea, function(err, result) {
+            if (err) { callback(err, { msg: err }) }
+
+            boardModel.update({ boardId: boardId },
+                { $push: { "ideas": result } }, function(err, result) {
+                    if (err) { callback(err, { msg: err }) }
+                    else {
+                        callback(null);
+                    }
+            });
+        });
+    }
+
+    // Exposed function that takes a boardId, an ideaId, and a callback.
+    //
+    // We remove the ideaId from the board and from the idea collection. 
+    // If error, we send an error message back to the router.
+    that.removeIdeaFromBoard = function(boardId, ideaId, callback) {
+        boardModel.update({ boardId: boardId },
+            { $pull: { "ideas": ideaId } }, function(err, result) {
+                if (err) {
+                    callback(err, { msg: err });
+                } else {
+                    callback(null);
+                }
+        });
+
+        ideas.removeIdea(ideaId, function(err, result) {
+            if (err) { 
+                callback(err, { msg: err });
+            } else {
+                callback(null);
             }
         });
     }
@@ -136,10 +164,15 @@ var Boards = (function(boardModel) {
     //
     // If the boardId exists, we delete the board corresponding to
     // that Id in the _store. Otherwise, we return an error.
+    // We also delete all ideas associated with the board because
+    // those ideas only exist within the context of the board.
     that.removeBoard = function(boardId, callback) {
         boardModel.findOne({ _id: boardId }, function(err, result) {
             if (err) callback({ msg: err });
             if (result !== null) {
+                ideas.removeIdeasbyIds(result.ideas, function(err, result) {
+                    if (err) callback({ msg: err });
+                });
                 result.remove();
                 callback(null);
             } else {

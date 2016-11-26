@@ -78,20 +78,8 @@ module.exports = function(app,express) {
           if (err) {
             res.status(404).json({ success: false });
           } else {
-            console.log('result', result)
-            if (result) {
-              ideas.findIdeasByIds(result, function(err, data) {
-                if (err) {
-                  res.status(404).json({ success: false });
-                } else {
-                  setSessionIdentifier(req, boardId);
-                  res.status(200).json({success: true, data: {ideas: data}});
-                }
-              });
-            } else {
-              setSessionIdentifier(req, boardId);
-              res.status(200).json({success: true, data: {ideas: []}});
-            }
+            setSessionIdentifier(req, boardId);
+            res.status(200).json({success: true, data: {ideas: result}});
           }
         });
       }
@@ -142,7 +130,7 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var ideaId = req.params.ideaId;
       var userId = getIdentifierFromRequest(req);
-      ideas.removeIdea(ideaId, function(err){
+      boards.removeIdeaFromBoard(boardId, ideaId, function(err){
          if (err){
              res.status(400).json({success: false});
          }
