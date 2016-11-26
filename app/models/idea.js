@@ -171,43 +171,6 @@ var Ideas = (function(ideaModel) {
         });
     }
 
-    that.toggleFlag = function(ideaId,callback){
-        ideaModel.findOne({ _id: ideaId }, function(err,idea){
-            if(err){
-                res.send(err)
-            } else {
-                ideaModel.update({ _id: ideaId }, {"meta.flag": !idea.meta.flag}, function(err, result){
-                    if(err){
-                        callback({ msg: err });
-                    } else {
-
-                        callback(null);
-                    }
-                });
-
-                // if(idea.meta.flag){
-                //     ideaModel.update({ _id: ideaId }, {"meta.flag": false}, function(err, result){
-                //         if(err){
-                //             callback({msg:err});
-                //         } else {
-
-                //             callback(null);
-                //         }
-                //     })                    
-                // } else {
-                //     ideaModel.update({ _id: ideaId }, {"meta.flag": true}, function(err, result){
-                //         if(err){
-                //             callback({msg:err});
-                //         } else {
-
-                //             callback(null);
-                //         }
-                //     }) 
-                // }
-            }
-        })
-    }
-
     // Exposed function that takes an ideaId and a callback.
     //
     // If the ideaId exists, we increment the upvote count of the idea 
@@ -219,6 +182,28 @@ var Ideas = (function(ideaModel) {
                 callback({ msg: err });
             } else {
                 callback(null);
+            }
+        });
+    }
+
+    // Exposed function that takes an ideaId and a callback.
+    //
+    // If the ideaId exists, we toggle the flagged field of the idea 
+    // corresponding to that Id in the _store. Otherwise, we return
+    // an error.
+    that.toggleFlag = function(ideaId, callback){
+        ideaModel.findOne({ _id: ideaId }, function(err,idea){
+            if(err) {
+                callback({ msg: err });
+            } else {
+                ideaModel.update({ _id: ideaId }, {"meta.flag": !idea.meta.flag}, function(err, result){
+                    if(err){
+                        callback({ msg: err });
+                    } else {
+
+                        callback(null);
+                    }
+                });
             }
         });
     }

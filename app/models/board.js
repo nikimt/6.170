@@ -57,6 +57,15 @@ var Boards = (function(boardModel) {
         });
     }
 
+    // Exposed function that takes an board, an idea, and a callback.
+    // Expects the idea in the form of:
+    //   {'content': 'someContent',
+    //    'boardId': 'boardId',
+    //    'creator': 'userId'}
+    //
+    // We put the board in the _store, (with the addition
+    // of a UUID and Date()). If error, we send an error message
+    // back to the router.
     that.addIdeaToBoard = function(boardId, idea, callback) {
         console.log(idea.content)
         ideas.addIdea(idea, function(err, result) {
