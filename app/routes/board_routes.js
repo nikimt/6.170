@@ -74,12 +74,18 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var CODE_LENGTH = 6;
       if (boardId && boardId.length == CODE_LENGTH){
-        boards.getBoardIdeas(boardId, function(err, result) {
+        boards.getBoardIdeas(boardId, function(err, ideaIds) {
           if (err) {
             res.status(404).json({ success: false });
           } else {
             setSessionIdentifier(req, boardId);
-            res.status(200).json({success: true, data: {ideas: result}});
+            ideas.findIdeasByIds(ideaIds, function(err, result) {
+              if (err) {
+                res.status(404).json({ success: false });
+              } else {
+                res.status(200).json({success: true, data: {ideas: result}});
+              }
+            });
           }
         });
       }
@@ -101,7 +107,7 @@ module.exports = function(app,express) {
             }
             
           }
-        })
+        });
       } else {
         res.json({success:false})
       }
@@ -116,12 +122,14 @@ module.exports = function(app,express) {
       var ideaText = req.body.text;
       var userId = getIdentifierFromRequest(req);
       var idea = { boardId: boardId, content: ideaText, creatorId: userId };
-      boards.addIdeaToBoard(boardId, idea, function(err, idea) {
-        if (err) {
-          res.send(err);
-        } else {
-          res.status(201).json({ success: true, idea: idea });
-        }
+      ideas.addIdea(idea, function(err, result) {
+        boards.addIdeaToBoard(boardId, result._id, function(err) {
+          if (err) {
+            res.send(err);
+          } else {
+            res.status(201).json({ success: true, idea: result });
+          }
+        });
       });
   });
 
@@ -130,13 +138,17 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var ideaId = req.params.ideaId;
       var userId = getIdentifierFromRequest(req);
-      boards.removeIdeaFromBoard(boardId, ideaId, function(err){
-         if (err){
-             res.status(400).json({success: false});
-         }
-         else{
-             res.status(200).json({success: true});
-         }
+      ideas.removeIdea(ideaId, function(err) {
+        if (err) {
+          res.status(400).json({ success: false });
+        }
+        boards.removeIdeaFromBoard(boardId, ideaId, function(err){
+          if (err) {
+              res.status(400).json({success: false});
+          } else {
+              res.status(200).json({success: true});
+          }
+        });
       });
   });
 

@@ -2,7 +2,6 @@
 
 var mongoose = require('mongoose');
 var codeGenerator = require('../../utils/board_code.js');
-var ideas = require('../models/idea.js');
 
 var boardSchema = new mongoose.Schema({
     boardId: {
@@ -101,39 +100,35 @@ var Boards = (function(boardModel) {
                 callback({ msg: err });
             }
             if (result !== null) {
-                ideas.findIdeasByIds(result.ideas, function(err, result) {
-                    if (err) {
-                        callback({ msg: err });
-                    } else {
-                        callback(null, result);
-                    }
-                });
+                callback(null, result.ideas);
             } else {
                 callback({ msg: 'No such board!' });
             }
         });
     }
 
-    // Exposed function that takes an board, an idea, and a callback.
-    // Expects the idea in the form of:
-    //   {'content': 'someContent',
-    //    'boardId': 'boardId',
-    //    'creator': 'userId'}
+    // Exposed function that takes a boardId, an ideaId, and a callback.
     //
     // We put the board in the _store, (with the addition
     // of a UUID and Date()). If error, we send an error message
     // back to the router.
-    that.addIdeaToBoard = function(boardId, idea, callback) {
-        ideas.addIdea(idea, function(err, result) {
-            if (err) { callback(err, { msg: err }) }
-
-            boardModel.update({ boardId: boardId },
-                { $push: { "ideas": result } }, function(err, result) {
-                    if (err) { callback(err, { msg: err }) }
-                    else {
-                        callback(null);
-                    }
-            });
+    that.addIdeaToBoard = function(boardId, ideaId, callback) {
+        boardModel.findOne({ boardId: boardId }, function(err, result) {
+            if (err) callback(err, { msg: err });
+            var ideas = result.ideas
+            
+            // Check for duplicates
+            if (ideas.indexOf(ideaId) != -1) {
+                callback(null);
+            } else {
+                boardModel.update({ boardId: boardId },
+                    { $push: { "ideas": ideaId } }, function(err, result) {
+                        if (err) { callback(err, { msg: err }) }
+                        else {
+                            callback(null);
+                        }
+                });
+            }
         });
     }
 
@@ -150,14 +145,6 @@ var Boards = (function(boardModel) {
                     callback(null);
                 }
         });
-
-        ideas.removeIdea(ideaId, function(err, result) {
-            if (err) { 
-                callback(err, { msg: err });
-            } else {
-                callback(null);
-            }
-        });
     }
 
     // Exposed function that takes an boardId and a callback.
@@ -170,9 +157,6 @@ var Boards = (function(boardModel) {
         boardModel.findOne({ _id: boardId }, function(err, result) {
             if (err) callback({ msg: err });
             if (result !== null) {
-                ideas.removeIdeasbyIds(result.ideas, function(err, result) {
-                    if (err) callback({ msg: err });
-                });
                 result.remove();
                 callback(null);
             } else {
@@ -184,7 +168,7 @@ var Boards = (function(boardModel) {
     Object.freeze(that);
     return that;
 
-})(boardModel);
+}) (boardModel);
 
 module.exports = Boards;
 
