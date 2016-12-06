@@ -15,7 +15,7 @@ var mongoose = require('mongoose')
 //          users: Array, array of userIds of users who have upvoted
 //              this idea
 //      flag: Boolean, represents if the idea has been flagged
-//   date: Date, time the board was created
+//   date: Date, time the idea was created
 var ideaSchema = new mongoose.Schema({
     boardId: {
         type: String,
