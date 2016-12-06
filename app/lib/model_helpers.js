@@ -103,16 +103,13 @@ var ModelHelper = function() {
     // corresponding to that Id in the _store by +1. Otherwise, we return
     // an error.
     that.unflagIdea = function(boardId, ideaId, userId, callback) {
-        ideas.findIdea(ideaId, function(err, idea) {
-            if (err) callback({ msg: err });
-            boards.findBoard(boardId, function(err, board) {
-                if (idea.creatorId == userId || board.moderator == userId) {
-                    ideas.deflagIdea(ideaId, function(err) {
-                        if (err) callback({ msg: err });
-                        callback(null);
-                    });
-                }
-            });
+        boards.findBoard(boardId, function(err, board) {
+            if (board.moderator == userId) {
+                ideas.unflagIdea(ideaId, function(err) {
+                    if (err) callback({ msg: err });
+                    callback(null);
+                });
+            }
         });
     }
 

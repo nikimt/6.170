@@ -232,7 +232,7 @@ var Ideas = (function(ideaModel) {
     // If the ideaId exists, we set the flagged field of the idea 
     // corresponding to that Id to false in the _store. Otherwise, we return
     // an error.
-    that.deflagIdea = function(ideaId, callback) {
+    that.unflagIdea = function(ideaId, callback) {
         ideaModel.update({ _id: ideaId }, {"meta.flag": false}, function(err, result) {
             if (err) {
                 callback({ msg: err });
