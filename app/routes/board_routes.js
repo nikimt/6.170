@@ -4,10 +4,9 @@ var session = require('express-session');
 
 var boards = require('../models/board.js');
 var ideas = require('../models/idea.js');
-var config     = require('../../config');
-var mongoose   = require('mongoose');
-var ObjectId   = mongoose.Schema.Types.ObjectId;
+var modelHelpers = require('../lib/model_helpers.js');
 
+var config     = require('../../config');
 var superSecret = config.secret;
 
 
@@ -74,18 +73,12 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var CODE_LENGTH = 6;
       if (boardId && boardId.length == CODE_LENGTH){
-        boards.getBoardIdeas(boardId, function(err, ideaIds) {
+        modelHelpers.getBoardIdeas(boardId, function(err, data) {
           if (err) {
             res.status(404).json({ success: false });
           } else {
             setSessionIdentifier(req, boardId);
-            ideas.findIdeasByIds(ideaIds, function(err, result) {
-              if (err) {
-                res.status(404).json({ success: false });
-              } else {
-                res.status(200).json({success: true, data: {ideas: result}});
-              }
-            });
+            res.status(200).json({ success: true, data: { ideas: data } });
           }
         });
       }
@@ -122,14 +115,12 @@ module.exports = function(app,express) {
       var ideaText = req.body.text;
       var userId = getIdentifierFromRequest(req);
       var idea = { boardId: boardId, content: ideaText, creatorId: userId };
-      ideas.addIdea(idea, function(err, result) {
-        boards.addIdeaToBoard(boardId, result._id, function(err) {
-          if (err) {
-            res.send(err);
-          } else {
-            res.status(201).json({ success: true, idea: result });
-          }
-        });
+      modelHelpers.addIdeaToBoard(boardId, idea, function(err, result) {
+        if (err) {
+          res.send(err);
+        } else {
+          res.status(201).json({ success: true, idea: result });
+        }
       });
   });
 
@@ -138,17 +129,12 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var ideaId = req.params.ideaId;
       var userId = getIdentifierFromRequest(req);
-      ideas.removeIdea(ideaId, function(err) {
+      modelHelpers.deleteIdea(boardId, ideaId, userId, function(err) {
         if (err) {
           res.status(400).json({ success: false });
+        } else {
+          res.status(200).json({success: true});
         }
-        boards.removeIdeaFromBoard(boardId, ideaId, function(err){
-          if (err) {
-              res.status(400).json({success: false});
-          } else {
-              res.status(200).json({success: true});
-          }
-        });
       });
   });
 
@@ -157,13 +143,12 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var ideaId = req.params.ideaId;
       var userId = getIdentifierFromRequest(req);
-      ideas.addUpvoteToIdea(ideaId, function(err){
-         if (err) {
-            res.status(400).json({success: false});
-         }
-         else{
-            res.status(200).json({success: true});
-         }
+      modelHelpers.upvoteIdea(ideaId, userId, function(err) {
+        if (err) {
+          res.status(400).json({success: false});
+        } else {
+          res.status(200).json({success: true});
+        }
       });
   });
 
@@ -187,7 +172,7 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var ideaId = req.params.ideaId;
       var userId = getIdentifierFromRequest(req);
-      ideas.toggleFlag(ideaId, function(err){
+      modelHelpers.flagIdea(ideaId, function(err){
         if (err) {
           res.status(400).json({success: false})
         } else {
@@ -201,7 +186,13 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var ideaId = req.params.ideaId;
       var userId = getIdentifierFromRequest(req);
-      removeFlagFromIdea(boardId, ideaId, userId); // TODO: implement, replace with callback
+      modelHelpers.unflagIdea(boardId, ideaId, userId, function(err) {
+        if (err) {
+          res.status(400).json({success: false});
+        } else {
+          res.status(200).json({success: true});
+        }
+      });
   });
 
   return router;

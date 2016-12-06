@@ -77,4 +77,14 @@ angular.module('ideaCtrl', ['ideaService'])
 		})
 	}
 
+	vm.unflag = function(ideaId){
+		idea.unflag($routeParams.board_id,ideaId).then(function(data){
+				idea.all($routeParams.board_id)
+					.then(function(data) {
+						vm.processing = false;
+						vm.ideas = data.data.data.ideas;
+					});
+		})
+	}
+
 });

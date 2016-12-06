@@ -203,6 +203,36 @@ var Ideas = (function(ideaModel) {
 
     // Exposed function that takes an ideaId and a callback.
     //
+    // If the ideaId exists, we set the flagged field of the idea 
+    // corresponding to that Id to false in the _store. Otherwise, we return
+    // an error.
+    that.deflagIdea = function(ideaId, callback) {
+        ideaModel.update({ _id: ideaId }, {"meta.flag": false}, function(err, result) {
+            if (err) {
+                callback({ msg: err });
+            } else {
+                callback(null);
+            }
+        });
+    }
+
+    // Exposed function that takes an ideaId and a callback.
+    //
+    // If the ideaId exists, we set the flagged field of the idea 
+    // corresponding to that Id to true in the _store. Otherwise, we return
+    // an error.
+    that.flagIdea = function(ideaId, callback) {
+        ideaModel.update({ _id: ideaId }, {"meta.flag": true}, function(err, result) {
+            if (err) {
+                callback({ msg: err });
+            } else {
+                callback(null);
+            }
+        });
+    }
+
+    // Exposed function that takes an ideaId and a callback.
+    //
     // If the ideaId exists, we toggle the flagged field of the idea 
     // corresponding to that Id in the _store. Otherwise, we return
     // an error.

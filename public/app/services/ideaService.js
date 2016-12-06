@@ -33,13 +33,23 @@ angular.module('ideaService', [])
 	}
 
 	/**
-	* Toggle Flag of an idea
+	* Flag an idea
 	* @param ideaId
 	* @param boardId
 	* @return the idea
 	*/
 	ideaFactory.flag = function(boardId, ideaId){
 		return $http.put('board/boards/' + boardId + '/ideas/' + ideaId + '/flag');
+	}
+
+	/**
+	* Remove flag from an idea
+	* @param ideaId
+	* @param boardId
+	* @return the idea
+	*/
+	ideaFactory.unflag = function(boardId, ideaId){
+		return $http.delete('board/boards/' + boardId + '/ideas/' + ideaId + '/flag');
 	}
 
 	/**

@@ -94,7 +94,7 @@ var Boards = (function(boardModel) {
     //
     // If there are ideas associated with the boardId, returns
     // an array of idea object ids, otherwise an error.
-    that.getBoardIdeas = function(boardId, callback) {
+    that.getBoardIdeaIds = function(boardId, callback) {
         boardModel.findOne({ boardId: boardId }, function(err, result) {
             if (err) {
                 callback({ msg: err });
