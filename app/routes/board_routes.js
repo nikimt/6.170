@@ -143,7 +143,7 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var ideaId = req.params.ideaId;
       var userId = getIdentifierFromRequest(req);
-      modelHelpers.upvoteIdea(ideaId, userId, function(err) {
+      ideas.addUpvoteToIdea(ideaId, userId, function(err) {
         if (err) {
           res.status(400).json({success: false});
         } else {
@@ -157,7 +157,7 @@ module.exports = function(app,express) {
       var boardId = req.params.boardId;
       var ideaId = req.params.ideaId;
       var userId = getIdentifierFromRequest(req);
-      ideas.removeUpvoteFromIdea(ideaId, function(err){
+      ideas.removeUpvoteFromIdea(ideaId, userId, function(err){
          if (err) {
             res.status(400).json({success: false});
          }

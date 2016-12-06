@@ -84,22 +84,6 @@ var ModelHelper = function() {
         });
     }
 
-    // Exposed function that takes an ideaId, a userId, and a callback.
-    // An idea can only be upvoted once (but idk how to do that yet...).
-    //
-    // If the ideaId exists, we increment the upvote count of the idea 
-    // corresponding to that Id in the _store by +1. Otherwise, we return
-    // an error.
-    that.upvoteIdea = function(ideaId, userId, callback) {
-        ideas.findIdea(ideaId, function(err, idea) {
-            if (err) callback({ msg: err });
-            ideas.addUpvoteToIdea(ideaId, function(err) {
-                if (err) callback({ msg: err });
-                callback(null);
-            });
-        });
-    }
-
     // Exposed function that takes an ideaId and a callback.
     //
     // If the ideaId exists, we flag the idea corresponding

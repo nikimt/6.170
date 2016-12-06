@@ -16,11 +16,17 @@ var ideaSchema = new mongoose.Schema({
         required: [true, 'Needs Content']
     },
     meta: {
-        upvote_count: {
-            type: Number,
-            default: 0,
-            min: [0, 'No negative upvote counts'],
-            required: [true, 'Must have an upvote value, defaults to 0']
+        upvotes: {
+            upvote_count: {
+                type: Number,
+                default: 0,
+                min: [0, 'No negative upvote counts'],
+                required: [true, 'Must have an upvote value, defaults to 0']
+            },
+            users: {
+                type: [String],
+                default: []
+            }
         },
         flag: {
             type: Boolean,
@@ -171,32 +177,52 @@ var Ideas = (function(ideaModel) {
         });
     }
 
-    // Exposed function that takes an ideaId and a callback.
+    // Exposed function that takes an ideaId, a userId, and a callback.
+    // A user can only upvote an idea at most once.
     //
     // If the ideaId exists, we increment the upvote count of the idea 
     // corresponding to that Id in the _store by +1. Otherwise, we return
     // an error.
-    that.addUpvoteToIdea = function(ideaId, callback) {
-        ideaModel.update({ _id: ideaId }, { $inc: { "meta.upvote_count": 1 } }, function(err, result) {
-            if (err) {
-                callback({ msg: err });
+    that.addUpvoteToIdea = function(ideaId, userId, callback) {
+        ideaModel.findOne({ _id: ideaId }, function(err, idea) {
+            if (err) callback({ msg: err });
+
+            var upvote_users = idea.meta.upvotes.users;
+            if (upvote_users.indexOf(userId) != -1) {
+                // User has already upvoted this idea
+                callback(null, { msg: "user has already upvoted" });
             } else {
-                callback(null);
+                ideaModel.update({ _id: ideaId },
+                    { $inc: { "meta.upvotes.upvote_count": 1 },
+                      $push: { "meta.upvotes.users": userId } }, function(err, result) {
+                        if (err) callback({ msg: err });
+                        callback(null);
+                });
             }
         });
     }
 
-    // Exposed function that takes an ideaId and a callback.
+    // Exposed function that takes an ideaId and a callback. A user can
+    // only remove an upvote from an idea that they have already upvoted.
     //
     // If the ideaId exists, we increment the upvote count of the idea 
     // corresponding to that Id in the _store by -1. Otherwise, we return
     // an error.
-    that.removeUpvoteFromIdea = function(ideaId, callback) {
-        ideaModel.update({ _id: ideaId }, { $inc: { "meta.upvote_count": -1 } }, function(err, result) {
-            if (err) {
-                callback({ msg: err });
+    that.removeUpvoteFromIdea = function(ideaId, userId, callback) {
+        ideaModel.findOne({ _id: ideaId }, function(err, idea) {
+            if (err) callback({ msg: err });
+
+            var upvote_users = idea.meta.upvotes.users;
+            if (upvote_users.indexOf(userId) != -1) {
+                // User has upvoted this idea
+                ideaModel.update({ _id: ideaId },
+                    { $inc: { "meta.upvotes.upvote_count": -1 },
+                      $pull: { "meta.upvotes.users": userId } }, function(err, result) {
+                        if (err) callback({ msg: err });
+                        callback(null);
+                });
             } else {
-                callback(null);
+                callback(null, { msg: "user has not upvoted" });
             }
         });
     }

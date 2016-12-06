@@ -51,7 +51,7 @@
 		<tr ng-repeat="ideaBubble in idea.ideas">
 			<td>{{ ideaBubble.meta.flag }}</td>
 			<td>{{ ideaBubble.content }}</td>
-			<td>{{ ideaBubble.meta.upvote_count }}</td>
+			<td>{{ ideaBubble.meta.upvotes.upvote_count }}</td>
 			<td>
 				<a href="#" ng-click="idea.upvote(ideaBubble._id)" class="btn btn-primary">Upvote</a>
 			</td>
