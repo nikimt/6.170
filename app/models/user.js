@@ -9,6 +9,11 @@ const saltRounds = 10;
 
 // User is the model for storing user objects. Passwords
 // are stored as a hash.
+//
+// Users have the following attributes:
+//   username: String, unique id for the user
+//   password: String, coded hash of the user's password
+//   saved_boards: Array, array of boardIds of boards this user has saved
 var userSchema = new mongoose.Schema({
     username: {
         type: String,

@@ -2,6 +2,20 @@
 
 var mongoose = require('mongoose')
 
+// Model for storing idea objects. Ideas are shared by users
+// on boards.
+//
+// Ideas have the following attributes:
+//   boardId: String, boardId of board this idea is shared to
+//   creatorId: String, userId of user who created this idea
+//   content: String, content of the idea
+//   meta: Object, meta data associated with the idea
+//      upvotes: Object, upvote meta data
+//          upvote_count: Number, number of upvotes for an idea
+//          users: Array, array of userIds of users who have upvoted
+//              this idea
+//      flag: Boolean, represents if the idea has been flagged
+//   date: Date, time the board was created
 var ideaSchema = new mongoose.Schema({
     boardId: {
         type: String,

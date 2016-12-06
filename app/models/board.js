@@ -3,6 +3,14 @@
 var mongoose = require('mongoose');
 var codeGenerator = require('../../utils/board_code.js');
 
+// Model for storing board objects. Boards are used by users
+// to share ideas.
+//
+// Boards have the following attributes:
+//   boardId: String, unique secret code for the board
+//   moderator: String, userId of user who created the board
+//   ideas: Array, array of ideaIds associated with the board
+//   date: Date, time the board was created
 var boardSchema = new mongoose.Schema({
     boardId: {
         type: String,
