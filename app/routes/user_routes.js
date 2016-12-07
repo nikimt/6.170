@@ -89,7 +89,7 @@ module.exports = function(app, express) {
       */
     router.get("/boards", function(req, res){
         if (req.session.user != null){
-            users.getSavedBoards(req.session.user.id, function(err, boards){
+            users.getBoardsFromUser(req.session.user.id, function(err, boards){
                 if (err){
                     res.status(400).json({success: false});
                 }

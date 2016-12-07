@@ -95,7 +95,7 @@ var Users = (function(userModel) {
     //
     // Returns an array containing the ids of boards the user has saved. If error,
     // we send and error message back to the router.
-    that.getUserSavedBoards = function(userId, callback) {
+    that.getBoardsFromUser = function(userId, callback) {
         userModel.findOne({ _id: userId }, function(err, result) {
             if (err) callback(err, { msg: err });
             var boards = result.saved_boards
