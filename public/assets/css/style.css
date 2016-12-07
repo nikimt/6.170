@@ -16,6 +16,10 @@ h3 {
 	color:white;
 }
 
+input {
+	color: black;
+}
+
 /* HEADER 
 ===================== */
 header .navbar 		{ 
