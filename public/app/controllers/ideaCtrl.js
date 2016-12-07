@@ -1,6 +1,6 @@
 angular.module('ideaCtrl', ['ideaService'])
 
-.controller('ideaController', function($scope,idea, $routeParams) {
+.controller('ideaController', function($scope, idea, $routeParams, $location) {
 
 	var vm = this;
 
@@ -218,12 +218,9 @@ angular.module('ideaCtrl', ['ideaService'])
 
 		// use the create function in the ideaservice
 		idea.create($routeParams.board_id, vm.ideaData)
-			.then(function(data) {
-				vm.processing = false;
-				vm.ideaData = {};
-				vm.message = 'Successfully created an idea'
-			});
-			
+			.success(function (data) {
+			    $location.path('/boards/' + $routeParams.board_id);
+			});	
 	};
 
 	vm.upvote = function(ideaId){
