@@ -31,7 +31,12 @@ module.exports = function(app,express) {
           req.session.identifiers = {};
       }
       if (req.session.identifiers[boardId] == null){
-          req.session.identifiers[boardId] = Math.floor(Math.random()*999999999); // TODO: replace with unique id
+          if (req.session.user){
+              req.session.identifiers[boardId] = req.session.user.id;
+          }
+          else{
+              req.session.identifiers[boardId] = Math.floor(Math.random()*999999999); // TODO: replace with unique anonymous id
+          }
       }
   }
 
@@ -44,11 +49,16 @@ module.exports = function(app,express) {
     */
   router.post("/boards", function(req, res){
       var secured = req.body.secured;
-      boards.addBoard({moderator: "0"}, function(err, board){
+      var moderatorId = "0";
+      if (req.session.user){
+          moderatorId = req.session.user.id;
+      }
+      boards.addBoard({moderator: moderatorId}, function(err, board){
           if (err){
               res.status(500).json({success: false});
           }
           else{
+              req.session.identifiers[board.boardId] = moderatorId;
               res.status(201).json({success: true, id: board.boardId});
           }
       });
