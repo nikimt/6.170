@@ -37,7 +37,13 @@ app.use(morgan('dev'));
 */
 // mongoose.connect(config.database); 
 // Connect to either the MONGOLAB_URI or to the local database.
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/mymongodb' || config.database);
+// mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/mymongodb' || config.database);
+mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGODB_URI || 'mongodb://localhost/ideatedb');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+    console.log("database connected");
+});
 
 /**
 * set static files location
