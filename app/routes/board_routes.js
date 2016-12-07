@@ -58,6 +58,9 @@ module.exports = function(app,express) {
               res.status(500).json({success: false});
           }
           else{
+		      if (req.session.identifiers == null){
+                  req.session.identifiers = {};
+              }
               req.session.identifiers[board.boardId] = moderatorId;
               res.status(201).json({success: true, id: board.boardId});
           }
