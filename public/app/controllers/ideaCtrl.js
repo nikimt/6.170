@@ -87,4 +87,14 @@ angular.module('ideaCtrl', ['ideaService'])
 		})
 	}
 
+	vm.explanation = function(ideaId, content){
+		idea.explanation($routeParams.board_id,ideaId,content).then(function(data){
+			idea.all($routeParams.board_id)
+				.then(function(data) {
+					vm.processing = false;
+					vm.ideas = data.data.data.ideas;
+				});
+		})
+	}
+
 });

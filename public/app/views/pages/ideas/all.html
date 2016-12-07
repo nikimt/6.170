@@ -43,6 +43,8 @@
 			<th>Flagged</th>
 			<th>Text</th>
 			<th>Upvotes</th>
+			<th>Explanation</th>
+			<th>Notes</th>
 			<th></th>
 			<th></th>
 		</tr>
@@ -52,6 +54,8 @@
 			<td>{{ ideaBubble.meta.flag }}</td>
 			<td>{{ ideaBubble.content }}</td>
 			<td>{{ ideaBubble.meta.upvotes.upvote_count }}</td>
+			<td><input type="text" name="explanation" value={{ideaBubble.explanation}}></td>
+			<td><input type="text" name="notes" value="Notes"></td>
 			<td>
 				<a href="#" ng-click="idea.upvote(ideaBubble._id)" class="btn btn-primary">Upvote</a>
 			</td>

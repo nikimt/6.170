@@ -53,6 +53,17 @@ angular.module('ideaService', [])
 	}
 
 	/**
+	* Edit explanation of idea
+	* @param ideaId
+	* @param boardId
+	* @param explanationContent
+	* @return the idea
+	*/
+	ideaFactory.explanation = function(boardId, ideaId, explanationContent){
+		return $http.post('board/boards/' + boardId + '/ideas/' + ideaId + '/explanation', explanationContent);
+	}
+
+	/**
 	* Delete a single idea
 	* @param id, idea
 	* @return the message if sucessfull or not
