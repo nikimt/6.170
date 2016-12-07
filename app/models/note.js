@@ -32,12 +32,12 @@ var noteSchema = new mongoose.Schema({
 // -------- Validators --------
 var min_content_len = 1;
 
-ideaSchema.path("content").validate(function(value) {
+noteSchema.path("content").validate(function(value) {
     // This validates that the length of content is at least min_content_len
     return (value.length >= min_content_len);
 }, "Invalid Content length");
 
-var noteModel = mongoose.model('board', noteSchema);
+var noteModel = mongoose.model('note', noteSchema);
 
 var Notes = (function(noteModel) {
     var that = {};
@@ -46,7 +46,7 @@ var Notes = (function(noteModel) {
     // Expects the note in the form of:
     //   {'content': 'someContent',
     //    'ideaId': 'ideaId',
-    //    'creator': 'userId'}
+    //    'creatorId': 'userId'}
     //
     // Put the note in the _store, (with the addition
     // of a UUID and Date()).
@@ -116,7 +116,7 @@ var Notes = (function(noteModel) {
         noteModel.findOne({ _id: noteId }, function(err, result) {
             if (err) callback({ msg: err });
             if (result !== null) {
-                reslut.remove();
+                result.remove();
                 callback(null);
             } else {
                 callback({ msg: 'No such notes' });
@@ -137,8 +137,7 @@ var Notes = (function(noteModel) {
                 callback({ msg: 'No such notes'});
             }
         });
-    }    
-
+    }
 
     Object.freeze(that);
     return that;

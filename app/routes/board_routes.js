@@ -4,11 +4,11 @@ var session = require('express-session');
 
 var boards = require('../models/board.js');
 var ideas = require('../models/idea.js');
+var notes = require('../models/note.js');
 var modelHelpers = require('../lib/model_helpers.js');
 
-var config     = require('../../config');
+var config = require('../../config');
 var superSecret = config.secret;
-
 
 module.exports = function(app,express) {
   
@@ -123,7 +123,8 @@ module.exports = function(app,express) {
 
     /** 
     * POST request handler for posting an idea to a board.
-    * Text content for the idea should be sent in "content" field of request body
+    * 
+    * Request body should contain a "text" field containing the text content of the idea.
     */
     router.post("/boards/:boardId/ideas", function(req, res){
         var boardId = req.params.boardId;
@@ -193,7 +194,7 @@ module.exports = function(app,express) {
             } else {
                 res.status(200).json({success: true})
             }
-        }); // TODO: implement, replace with callback
+        });
     });
 
     /** DELETE request handler for removing the flag on an idea. */
@@ -207,6 +208,95 @@ module.exports = function(app,express) {
                 res.status(400).json({success: false});
             } else {
                 res.status(200).json({success: true});
+            }
+        });
+    });
+    
+    /**
+      * PUT request handler for updating the explanation of an idea.
+      *
+      * Request body should contain an "explanation" field with the desired explanation.
+      */
+    router.put("/boards/:boardId/ideas/:ideaId/explanation", function(req, res){
+        var boardId = req.params.boardId;
+        var ideaId = req.params.ideaId;
+        var explanation = req.body.explanation;
+        var userId = getIdentifierFromRequest(req, boardId);
+        modelHelpers.updateIdeaExplanation(ideaId, userId, explanation, function(err){
+            if (err) {
+                res.status(400).json({success: false})
+            } else {
+                res.status(200).json({success: true})
+            }
+        });
+    });
+    
+    /** 
+      * GET request handler for retrieving notes associated with an idea. 
+      *
+      * Returns JSON object to client with the following information:
+      *     success: true if note successfully deleted, else false
+      *     notes: array of JSON objects representing notes, each with the following information:
+      *         ideaId: String, ideaId of the idea this note is associated with
+      *         creatorId: String, userId of user who created the note
+      *         content: String, content of note
+      *         date: Date, time the note was created
+      */
+    router.get("/boards/:boardId/ideas/:ideaId/notes", function(req, res){
+        var boardId = req.params.boardId;
+        var ideaId = req.params.ideaId;
+        var userId = getIdentifierFromRequest(req, boardId);
+        notes.findNotesByIdea(ideaId, function(err, result){
+            if (err) {
+                res.status(400).json({success: false})
+            } else {
+                res.status(200).json({success: true, notes: result})
+            }
+        });
+    });
+    
+    /** 
+      * POST request handler for adding notes to an idea. 
+      *
+      * Returns JSON object to client with the following information:
+      *     success: true if note successfully deleted, else false
+      *     note: JSON object representing a note, with the following information:
+      *         ideaId: String, ideaId of the idea this note is associated with
+      *         creatorId: String, userId of user who created the note
+      *         content: String, content of note
+      *         date: Date, time the note was created
+      */
+    router.post("/boards/:boardId/ideas/:ideaId/notes", function(req, res){
+        var boardId = req.params.boardId;
+        var ideaId = req.params.ideaId;
+        var content = req.body.text;
+        var userId = getIdentifierFromRequest(req, boardId);
+        notes.addNote({content: content, ideaId: ideaId, creatorId: userId}, function(err, result){
+            if (err) {
+                res.status(400).json({success: false})
+            } else {
+                res.status(201).json({success: true, note: result})
+            }
+        });
+    });
+    
+    /** 
+      * DELETE request handler for deleting notes.
+      *
+      * Returns JSON object to client with the following information:
+      *     success: true if note successfully deleted, else false
+      */
+    router.delete("/boards/:boardId/ideas/:ideaId/notes/:noteId", function(req, res){
+        var boardId = req.params.boardId;
+        var ideaId = req.params.ideaId;
+        var noteId = req.params.noteId;
+        var userId = getIdentifierFromRequest(req, boardId);
+        // TODO: Only the creator of a note should be able to remove it.
+        notes.removeNote(noteId, function(err){
+            if (err) {
+                res.status(404).json({success: false})
+            } else {
+                res.status(200).json({success: true})
             }
         });
     });
