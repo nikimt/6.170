@@ -122,17 +122,16 @@ var ModelHelper = function() {
     }
 
     // Exposed function that takes an ideaId, a userId, and a callback.
-    // Notes can only be accessed by the owner of the idea they are
-    // associated with.
+    // Notes can only be accessed by the owner of the note.
     that.findNotesByIdea = function(ideaId, userId, callback) {
-        ideas.findIdea(ideaId, function(err, idea) {
+        notes.findNotesByIdea(ideaId, function(err, notes) {
             if (err) { callback({ msg: err }); }
             else {
-                if (idea.creatorId != userId) {
-                    callback({ msg: "user not owner of the idea" });
-                } else {
-                    notes.findNotesByIdea(ideaId, callback);
-                }
+                var filteredNotes = notes.filter(function(note) {
+                    return note.creatorId == userId;
+                });
+                console.log(filteredNotes)
+                callback(null, filteredNotes);
             }
         });
     }
