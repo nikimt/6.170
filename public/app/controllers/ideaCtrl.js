@@ -93,7 +93,7 @@ angular.module('ideaCtrl', ['ideaService'])
 				.then(function(data) {
 					vm.processing = false;
 					vm.ideas = data.data.data.ideas;
-				});
+				})
 		})
 	}
 
