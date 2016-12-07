@@ -44,7 +44,7 @@ module.exports = function(app,express) {
     */
   router.post("/boards", function(req, res){
       var secured = req.body.secured;
-      var board = boards.addBoard({moderator: "0"}, function(err, board){
+      boards.addBoard({moderator: "0"}, function(err, board){
           if (err){
               res.status(500).json({success: false});
           }

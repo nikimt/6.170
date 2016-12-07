@@ -81,9 +81,9 @@ var Users = (function(userModel) {
             if (err) callback(err, { msg: err });
             if (result !== null) {
                 var hash = result.password;
-                bycrypt.compare(password, hash, function(err, verify) {
+                bycrypt.compare(user.password, hash, function(err, verify) {
                     if (err) callback(err, { msg: err });
-                    callback(null, verify);
+                    callback(null, verify, result);
                 });
             } else {
                 callback(err, null);

@@ -47,7 +47,9 @@ app.use(express.static(__dirname + '/public'));
 * api routes
 */
 var boardRoutes = require('./app/routes/board_routes')(app, express);
+var userRoutes = require('./app/routes/user_routes')(app, express);
 app.use('/board', boardRoutes);
+app.use('/users', userRoutes);
 
 /**
 * main catchall route
