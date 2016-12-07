@@ -93,7 +93,17 @@ angular.module('ideaCtrl', ['ideaService'])
 				.then(function(data) {
 					vm.processing = false;
 					vm.ideas = data.data.data.ideas;
-				})
+				});
+		})
+	}
+
+	vm.getNotes = function(ideaId){
+		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
+			idea.all($routeParams.board_id)
+				.then(function(data) {
+					vm.processing = false;
+					vm.ideas = data.data.data.ideas;
+				});
 		})
 	}
 

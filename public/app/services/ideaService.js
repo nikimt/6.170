@@ -57,10 +57,20 @@ angular.module('ideaService', [])
 	* @param ideaId
 	* @param boardId
 	* @param explanationContent
-	* @return the idea
+	* @return the explanation
 	*/
 	ideaFactory.explanation = function(boardId, ideaId, explanationContent){
 		return $http.post('board/boards/' + boardId + '/ideas/' + ideaId + '/explanation', explanationContent);
+	}
+
+	/**
+	* Retrive notes associated with an idea
+	* @param ideaId
+	* @param boardId
+	* @return the notes
+	*/
+	ideaFactory.getNotes = function(boardId, ideaId){
+		return $http.get('board/boards/' + boardId + '/ideas/' + ideaId + '/notes');
 	}
 
 	/**
