@@ -50,8 +50,6 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     	}
     }
 
-    vm.saveNotes = function()
-
 	function createCircle(circle)
 	    {    
 	        // Reset when time is at zero
