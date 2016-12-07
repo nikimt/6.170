@@ -90,6 +90,18 @@ var Users = (function(userModel) {
             }
         });
     }
+    
+    // Exposed function that takes a userId and a callback.
+    //
+    // Returns an array containing the ids of boards the user has saved. If error,
+    // we send and error message back to the router.
+    that.getUserSavedBoards = function(userId, callback) {
+        userModel.findOne({ _id: userId }, function(err, result) {
+            if (err) callback(err, { msg: err });
+            var boards = result.saved_boards
+            callback(null, boards)
+        });
+    }
 
     // Exposed function that takes a userId, a boardId, and a callback.
     //

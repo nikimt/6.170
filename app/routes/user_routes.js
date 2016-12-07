@@ -25,7 +25,7 @@ module.exports = function(app, express) {
                 res.status(500).json({success: false});
             }
             else{
-                req.session.userId = user._id
+                req.session.user = {name: username, id: user._id};
                 res.status(201).json({success: true});
             }
         });
@@ -47,7 +47,7 @@ module.exports = function(app, express) {
                 res.status(500).json({success: false});
             }
             else if (verify){
-                req.session.userId = user._id;
+                req.session.user = {name: username, id: user._id};
                 res.status(200).json({success: true});
             }
             else{
@@ -63,6 +63,47 @@ module.exports = function(app, express) {
     });
     
     /** 
+      * GET request handler; returns information about whether or not the client is logged in.
+      *
+      * Returns JSON object to client with the following information:
+      *     loggedIn: whether or not the requester is logged in to the site
+      *     user: JSON object (null if not loggedIn) with the following information:
+      *         name: the username of this user
+      *         id: the user's id
+      */
+    router.get("/session", function(req, res){
+        if (req.session.user){
+            res.status(200).json({loggedIn: true, user: req.session.user});
+        }
+        else{
+            res.status(200).json({loggedIn: false});
+        }
+    });
+    
+    /**
+      * GET request handler for retrieving a user's collection of saved boards.
+      *
+      * Returns JSON object to client with the following information:
+      *     success: whether or not the request was successful
+      *     boards: JSON array containing IDs of all saved boards on successful request
+      */
+    router.get("/boards", function(req, res){
+        if (req.session.user != null){
+            users.getSavedBoards(req.session.user.id, function(err, boards){
+                if (err){
+                    res.status(400).json({success: false});
+                }
+                else{
+                    res.status(200).json({success: true, boards: boards})
+                }
+            });
+        }
+        else{
+            res.status(403).json({success: false});
+        }
+    });
+    
+    /** 
       * PUT request handler for adding a board to the user's collection of saved boards.
       *
       * Request body should contain "boardId" field.
@@ -70,16 +111,15 @@ module.exports = function(app, express) {
       * Returns JSON object with the following information:
       *     success: true if board was successfully added, else false
       */
-    router.put("/:userId/boards", function(req, res){
-        var userId = req.params.userId;
+    router.put("/boards", function(req, res){
         var boardId = req.body.boardId;
-        if (req.session.userId == userId){
+        if (req.session.user != null){
             boards.findBoard(boardId, function(err){
                 if (err){
                     res.status(400).json({success: false});
                 }
                 else{
-                    users.addBoardToUser(userId, boardId, function(err){
+                    users.addBoardToUser(req.session.user.id, boardId, function(err){
                         if (err){
                             res.status(500).json({success: false});
                         }
@@ -101,11 +141,10 @@ module.exports = function(app, express) {
       * Returns JSON object with the following information:
       *     success: true if board was successfully removed, else false
       */
-    router.delete("/:userId/boards/:boardId", function(req, res){
-        var userId = req.params.userId;
+    router.delete("/boards/:boardId", function(req, res){
         var boardId = req.params.boardId;
-        if (req.session.userId == userId){
-            users.removeBoardFromUser(userId, boardId, function(err){
+        if (req.session.user != null){
+            users.removeBoardFromUser(req.session.user.id, boardId, function(err){
                 if (err){
                     res.status(500).json({success: false});
                 }
