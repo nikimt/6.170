@@ -252,7 +252,7 @@ module.exports = function(app,express) {
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
         var userId = getIdentifierFromRequest(req, boardId);
-        notes.findNotesByIdea(ideaId, function(err, result){
+        model_helpers.findNotesByIdea(ideaId, function(err, result){
             if (err) {
                 res.status(400).json({success: false})
             } else {

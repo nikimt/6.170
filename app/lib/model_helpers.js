@@ -6,6 +6,7 @@
 
 var boards = require('../models/board.js');
 var ideas = require('../models/idea.js');
+var notes = require('../models/note.js');
 
 var ModelHelper = function() {
     var that = {};
@@ -146,6 +147,22 @@ var ModelHelper = function() {
                         });
                     }
                 });
+            }
+        });
+    }
+
+    // Exposed function that takes an ideaId, a userId, and a callback.
+    // Notes can only be accessed by the owner of the idea they are
+    // associated with.
+    that.findNotesByIdea = function(ideaId, userId, callback) {
+        ideas.findIdea(ideaId, function(err, idea) {
+            if (err) { callback({ msg: err }); }
+            else {
+                if (idea.creatorId != userId) {
+                    callback({ msg: "user not owner of the idea" });
+                } else {
+                    ideas.findNotesByIdea(ideaId, callback);
+                }
             }
         });
     }
