@@ -97,6 +97,29 @@ module.exports = function(app,express) {
         }
     });
 
+    /**
+    * GET request handler for retrieving the moderator of a board.
+    *
+    * Sends JSON response with the following information:
+    *     success: true if board data successfully retrieved, else false
+    *     is_user_moderator: Boolean, true if current user is moderator of board
+    */
+    router.get("/boards/:boardId/moderator", function(req, res){
+        var boardId = req.params.boardId;
+        var CODE_LENGTH = 6;
+        if (boardId && boardId.length == CODE_LENGTH){
+            boards.findBoard(boardId, function(err, board) {
+                if (err) {
+                    res.status(404).json({ success: false });
+                } else {
+                    var isModerator = (board.moderator == req.session.user.id)
+                    res.status(200).json(
+                      { success: true, is_user_moderator: isModerator });
+                }
+            });
+        }
+    });
+
     router.get("/boards/validate/:boardId", function(req, res){
         var boardId = req.params.boardId;
         var CODE_LENGTH = 6;
