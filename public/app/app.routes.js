@@ -16,9 +16,15 @@ angular.module('app.routes', ['ngRoute'])
 		/**
 		* Route for the board
 		*/
+		// .when('/boards/:board_id',{
+		// 	templateUrl: 'app/views/pages/ideas/all.html',
+		// 	controller: 'ideaController',
+		// 	controllerAs: 'idea'
+		// })
+
 		.when('/boards/:board_id',{
-			templateUrl: 'app/views/pages/ideas/all.html',
-			controller: 'ideaController',
+			templateUrl: 'app/views/pages/ideas/bubble-all.html',
+			controller: 'ideaBubbleController',
 			controllerAs: 'idea'
 		})
 

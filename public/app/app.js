@@ -1,1 +1,1 @@
-angular.module('userApp', ['ngAnimate', 'app.routes','boardService','boardCtrl','ideaService','ideaCtrl'])
+angular.module('userApp', ['ngAnimate', 'app.routes','boardService','boardCtrl','ideaService','ideaCtrl','ideaBubbleCtrl'])

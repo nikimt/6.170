@@ -1,6 +1,6 @@
-angular.module('ideaCtrl', ['ideaService'])
+angular.module('ideaBubbleCtrl', ['ideaService'])
 
-.controller('ideaController', function($scope,idea, $routeParams) {
+.controller('ideaBubbleController', function($scope,idea, $routeParams) {
 
 	var vm = this;
 
@@ -236,14 +236,21 @@ angular.module('ideaCtrl', ['ideaService'])
 		})
 	}
 
-	vm.flag = function(ideaId){
-		idea.flag($routeParams.board_id,ideaId).then(function(data){
-				idea.all($routeParams.board_id)
-					.then(function(data) {
-						vm.processing = false;
-						vm.ideas = data.data.data.ideas;
-					});
-		})
+	vm.flag = function(obj){
+		var clickedFlagIdStr = obj.target.id
+		if(clickedFlagIdStr.charAt(0) == 'f'){
+			var clickedFlagId = parseInt(clickedFlagIdStr.substring(1,clickedFlagIdStr.length))
+			var ideaId = vm.ideas[clickedFlagId]._id
+			idea.flag($routeParams.board_id,ideaId).then(function(data){
+					idea.all($routeParams.board_id)
+						.then(function(data) {
+							vm.processing = false;
+							vm.ideas = data.data.data.ideas;
+							var flagText = '!'
+							flagTexts[clickedFlagId].attr("text",flagText)
+						});
+			})
+		}
 	}
 
 	vm.unflag = function(ideaId){
@@ -253,26 +260,6 @@ angular.module('ideaCtrl', ['ideaService'])
 						vm.processing = false;
 						vm.ideas = data.data.data.ideas;
 					});
-		})
-	}
-
-	vm.explanation = function(ideaId, content){
-		idea.explanation($routeParams.board_id,ideaId,content).then(function(data){
-			idea.all($routeParams.board_id)
-				.then(function(data) {
-					vm.processing = false;
-					vm.ideas = data.data.data.ideas;
-				});
-		})
-	}
-
-	vm.getNotes = function(ideaId){
-		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
-			idea.all($routeParams.board_id)
-				.then(function(data) {
-					vm.processing = false;
-					vm.ideas = data.data.data.ideas;
-				});
 		})
 	}
 
