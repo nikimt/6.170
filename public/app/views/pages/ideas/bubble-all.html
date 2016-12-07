@@ -38,7 +38,27 @@
 <div ng-if="idea.ideaToShow" id="explanation" ng-show="idea.ideas">
 	<h5> Explanation for <i>{{idea.ideas[idea.ideaToShow].content}}</i>:</h5>
 	{{idea.ideas[idea.ideaToShow].explanation}}
+
+	<h5>Notes</h5>
+	<div ng-repeat="note in idea.noteToShow">
+		{{ note.content }}
+	</div>
+
+	<form class="form-horizontal" ng-submit="idea.saveNote()">	
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Create Note</label>
+			<div class="col-sm-6">
+					<input type="text" class="form-control home-text" ng-model="idea.noteData.text" ng-value=''>
+					
+			</div>
+			<div class="col-sm-2">
+				<button type="submit" class="btn btn-primary btn-block">Create Note</button>
+			</div>
+		</div>
+		
+	</form>
 </div>
+
 
 <div class="jumbotron text-center" ng-show="idea.processing">
 	<span class="glyphicon glyphicon-repeat spinner"></span>

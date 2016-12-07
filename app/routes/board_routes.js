@@ -275,9 +275,9 @@ module.exports = function(app,express) {
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
         var userId = getIdentifierFromRequest(req, boardId);
-        model_helpers.findNotesByIdea(ideaId, function(err, result){
+        modelHelpers.findNotesByIdea(ideaId, userId, function(err, result){
             if (err) {
-                res.status(400).json({success: false})
+                res.status(400).json({err: err, success: false})
             } else {
                 res.status(200).json({success: true, notes: result})
             }
@@ -302,7 +302,7 @@ module.exports = function(app,express) {
         var userId = getIdentifierFromRequest(req, boardId);
         notes.addNote({content: content, ideaId: ideaId, creatorId: userId}, function(err, result){
             if (err) {
-                res.status(400).json({success: false})
+                res.status(400).json({success: false, err: err})
             } else {
                 res.status(201).json({success: true, note: result})
             }

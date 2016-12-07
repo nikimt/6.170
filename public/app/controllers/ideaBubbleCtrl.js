@@ -46,8 +46,17 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     	if(clickedCircleIdStr.charAt(0) == 'b'){
     		var clickedCircleId = parseInt(clickedCircleIdStr.substring(1,clickedCircleIdStr.length))
     		vm.ideaToShow = clickedCircleId
-    		console.log(vm.ideaToShow)
     	}
+		var ideaId = vm.ideas[vm.ideaToShow]._id
+		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
+			console.log(data.data.notes)
+			vm.noteToShow = data.data.notes
+			idea.all($routeParams.board_id)
+				.then(function(data) {
+					vm.processing = false;
+					vm.ideas = data.data.data.ideas;
+				});
+		})
     }
 
 	function createCircle(circle)
@@ -227,7 +236,37 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 				vm.message = 'Successfully created an idea'
 			});
 			
-	};
+	}
+
+	vm.saveNote = function(){
+		vm.processing = true
+
+		var ideaId = vm.ideas[vm.ideaToShow]._id
+		vm.getNote(ideaId)
+
+		idea.createNote($routeParams.board_id,ideaId,vm.noteData).then(function(data){
+			//vm.noteData = {text: data.data.note.content}
+			idea.all($routeParams.board_id)
+				.then(function(data) {
+					vm.processing = false;
+					vm.noteData = {}
+					vm.ideas = data.data.data.ideas;
+				});
+		})
+	}
+
+
+	vm.getNote = function(ideaId){
+		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
+			console.log(data.data.notes)
+			vm.noteToShow = data.data.notes
+			idea.all($routeParams.board_id)
+				.then(function(data) {
+					vm.processing = false;
+					vm.ideas = data.data.data.ideas;
+				});
+		})
+	}
 
 	vm.upvote = function(ideaId){
 		idea.upvote($routeParams.board_id,ideaId).then(function(data){

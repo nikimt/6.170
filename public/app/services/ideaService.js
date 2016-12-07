@@ -64,6 +64,17 @@ angular.module('ideaService', [])
 	}
 
 	/**
+	* Create note
+	* @param ideaId
+	* @param boardId
+	* @param noteContent
+	* @return the note
+	*/
+	ideaFactory.createNote = function(boardId, ideaId, noteContent){
+		return $http.post('board/boards/' + boardId + '/ideas/' + ideaId + '/notes', noteContent)
+	}
+
+	/**
 	* Retrive notes associated with an idea
 	* @param ideaId
 	* @param boardId

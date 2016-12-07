@@ -131,7 +131,7 @@ var ModelHelper = function() {
                 if (idea.creatorId != userId) {
                     callback({ msg: "user not owner of the idea" });
                 } else {
-                    ideas.findNotesByIdea(ideaId, callback);
+                    notes.findNotesByIdea(ideaId, callback);
                 }
             }
         });
