@@ -100,11 +100,20 @@ var Ideas = (function(ideaModel) {
     // back to the router, reminding the user of the character limit.
     that.addIdea = function(idea, callback) {
         if (idea.content.length <= max_content_len) {
-            var idea = new ideaModel({
-                content: idea.content,
-                boardId: idea.boardId,
-                creatorId: idea.creatorId
-            });
+            if (idea.explanation) {
+                var idea = new ideaModel({
+                    content: idea.content,
+                    boardId: idea.boardId,
+                    creatorId: idea.creatorId,
+                    explanation: idea.explanation
+                });
+            } else {
+                var idea = new ideaModel({
+                    content: idea.content,
+                    boardId: idea.boardId,
+                    creatorId: idea.creatorId
+                });
+            }
 
             idea.save(function(err, newIdea) {
                 if (err) {

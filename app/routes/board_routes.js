@@ -129,8 +129,14 @@ module.exports = function(app,express) {
     router.post("/boards/:boardId/ideas", function(req, res){
         var boardId = req.params.boardId;
         var ideaText = req.body.text;
+        var explanation = req.body.explanation;
         var userId = getIdentifierFromRequest(req, boardId);
-        var idea = { boardId: boardId, content: ideaText, creatorId: userId };
+        var idea = { 
+          boardId: boardId,
+          content: ideaText,
+          creatorId: userId,
+          explanation: explanation
+        };
         modelHelpers.addIdeaToBoard(boardId, idea, function(err, result) {
             if (err) {
                 res.send(err);
