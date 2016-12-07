@@ -1,3 +1,9 @@
+// Helper that abstracts some of the model operations that require
+// interactions with multiple models. 
+// For example, creating an idea involves both the idea model
+// (to create a new idea) and the board model (to update the 
+// board's idea list).
+
 var boards = require('../models/board.js');
 var ideas = require('../models/idea.js');
 
