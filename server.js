@@ -35,7 +35,9 @@ app.use(morgan('dev'));
 /** 
 * connect to our database
 */
-mongoose.connect(config.database); 
+// mongoose.connect(config.database); 
+// Connect to either the MONGOLAB_URI or to the local database.
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/mymongodb' || config.database);
 
 /**
 * set static files location
