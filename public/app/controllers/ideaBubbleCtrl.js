@@ -39,13 +39,18 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		}
     }
 
-    vm.showInfo = function(obj){
+    vm.ideaToShow;
+
+    vm.showExplanation = function(obj){
     	var clickedCircleIdStr = obj.target.id
     	if(clickedCircleIdStr.charAt(0) == 'b'){
     		var clickedCircleId = parseInt(clickedCircleIdStr.substring(1,clickedCircleIdStr.length))
-    		var extraInfo = vm.ideas[clickedCircleId].info
+    		vm.ideaToShow = clickedCircleId
+    		console.log(vm.ideaToShow)
     	}
     }
+
+    vm.saveNotes = function()
 
 	function createCircle(circle)
 	    {    

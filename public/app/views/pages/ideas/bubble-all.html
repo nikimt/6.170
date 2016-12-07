@@ -35,10 +35,15 @@
 
 </div>
 
+<div ng-if="idea.ideaToShow" id="explanation" ng-show="idea.ideas">
+	<h5> Explanation for <i>{{idea.ideas[idea.ideaToShow].content}}</i>:</h5>
+	{{idea.ideas[idea.ideaToShow].explanation}}
+</div>
+
 <div class="jumbotron text-center" ng-show="idea.processing">
 	<span class="glyphicon glyphicon-repeat spinner"></span>
 	<p>Loading Ideas...</p>
 </div>
 
-<div id="canvas" ng-click="idea.upvoteBubble($event); idea.flag($event)" ng-model="ideas">
+<div id="canvas" ng-click="idea.upvoteBubble($event); idea.flag($event)" ng-mouseover="idea.showExplanation($event)">
 </div>
