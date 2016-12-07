@@ -29,6 +29,9 @@ var ideaSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Needs Content']
     },
+    explanation: {
+        type: String,
+    },
     meta: {
         upvotes: {
             upvote_count: {
@@ -64,6 +67,13 @@ ideaSchema.path("content").validate(function(value) {
 
     return (value.length >= min_content_len) && (value.length <= max_content_len);
 }, "Invalid Content length");
+
+ideaSchema.path("explanation").validate(function(value) {
+    // This validates that the length of explanation is between min_content_len
+    // and max_content_len
+
+    return (value.length >= min_content_len) && (value.length <= max_content_len);
+}, "Invalid Explanation length");
 
 ideaSchema.path("boardId").validate(function(value) {
     // This validates that the length of content is between min_content_len
@@ -117,8 +127,7 @@ var Ideas = (function(ideaModel) {
             ideaModel.findOne({ _id: ideaId }, function(err, result) {
                 if (err) {
                     callback({ msg: err });
-                }
-                if (result !== null) {
+                } else if (result !== null) {
                     callback(null, result);
                 } else {
                     callback({ msg: 'No such idea!' });
@@ -290,6 +299,18 @@ var Ideas = (function(ideaModel) {
                     }
                 });
             }
+        });
+    }
+
+    // Exposed function that takes an ideaId (as a string), an explanation, and
+    // a callback.
+    //
+    // Updates the explanation of the idea with ideaId to explanation.
+    that.updateIdeaExplanation = function(ideaId, explanation, callback) {
+        ideaModel.update({ _id: ideaId }, { $set: { explanation: explanation } },
+            function(err, result) {
+                if (err) { callback({ ms: err }); }
+                else { callback(null) }
         });
     }
 

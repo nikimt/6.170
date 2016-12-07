@@ -111,21 +111,41 @@ var ModelHelper = function() {
     }
 
     // Exposed function that takes an ideaId, a userId, and a callback.
-    // An idea can only be deflagged by the user who created it or the
-    // moderator of the board.
-    //
-    // If the ideaId exists, we increment the upvote count of the idea 
-    // corresponding to that Id in the _store by +1. Otherwise, we return
-    // an error.
+    // An idea can only be deflagged by the moderator of the board.
     that.unflagIdea = function(boardId, ideaId, userId, callback) {
         boards.findBoard(boardId, function(err, board) {
-            if (board.moderator == userId) {
+            if (err) { callback({ msg: err }); }
+            else if (board.moderator == userId) {
                 ideas.unflagIdea(ideaId, function(err) {
                     if (err) { callback({ msg: err }); }
                     else { callback(null); }
                 });
             } else {
                 callback({ msg: "user not the moderator of the board" });
+            }
+        });
+    }
+
+    // Exposed function that takes an ideaId, a userId, an explanation,
+    // and a callback. An explanation can only be updated by the user 
+    // who created it or the moderator of the board.
+    that.updateIdeaExplanation = function(ideaId, userId, explanation, callback) {
+        ideas.findIdea(ideaId, function(err, idea) {
+            if (err) { callback({ msg: err }); }
+            else {
+                boards.findBoard(boardId, function(err, board) {
+                    if (err) {
+                        callback({ msg: err });
+                    } else if (idea.creatorId != userId 
+                        && board.moderator != userId) {
+                        callback({ msg: "user not the moderator or owner of the idea" });
+                    } else {
+                        ideas.updateIdeaExplanation(ideaId, explanation, function(err) {
+                            if (err) { callback({ msg: err }); }
+                            else { callback(null) }
+                        });
+                    }
+                });
             }
         });
     }
