@@ -17,13 +17,7 @@ var ModelHelper = function() {
         ideas.removeIdea(ideaId, function(err) {
             if (err) { callback(err); }
             else {
-                boards.removeIdeaFromBoard(boardId, ideaId, function(err){
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null);
-                    }
-                });
+                boards.removeIdeaFromBoard(boardId, ideaId, callback);
             }
         });
     }
@@ -37,13 +31,7 @@ var ModelHelper = function() {
         boards.getBoardIdeaIds(boardId, function(err, ideaIds) {
             if (err) { callback({ msg: err }); }
             else {
-                ideas.findIdeasByIds(ideaIds, function(err, result) {
-                    if (err) {
-                        callback({ msg: err });
-                    } else {
-                        callback(null, result);
-                    }
-                });
+                ideas.findIdeasByIds(ideaIds, callback);
             }
         });
     }
@@ -61,13 +49,7 @@ var ModelHelper = function() {
         ideas.addIdea(idea, function(err, result) {
             if (err) { callback({ msg: err }); }
             else {
-                boards.addIdeaToBoard(boardId, result._id, function(err) {
-                    if (err) {
-                        callback({ msg: err });
-                    } else {
-                        callback(null, result);
-                    }
-                });
+                boards.addIdeaToBoard(boardId, result._id, callback);
             }
         });
     }
@@ -90,10 +72,7 @@ var ModelHelper = function() {
                         && board.moderator != userId) {
                         callback({ msg: err });
                     } else {
-                        removeIdea(boardId, ideaId, function(err) {
-                            if (err) callback({ msg: err });
-                            callback(null);
-                        });
+                        removeIdea(boardId, ideaId, callback);
                     }
                 });
             }
@@ -105,10 +84,7 @@ var ModelHelper = function() {
     // If the ideaId exists, we flag the idea corresponding
     // to that Id in the _store. Otherwise, we return an error.
     that.flagIdea = function(ideaId, callback) {
-        ideas.flagIdea(ideaId, function(err) {
-            if (err) { callback({ msg: err }); }
-            else { callback(null); }
-        });
+        ideas.flagIdea(ideaId, callback);
     }
 
     // Exposed function that takes an ideaId, a userId, and a callback.
@@ -117,10 +93,7 @@ var ModelHelper = function() {
         boards.findBoard(boardId, function(err, board) {
             if (err) { callback({ msg: err }); }
             else if (board.moderator == userId) {
-                ideas.unflagIdea(ideaId, function(err) {
-                    if (err) { callback({ msg: err }); }
-                    else { callback(null); }
-                });
+                ideas.unflagIdea(ideaId, callback);
             } else {
                 callback({ msg: "user not the moderator of the board" });
             }
@@ -141,10 +114,7 @@ var ModelHelper = function() {
                         && board.moderator != userId) {
                         callback({ msg: "user not the moderator or owner of the idea" });
                     } else {
-                        ideas.updateIdeaExplanation(ideaId, explanation, function(err) {
-                            if (err) { callback({ msg: err }); }
-                            else { callback(null) }
-                        });
+                        ideas.updateIdeaExplanation(ideaId, explanation, callback);
                     }
                 });
             }
