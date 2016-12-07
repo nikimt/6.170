@@ -8,6 +8,7 @@ var codeGenerator = require('../../utils/board_code.js');
 //
 // Boards have the following attributes:
 //   boardId: String, unique secret code for the board
+//   name: String, human readable name for the board
 //   moderator: String, userId of user who created the board
 //   ideas: Array, array of ideaIds associated with the board
 //   date: Date, time the board was created
@@ -16,6 +17,10 @@ var boardSchema = new mongoose.Schema({
         type: String,
         unique: true,
         required: [true, 'Board needs a secret code']
+    },
+    name: {
+        type: String,
+        required: [true, 'Board needs a name']
     },
     moderator: { 
         type: String,
@@ -48,19 +53,39 @@ var Boards = (function(boardModel) {
     // Exposed function that takes an board and a callback.
     // Expects the board in the form of:
     //   {'moderator': 'userId'}
+    // Optionally also has {'name': 'board name'}, otherwise
+    // name is defaulted to the boardId.
     //
     // We put the board in the _store, (with the addition
     // of a UUID and Date()). If error, we send an error message
     // back to the router.
     that.addBoard = function(board, callback) {
+        var boardId = codeGenerator.getUniqueCode();
+        var name = boardId;
+        if ('name' in board) {
+            name = board.name;
+        }
         var board = new boardModel({
             moderator: board.moderator,
-            boardId: codeGenerator.getUniqueCode()
+            boardId: boardId,
+            name: name,
         });
 
         board.save(function(err, newboard) {
             if (err) callback(err, { msg: err});
             callback(null, newboard);
+        });
+    }
+
+    // Exposed function that takes a boardId (as a string), a boardName, and
+    // a callback.
+    //
+    // Updates the name of the board with boardId to boardName.
+    that.updateBoardName = function(boardId, boardName, callback) {
+        boardModel.update({ boardId: boardId }, { $set: { name: boardName } },
+            function(err, result) {
+                if (err) { callback({ msg: err }); }
+                else { callback(null); }
         });
     }
 
