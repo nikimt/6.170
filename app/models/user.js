@@ -25,8 +25,7 @@ var userSchema = new mongoose.Schema({
         required: [true, 'Needs a password']
     },
     saved_boards: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Board',
+        type: [String],
         default: []
     },
 });
