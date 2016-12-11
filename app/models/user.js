@@ -55,15 +55,17 @@ var Users = (function(userModel) {
     // back to the router.
     that.addUser = function(userInfo, callback) {
         bcrypt.hash(userInfo.password, saltRounds, function(err, hash) {
-            if (err) callback(err, { msg: err });
-            var user = new userModel({
-                username: userInfo.username,
-                password: hash,
-            });
-            user.save(function(err, newuser) {
-                if (err) callback(err, { msg: err });
-                callback(null, newuser);
-            });
+            if (err) { callback(err, { msg: err }); }
+            else {
+                var user = new userModel({
+                    username: userInfo.username,
+                    password: hash,
+                });
+                user.save(function(err, newuser) {
+                    if (err) { callback(err, { msg: err }); }
+                    else { callback(null, newuser); }
+                });
+            }
         });
     }
 
@@ -77,12 +79,12 @@ var Users = (function(userModel) {
     // Verifies that a user has the correct login.
     that.verifyUser = function(user, callback) {
         userModel.findOne({ username: user.username }, function(err, result) {
-            if (err) callback(err, { msg: err });
-            if (result !== null) {
+            if (err) { callback(err, { msg: err }); }
+            else if (result !== null) {
                 var hash = result.password;
                 bycrypt.compare(user.password, hash, function(err, verify) {
-                    if (err) callback(err, { msg: err });
-                    callback(null, verify, result);
+                    if (err) { callback(err, { msg: err }); }
+                    else { callback(null, verify, result); }
                 });
             } else {
                 callback(err, null);
@@ -96,9 +98,11 @@ var Users = (function(userModel) {
     // we send and error message back to the router.
     that.getBoardsFromUser = function(userId, callback) {
         userModel.findOne({ _id: userId }, function(err, result) {
-            if (err) callback(err, { msg: err });
-            var boards = result.saved_boards
-            callback(null, boards)
+            if (err) { callback(err, { msg: err }); }
+            else {
+                var boards = result.saved_boards;
+                callback(null, boards);
+            }
         });
     }
 
@@ -108,20 +112,22 @@ var Users = (function(userModel) {
     // with the userId. If error, we send an error message back to the router.
     that.addBoardToUser = function(userId, boardId, callback) {
         userModel.findOne({ _id: userId }, function(err, result) {
-            if (err) callback(err, { msg: err });
-            var boards = result.saved_boards
+            if (err) { callback(err, { msg: err }); }
+            else {
+                var boards = result.saved_boards;
             
-            // Check for duplicates
-            if (boards.indexOf(boardId) != -1) {
-                callback(null);
-            } else {
-                userModel.update({ _id: userId },
-                    { $push: { "saved_boards": boardId } }, function(err, result) {
-                        if (err) { callback(err, { msg: err }) }
-                        else {
-                            callback(null);
-                        }
-                });
+                // Check for duplicates
+                if (boards.indexOf(boardId) != -1) {
+                    callback(null);
+                } else {
+                    userModel.update({ _id: userId },
+                        { $push: { "saved_boards": boardId } }, function(err, result) {
+                            if (err) { callback(err, { msg: err }) }
+                            else {
+                                callback(null);
+                            }
+                    });
+                }
             }
         });
     }
@@ -133,11 +139,8 @@ var Users = (function(userModel) {
     that.removeBoardFromUser = function(userId, boardId, callback) {
         userModel.update({ _id: userId },
             { $pull: { "saved_boards": boardId } }, function(err, result) {
-                if (err) {
-                    callback(err, { msg: err });
-                } else {
-                    callback(null);
-                }
+                if (err) { callback(err, { msg: err }); }
+                else { callback(null); }
         });
     }
 
