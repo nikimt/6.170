@@ -16,13 +16,18 @@ module.exports = function(app, express) {
       *
       * Returns JSON object to client with the following information:
       *     success: true if user successfully created, else false
+      *     if success is false and error code is 11000, then username already exists
       */
     router.post("/register", function(req, res){
         var username = req.body.username;
         var password = req.body.password;
         users.addUser({username: username, password: password}, function(err, user){
             if (err){
-                res.status(500).json({success: false, err: err});
+                if(err.code == 11000){
+                  res.json({success: false, message: "Username already exists"})
+                } else {
+                  res.status(500).json({success: false, err: err});
+                }
             }
             else{
                 req.session.user = {name: username, id: user._id};

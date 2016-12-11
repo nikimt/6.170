@@ -1,99 +1,99 @@
-angular.module('ideaService', [])
+angular.module('userService', [])
 
-.factory('idea', function($http) {
+.factory('user', function($http) {
 
 	// create a new object
-	var ideaFactory = {};
+	var userFactory = {};
 
 	/**
-	* Get all ideas
-	* @return all ideas
+	* Get all users
+	* @return all users
 	*/
-	ideaFactory.all = function(id) {
-		return $http.get('board/boards/' + id);
+	userFactory.all = function() {
+		return $http.get('users/boards/');
 	};
 
 	/**
-	* Create a single idea
-	* @param ideaData, the idea text
-	* @return the new idea
+	* Create a single user
+	* @param userData, the user text
+	* @return the new user
 	*/
-	ideaFactory.create = function(id,ideaData) {
-		return $http.post('/board/boards/' + id + '/ideas', ideaData);
+	userFactory.create = function(id,userData) {
+		return $http.post('/board/boards/' + id + '/users', userData);
 	};
 
 	/**
-	* Upvote an idea
-	* @param ideaId
+	* Upvote an user
+	* @param userId
 	* @param boardId
-	* @return the idea
+	* @return the user
 	*/
-	ideaFactory.upvote = function(boardId,ideaId){
-		return $http.put('board/boards/' + boardId + '/ideas/' + ideaId + '/upvote');
+	userFactory.upvote = function(boardId,userId){
+		return $http.put('board/boards/' + boardId + '/users/' + userId + '/upvote');
 	}
 
 	/**
-	* Flag an idea
-	* @param ideaId
+	* Flag an user
+	* @param userId
 	* @param boardId
-	* @return the idea
+	* @return the user
 	*/
-	ideaFactory.flag = function(boardId, ideaId){
-		return $http.put('board/boards/' + boardId + '/ideas/' + ideaId + '/flag');
+	userFactory.flag = function(boardId, userId){
+		return $http.put('board/boards/' + boardId + '/users/' + userId + '/flag');
 	}
 
 	/**
-	* Remove flag from an idea
-	* @param ideaId
+	* Remove flag from an user
+	* @param userId
 	* @param boardId
-	* @return the idea
+	* @return the user
 	*/
-	ideaFactory.unflag = function(boardId, ideaId){
-		return $http.delete('board/boards/' + boardId + '/ideas/' + ideaId + '/flag');
+	userFactory.unflag = function(boardId, userId){
+		return $http.delete('board/boards/' + boardId + '/users/' + userId + '/flag');
 	}
 
 	/**
-	* Edit explanation of idea
-	* @param ideaId
+	* Edit explanation of user
+	* @param userId
 	* @param boardId
 	* @param explanationContent
 	* @return the explanation
 	*/
-	ideaFactory.explanation = function(boardId, ideaId, explanationContent){
-		return $http.post('board/boards/' + boardId + '/ideas/' + ideaId + '/explanation', explanationContent);
+	userFactory.explanation = function(boardId, userId, explanationContent){
+		return $http.post('board/boards/' + boardId + '/users/' + userId + '/explanation', explanationContent);
 	}
 
 	/**
 	* Create note
-	* @param ideaId
+	* @param userId
 	* @param boardId
 	* @param noteContent
 	* @return the note
 	*/
-	ideaFactory.createNote = function(boardId, ideaId, noteContent){
-		return $http.post('board/boards/' + boardId + '/ideas/' + ideaId + '/notes', noteContent)
+	userFactory.createNote = function(boardId, userId, noteContent){
+		return $http.post('board/boards/' + boardId + '/users/' + userId + '/notes', noteContent)
 	}
 
 	/**
-	* Retrive notes associated with an idea
-	* @param ideaId
+	* Retrive notes associated with an user
+	* @param userId
 	* @param boardId
 	* @return the notes
 	*/
-	ideaFactory.getNotes = function(boardId, ideaId){
-		return $http.get('board/boards/' + boardId + '/ideas/' + ideaId + '/notes');
+	userFactory.getNotes = function(boardId, userId){
+		return $http.get('board/boards/' + boardId + '/users/' + userId + '/notes');
 	}
 
 	/**
-	* Delete a single idea
-	* @param id, idea
+	* Delete a single user
+	* @param id, user
 	* @return the message if sucessfull or not
 	*/
-	ideaFactory.delete = function(id) {
-		return $http.delete('/idea/ideas/' + id);
+	userFactory.delete = function(id) {
+		return $http.delete('/user/users/' + id);
 	};
 
-	// return our entire ideaFactory object
-	return ideaFactory;
+	// return our entire userFactory object
+	return userFactory;
 
 });
