@@ -7,7 +7,7 @@ var mongoose = require("mongoose");
 var should = require('chai').should();
 var expect = require('chai').expect;
 
-var ideas = require('../app/models/idea.js');
+var ideas = require('../../app/models/idea.js');
 
 var db = mongoose.connect('mongodb://localhost/test');
 
