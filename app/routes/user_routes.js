@@ -49,14 +49,18 @@ module.exports = function(app, express) {
         var password = req.body.password;
         users.verifyUser({username: username, password: password}, function(err, verify, user){
             if (err){
+              if(err.message){
+                res.json({message: err.message})
+              } else {
                 res.status(500).json({success: false});
+              }
             }
             else if (verify){
                 req.session.user = {name: username, id: user._id};
                 res.status(200).json({success: true});
             }
             else{
-                res.status(401).json({success: false});
+                res.json({success: false, message: user});
             }
         });
     });

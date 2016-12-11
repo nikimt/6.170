@@ -54,7 +54,7 @@ angular.module('authService', [])
 	*/
 	authFactory.logout = function() {
 		// clear the token
-		AuthToken.setToken();
+		return $http.post('users/logout/');
 	};
 
 	/**
@@ -64,10 +64,7 @@ angular.module('authService', [])
 	* false otherwise
 	*/
 	authFactory.isLoggedIn = function() {
-		if (AuthToken.getToken()) 
-			return true;
-		else
-			return false;	
+		return $http.get('users/session/');
 	};
 
 	/**

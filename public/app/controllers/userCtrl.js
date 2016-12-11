@@ -8,16 +8,14 @@ angular.module('userCtrl', ['userService'])
 	vm.processing = true;
 
 	// grab all the ideas at page load
-	user.all($routeParams.board_id)
+	user.all()
 		.then(function(data) {
 
 			// when all the ideas come back, remove the processing variable
 			vm.processing = false;
 
 			// bind the ideas that come back to vm.ideas
-			vm.ideas = data.data.data.ideas;
-			initCanvas();
-			getBubbles();
+			vm.boards = data.data.boards;
 		});
 
 	/**

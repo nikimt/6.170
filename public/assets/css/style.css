@@ -3,6 +3,12 @@ body {
 	color: white;
 }
 
+.logout {
+	margin: 50px;
+	top: 10px;
+	position: relative;
+}
+
 .jumbotron {
 	background-color: #0D2027;
 }

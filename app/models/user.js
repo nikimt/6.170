@@ -80,15 +80,25 @@ var Users = (function(userModel) {
     that.verifyUser = function(user, callback) {
         userModel.findOne({ username: user.username }, function(err, result) {
             if (err) { callback(err, { msg: err }); }
-            else if (result !== null) {
-                var hash = result.password;
-                bcrypt.compare(user.password, hash, function(err, verify) {
-                    if (err) { callback(err, { msg: err }); }
-                    else { callback(null, verify, result); }
-                });
-            } else {
-                callback(err, null);
+            if (!result) {
+                callback({ 
+                    success: false, 
+                    message: 'Authentication failed. User not found.' 
+                },false,null)
             }
+            else if (result) {
+                    var hash = result.password;
+                    bcrypt.compare(user.password, hash, function(err, verify) {
+                        if (err) { callback(err,false, null); }
+                        if (!verify) {
+                            callback({
+                                success: false,
+                                message: 'Authentication failed. Wrong password.' 
+                            },false,null)
+                        }
+                        else { callback(null, verify, result); }
+                    });
+                }
         });
     }
     
