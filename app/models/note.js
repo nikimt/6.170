@@ -1,4 +1,6 @@
 // MongoDB data model for Note
+//
+// Main author: mslaught
 
 var mongoose = require('mongoose');
 

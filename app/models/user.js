@@ -1,4 +1,6 @@
 // MongoDB data model for User
+//
+// Main author: mslaught
 
 var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');

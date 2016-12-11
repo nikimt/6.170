@@ -3,6 +3,8 @@
 // For example, creating an idea involves both the idea model
 // (to create a new idea) and the board model (to update the 
 // board's idea list).
+//
+// Main author: mslaught
 
 var boards = require('../models/board.js');
 var ideas = require('../models/idea.js');
