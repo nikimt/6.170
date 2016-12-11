@@ -23,7 +23,7 @@ module.exports = function(app, express) {
         var password = req.body.password;
         users.addUser({username: username, password: password}, function(err, user){
             if (err){
-                if(err.code == 11000){
+                if (err.code == 11000){
                   res.json({success: false, message: "Username already exists"})
                 } else {
                   res.status(500).json({success: false, err: err});

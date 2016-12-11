@@ -1,7 +1,7 @@
 // MongoDB data model for Board
 
 var mongoose = require('mongoose');
-var codeGenerator = require('../../utils/board_code.js');
+var codeGenerator = require('../lib/board_code.js');
 
 // Model for storing board objects. Boards are used by users
 // to share ideas.
@@ -49,6 +49,22 @@ var boardModel = mongoose.model('board', boardSchema);
 var Boards = (function(boardModel) {
 
     var that = {};
+    
+    /* Unexposed function that generates a unique board code. */
+    var getUniqueCode = function(callback){
+        var code = codeGenerator.getCode();
+        boardModel.findOne({boardId: code}, function(err, result){
+            if (err){
+                callback(err, null);
+            }
+            else if (result !== null){
+                getUniqueCode(callback);
+            }
+            else{
+                callback(null, code);
+            }
+        });
+    }
 
     // Exposed function that takes an board and a callback.
     // Expects the board in the form of:
@@ -60,20 +76,29 @@ var Boards = (function(boardModel) {
     // of a UUID and Date()). If error, we send an error message
     // back to the router.
     that.addBoard = function(board, callback) {
-        var boardId = codeGenerator.getUniqueCode();
-        var name = boardId;
-        if ('name' in board) {
-            name = board.name;
-        }
-        var board = new boardModel({
-            moderator: board.moderator,
-            boardId: boardId,
-            name: name,
-        });
-
-        board.save(function(err, newboard) {
-            if (err) callback(err, { msg: err});
-            callback(null, newboard);
+        getUniqueCode(function(err, boardId){
+            if (err){
+                callback(err, {msg: err});
+            }
+            else{
+                var name = boardId;
+                if ('name' in board) {
+                    name = board.name;
+                }
+                var board = new boardModel({
+                    moderator: board.moderator,
+                    boardId: boardId,
+                    name: name,
+                });
+                board.save(function(err, newboard) {
+                    if (err){
+                        callback(err, {msg: err});
+                    }
+                    else{
+                        callback(null, newboard);
+                    }
+                });
+            }
         });
     }
 
