@@ -1,25 +1,3 @@
-<div class="navbar-section">
-	<!--Navbar, includes a collapsing navbar-->
-	<nav class="navbar navbar-default navbar-fixed-top">
-		<div class="container-fluid">
-		    <div class="navbar-header">
-		    	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-		        	<span class="icon-bar"></span>
-		        	<span class="icon-bar"></span>
-		        	<span class="icon-bar"></span>                        
-		      	</button>
-			<div class="navbar-header">
-				<a href="/" class="navbar-brand"><span class="glyphicon glyphicon-globe"></span>  Ideate</a>
-			</div>	
-		    </div>
-		    <div class="collapse navbar-collapse" id="myNavbar">
-		    	<ul class="nav navbar-nav navbar-right">
-		      	</ul>
-			</div>
-		</div>
-	</nav>
-</div>
-
 <div class="page-header">
 	<div class="home-text">
 		<h3>Meeting {{idea.boardId}}</h3>
@@ -35,21 +13,29 @@
 
 </div>
 
-<div ng-if="idea.ideaToShow" id="explanation" ng-show="idea.ideas">
+<div ng-if="!idea.hideExplanation" id="explanation">
+	<div class="img-wrap">
+		<span class="close" ng-click="idea.hideExplanationClick()">&times;</span>
+	</div>
 	<h5> Explanation for <i>{{idea.ideas[idea.ideaToShow].content}}</i>:</h5>
 	{{idea.ideas[idea.ideaToShow].explanation}}
+</div>
 
+<div ng-if="!idea.hideNotes" id="explanation">
+	<div class="img-wrap">
+		<span class="close" ng-click="idea.hideNotesClick()">&times;</span>
+	</div>
 	<h5>Notes</h5>
 	<div ng-repeat="note in idea.noteToShow">
-		{{ note.content }}
+		 &bull;
+		 {{ note.content }}
 	</div>
 
 	<form class="form-horizontal" ng-submit="idea.saveNote()">	
 		<div class="form-group">
 			<label class="col-sm-2 control-label">Create Note</label>
 			<div class="col-sm-6">
-					<input type="text" class="form-control home-text" ng-model="idea.noteData.text" ng-value=''>
-					
+					<input type="text" class="form-control home-text" ng-model="idea.noteData.text" ng-value=''>					
 			</div>
 			<div class="col-sm-2">
 				<button type="submit" class="btn btn-primary btn-block">Create Note</button>

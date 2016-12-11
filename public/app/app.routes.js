@@ -37,6 +37,24 @@ angular.module('app.routes', ['ngRoute'])
 			controllerAs: 'idea'
 		})
 
+		.when('/home',{
+			templateUrl: 'app/views/pages/home.html',
+			controller: 'ideaController',
+			controllerAs: 'idea'
+		})
+
+		.when('/register',{
+			templateUrl: 'app/views/pages/register.html',
+			controller: 'mainController',
+			controllerAs: 'register'
+		})
+
+		.when('/login',{
+			templateUrl: 'app/views/pages/login.html',
+			controller: 'mainController',
+			controllerAs: 'login'
+		})		
+
 		/**
 		* Route for the 404 page
 		*/

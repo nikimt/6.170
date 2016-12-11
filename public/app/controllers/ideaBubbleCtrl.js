@@ -40,16 +40,19 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     }
 
     vm.ideaToShow;
+    vm.hideExplanation = true;
+    vm.hideNotes = true;
 
     vm.showExplanation = function(obj){
     	var clickedCircleIdStr = obj.target.id
     	if(clickedCircleIdStr.charAt(0) == 'b'){
     		var clickedCircleId = parseInt(clickedCircleIdStr.substring(1,clickedCircleIdStr.length))
     		vm.ideaToShow = clickedCircleId
+    		vm.hideExplanation = false;
+    		vm.hideNotes = false;
     	}
 		var ideaId = vm.ideas[vm.ideaToShow]._id
 		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
-			console.log(data.data.notes)
 			vm.noteToShow = data.data.notes
 			idea.all($routeParams.board_id)
 				.then(function(data) {
@@ -57,6 +60,14 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 					vm.ideas = data.data.data.ideas;
 				});
 		})
+    }
+
+    vm.hideExplanationClick = function(){
+    	vm.hideExplanation = true;
+    }
+
+    vm.hideNotesClick = function(){
+    	vm.hideNotes = true;
     }
 
 	function createCircle(circle)
@@ -245,13 +256,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		vm.getNote(ideaId)
 
 		idea.createNote($routeParams.board_id,ideaId,vm.noteData).then(function(data){
-			//vm.noteData = {text: data.data.note.content}
-			idea.all($routeParams.board_id)
-				.then(function(data) {
-					vm.processing = false;
-					vm.noteData = {}
-					vm.ideas = data.data.data.ideas;
-				});
+			vm.noteData = {}
 		})
 	}
 
