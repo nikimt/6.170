@@ -98,7 +98,7 @@ var Boards = (function(boardModel) {
             if (err) {
                 callback(err,null);
             }
-            if (result !== null) {
+            else if (result !== null) {
                 callback(null, result);
             } else {
                 callback(err,null);
@@ -113,8 +113,8 @@ var Boards = (function(boardModel) {
     // an array of board objects, otherwise an error.
     that.findBoardsByModerator = function(moderatorId, callback) {
         boardModel.find({ moderator: moderatorId }).sort('-date').exec(function(err, result) {
-            if (err) callback({ msg: err });
-            if (result.length > 0) {
+            if (err) { callback({ msg: err }); }
+            else if (result.length > 0) {
                 callback(null, result);
             } else {
                 callback({ msg: 'No such boards!'})
@@ -147,20 +147,22 @@ var Boards = (function(boardModel) {
     // back to the router.
     that.addIdeaToBoard = function(boardId, ideaId, callback) {
         boardModel.findOne({ boardId: boardId }, function(err, result) {
-            if (err) callback(err, { msg: err });
-            var ideas = result.ideas
+            if (err) { callback(err, { msg: err }); }
+            else {
+                var ideas = result.ideas
             
-            // Check for duplicates
-            if (ideas.indexOf(ideaId) != -1) {
-                callback(null);
-            } else {
-                boardModel.update({ boardId: boardId },
-                    { $push: { "ideas": ideaId } }, function(err, result) {
-                        if (err) { callback(err, { msg: err }) }
-                        else {
-                            callback(null);
-                        }
-                });
+                // Check for duplicates
+                if (ideas.indexOf(ideaId) != -1) {
+                    callback(null);
+                } else {
+                    boardModel.update({ boardId: boardId },
+                        { $push: { "ideas": ideaId } }, function(err, result) {
+                            if (err) { callback(err, { msg: err }) }
+                            else {
+                                callback(null);
+                            }
+                    });
+                }
             }
         });
     }
@@ -187,7 +189,7 @@ var Boards = (function(boardModel) {
     // We also delete all ideas associated with the board because
     // those ideas only exist within the context of the board.
     that.removeBoard = function(boardId, callback) {
-        boardModel.findOne({ _id: boardId }, function(err, result) {
+        boardModel.findOne({ boardId: boardId }, function(err, result) {
             if (err) callback({ msg: err });
             if (result !== null) {
                 result.remove();

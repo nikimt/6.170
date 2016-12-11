@@ -92,7 +92,7 @@ var Ideas = (function(ideaModel) {
     // Expects the idea in the form of:
     //   {'content': 'someContent',
     //    'boardId': 'boardId',
-    //    'creator': 'userId'}
+    //    'creatorId': 'userId'}
     //
     // If the idea has an appropriate content length, we
     // allow it to be put in the _store, (with the addition
