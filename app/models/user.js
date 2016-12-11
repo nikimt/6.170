@@ -53,11 +53,11 @@ var Users = (function(userModel) {
     // We put the user in the _store. We hash the password 
     // before storing. If error, we send an error message
     // back to the router.
-    that.addUser = function(user, callback) {
-        bcrypt.hash(user.password, saltRounds, function(err, hash) {
+    that.addUser = function(userInfo, callback) {
+        bcrypt.hash(userInfo.password, saltRounds, function(err, hash) {
             if (err) callback(err, { msg: err });
             var user = new userModel({
-                username: user.username,
+                username: userInfo.username,
                 password: hash,
             });
             user.save(function(err, newuser) {
