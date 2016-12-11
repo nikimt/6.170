@@ -8,7 +8,7 @@ angular.module('mainCtrl', [])
 	Auth.isLoggedIn()
 		.then(function(data){
 			vm.loggedIn = data.data.loggedIn
-			console.log(vm.loggedIn)
+			if(vm.loggedIn) vm.username = data.data.user.name
 		})
 
 	// check to see if a user is logged in on every request
@@ -16,6 +16,8 @@ angular.module('mainCtrl', [])
 		Auth.isLoggedIn()
 			.then(function(data){
 				vm.loggedIn = data.data.loggedIn
+				console.log(vm.loggedIn)
+				if(vm.loggedIn) vm.username = data.data.user.name
 		})	
 
 		// get user information on page load
@@ -77,7 +79,7 @@ angular.module('mainCtrl', [])
 	*/
 	vm.doLogout = function() {
 		Auth.logout();
-		vm.user = '';
+		vm.username = '';
 		vm.loggedIn = false;
 		
 		$location.path('/');

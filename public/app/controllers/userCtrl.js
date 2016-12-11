@@ -17,7 +17,7 @@ angular.module('userCtrl', ['userService'])
 			// bind the ideas that come back to vm.ideas
 			vm.boards = data.data.boards;
 		});
-
+		
 	/**
 	* Delete a idea
 	* @param id, id of the idea to delete

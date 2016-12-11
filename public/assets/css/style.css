@@ -3,6 +3,10 @@ body {
 	color: white;
 }
 
+.padding {
+	margin-top: 40px;
+}
+
 .logout {
 	margin: 50px;
 	top: 10px;
