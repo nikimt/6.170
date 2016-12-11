@@ -45,14 +45,14 @@ angular.module('app.routes', ['ngRoute'])
 
 		.when('/register',{
 			templateUrl: 'app/views/pages/register.html',
-			controller: 'ideaController',
-			controllerAs: 'idea'
+			controller: 'mainController',
+			controllerAs: 'register'
 		})
 
 		.when('/login',{
 			templateUrl: 'app/views/pages/login.html',
-			controller: 'ideaController',
-			controllerAs: 'idea'
+			controller: 'mainController',
+			controllerAs: 'login'
 		})		
 
 		/**
