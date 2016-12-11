@@ -87,7 +87,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	        for(i = 0; i < circs.length; ++i)
 	        {    
 	            circs[i].curve = ran(0,1);  
-	            var radius = (vm.ideas[i].meta.upvotes.upvote_count + 1) * 50
+	            var radius = (vm.ideas[i].meta.upvotes.upvote_count + 1) * 50;
 	            circs[i].attr("r",radius);                  
 	            // Get position
 	            nowX = circs[i].attr("cx");
@@ -325,11 +325,8 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	vm.delete = function(obj) {
 		var clickedDeleteIdStr = obj.target.id;
 		if(clickedDeleteIdStr.charAt(0) == 'd'){
-			debugger;
 			var clickedDeleteId = parseInt(clickedDeleteIdStr.substring(1,clickedDeleteIdStr.length))
 			var ideaId = vm.ideas[clickedDeleteId]._id
-			console.log(ideaId);
-			debugger;
 			idea.delete($routeParams.board_id,ideaId).then(function(data){
 					idea.all($routeParams.board_id)
 						.then(function(data) {

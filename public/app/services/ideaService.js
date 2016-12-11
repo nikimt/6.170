@@ -90,7 +90,7 @@ angular.module('ideaService', [])
 	* @return the message if sucessfull or not
 	*/
 	ideaFactory.delete = function(boardId, ideaId) {
-		return $http.delete('board/boards/' + boardId + '/ideas/' + id);
+		return $http.delete('board/boards/' + boardId + '/ideas/' + ideaId);
 	};
 
 	// return our entire ideaFactory object
