@@ -17,3 +17,7 @@
 - Saving boards
 - Security mitigations
 - Bubble Interface
+
+###To run tests:
+1. npm install
+2. mocha tests/
