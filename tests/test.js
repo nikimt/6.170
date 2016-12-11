@@ -11,6 +11,7 @@ var importTest = function(name, path) {
 describe("Model Testing:", function() {
 
     importTest('Board Model Testing:', './models/test_board.js');
+    importTest('Idea Model Testing:', './models/test_idea.js');
 
     after(function() {
         mongoose.disconnect();

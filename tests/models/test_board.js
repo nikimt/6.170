@@ -38,12 +38,9 @@ describe('Board Model Tests', function() {
 
     // Drop boards and ideas collection between tests
     afterEach(function(done) {
-        mongoose.connection.db.dropCollection('boards', function(err) {
-            done();
-        });
-        mongoose.connection.db.dropCollection('ideas', function(err) {
-            done();
-        });
+        mongoose.connection.db.dropCollection('boards', function(err) {});
+        mongoose.connection.db.dropCollection('ideas', function(err) {});
+        done();
     });
 
     it ('creates a new board', function(done) {
