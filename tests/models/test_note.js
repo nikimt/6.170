@@ -9,8 +9,6 @@ var expect = require('chai').expect;
 
 var ideas = require('../../app/models/idea.js');
 
-var db = mongoose.connect('mongodb://localhost/test');
-
 describe('Notes Model Tests', function() {
     
     // Holds a board to use in each test

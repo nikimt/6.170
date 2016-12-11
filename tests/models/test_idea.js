@@ -9,8 +9,6 @@ var expect = require('chai').expect;
 
 var ideas = require('../../app/models/idea.js');
 
-var db = mongoose.connect('mongodb://localhost/test');
-
 describe('Idea Model Tests', function() {
     
     // Holds a board to use in each test
@@ -18,10 +16,19 @@ describe('Idea Model Tests', function() {
 
     // Constants
     var moderatorId = '0';
+    var boardId = '123456';
 
     // Create an idea before each test
     beforeEach(function(done) {
-        
+        var ideaInfo = {
+            'content': 'test',
+            'boardId': boardId,
+            'creatorId': moderatorId,
+        }
+        ideas.addIdea(ideaInfo, function(err, ideaDoc) {
+            currentBoard = ideaDoc;
+            done();
+        });
     });
 
     // Drop ideas collection between tests
@@ -32,12 +39,19 @@ describe('Idea Model Tests', function() {
     });
 
     it ('creates a new idea', function(done) {
-        ideas.addBoard({ 'moderator': moderatorId }, function(err, doc) {
-            doc.moderator.should.equal(moderatorId);
+        var ideaInfo = {
+            'content': 'test',
+            'boardId': boardId,
+            'creatorId': moderatorId,
+        }
+        ideas.addIdea(ideaInfo, function(err, doc) {
+            doc.content.should.equal('test');
+            doc.creatorId.should.equal(moderatorId);
+            doc.boardId.should.equal(boardId);
+            doc.meta.upvotes.upvote_count.should.equal(0);
+            doc.meta.flag.should.equal(false);
             
-            expect(doc.ideas).to.have.length(0);
-            expect(doc.boardId).to.have.length(6);
-            expect(doc.name).to.have.length(6);
+            expect(doc.meta.upvotes.users).to.have.length(0);
             
             done();
         });
