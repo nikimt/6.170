@@ -60,7 +60,7 @@ module.exports = function(app, express) {
                 res.status(200).json({success: true});
             }
             else{
-                res.json({success: false, message: user});
+                res.json({success: false, message: "Incorrect login"});
             }
         });
     });
