@@ -3,8 +3,17 @@ body {
 	color: white;
 }
 
+.jumbotron {
+	background-color: #0D2027;
+}
+
 main 					{
 	padding-top:30px;	
+}
+
+.buttons-navbar {
+	margin-top: 20px;
+	padding-right: 10px;
 }
 
 #explanation {
@@ -21,8 +30,22 @@ main 					{
 	color:white;
 }
 
-h3,h5 {
+.img-wrap {
+    position: relative;
+}
+.img-wrap .close {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 100;
+}
+
+h2,h3,h5 {
 	color:white;
+}
+
+.text {
+	color: white;
 }
 
 input {
@@ -33,6 +56,10 @@ input {
 ===================== */
 header .navbar 		{ 
 	border-radius:0;
+}
+
+.navbar {
+	border-bottom: 1px solid white;
 }
 
 /* Navbar */

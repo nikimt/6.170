@@ -14,6 +14,7 @@
 		    </div>
 		    <div class="collapse navbar-collapse" id="myNavbar">
 		    	<ul class="nav navbar-nav navbar-right">
+		    		<a ng-href="/home" class="btn btn-primary buttons-navbar">Log In to Save Board</a>
 		      	</ul>
 			</div>
 		</div>
@@ -35,21 +36,29 @@
 
 </div>
 
-<div ng-if="idea.ideaToShow" id="explanation" ng-show="idea.ideas">
+<div ng-if="!idea.hideExplanation" id="explanation">
+	<div class="img-wrap">
+		<span class="close" ng-click="idea.hideExplanationClick()">&times;</span>
+	</div>
 	<h5> Explanation for <i>{{idea.ideas[idea.ideaToShow].content}}</i>:</h5>
 	{{idea.ideas[idea.ideaToShow].explanation}}
+</div>
 
+<div ng-if="!idea.hideNotes" id="explanation">
+	<div class="img-wrap">
+		<span class="close" ng-click="idea.hideNotesClick()">&times;</span>
+	</div>
 	<h5>Notes</h5>
 	<div ng-repeat="note in idea.noteToShow">
-		{{ note.content }}
+		 &bull;
+		 {{ note.content }}
 	</div>
 
 	<form class="form-horizontal" ng-submit="idea.saveNote()">	
 		<div class="form-group">
 			<label class="col-sm-2 control-label">Create Note</label>
 			<div class="col-sm-6">
-					<input type="text" class="form-control home-text" ng-model="idea.noteData.text" ng-value=''>
-					
+					<input type="text" class="form-control home-text" ng-model="idea.noteData.text" ng-value=''>					
 			</div>
 			<div class="col-sm-2">
 				<button type="submit" class="btn btn-primary btn-block">Create Note</button>
