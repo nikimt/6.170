@@ -66,8 +66,8 @@ var Boards = (function(boardModel) {
         });
     }
 
-    // Exposed function that takes an board and a callback.
-    // Expects the board in the form of:
+    // Exposed function that takes boardInfo and a callback.
+    // Expects the boardInfo in the form of:
     //   {'moderator': 'userId'}
     // Optionally also has {'name': 'board name'}, otherwise
     // name is defaulted to the boardId.
@@ -75,18 +75,18 @@ var Boards = (function(boardModel) {
     // We put the board in the _store, (with the addition
     // of a UUID and Date()). If error, we send an error message
     // back to the router.
-    that.addBoard = function(board, callback) {
+    that.addBoard = function(boardInfo, callback) {
         getUniqueCode(function(err, boardId){
             if (err){
                 callback(err, {msg: err});
             }
             else{
                 var name = boardId;
-                if ('name' in board) {
-                    name = board.name;
+                if ('name' in boardInfo) {
+                    name = boardInfo.name;
                 }
                 var board = new boardModel({
-                    moderator: board.moderator,
+                    moderator: boardInfo.moderator,
                     boardId: boardId,
                     name: name,
                 });
