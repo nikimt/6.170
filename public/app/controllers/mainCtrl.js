@@ -34,7 +34,7 @@ angular.module('mainCtrl', [])
 
 				// if a user successfully logs in, redirect to users page
 				if (data.data.success)			
-					$location.path('/tweets');
+					$location.path('/profile');
 				else 
 					vm.error = data.data.message;
 				
@@ -56,10 +56,12 @@ angular.module('mainCtrl', [])
 				vm.processing = false;		
 
 				// if a user successfully logs in, redirect to users page
-				if (data.data.success)			
-					vm.message = data.data.message;	
-				else 
-					vm.error = data.data.message;				
+				if (data.data.success) {		
+					vm.message = "Successfully registered. Now you can "
+				}	
+				else {
+					vm.error = data.data.message
+				}				
 			});
 	};
 

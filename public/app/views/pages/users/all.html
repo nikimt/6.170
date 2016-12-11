@@ -1,44 +1,24 @@
-<div class="page-header">
-	<div class="home-text">
-		<h3>Meeting</h3>
-		<a ng-href="/ideas/create/{{ idea.boardId }}" class="btn btn-warning">
-			<span class="glyphicon glyphicon-plus"></span> 
-			New Idea
-		</a>
-	</h3>
-
-</div>
-
 <div class="jumbotron text-center" ng-show="idea.processing">
+	<h1>Welcome {{ user.username }}</h1>
 	<span class="glyphicon glyphicon-repeat spinner"></span>
-	<p>Loading Ideas...</p>
+	<p>Loading Boards...</p>
 </div>
 
-<table class="table" ng-show="idea.ideas">
+<table class="table" ng-show="user.boards">
 	<thead>
 		<tr>
-			<th>Flagged</th>
-			<th>Text</th>
-			<th>Upvotes</th>
-			<th>Explanation</th>
-			<th>Notes</th>
+			<th>Board Code</th>
+			<th>Number of Ideas</th>
 			<th></th>
 			<th></th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="ideaBubble in idea.ideas">
-			<td>{{ ideaBubble.meta.flag }}</td>
-			<td>{{ ideaBubble.content }}</td>
-			<td>{{ ideaBubble.meta.upvotes.upvote_count }}</td>
-			<td><input ng-controller="ideaController" type="text" name="explanation" value={{ideaBubble.explanation}}></td>
-			<td><input type="text" name="notes" value="Notes"></td>
+		<tr ng-repeat="board in user.boards">
+			<td>{{ board.code }}</td>
+			<td>{{ board.numberOfIdeas }}</td>
 			<td>
-				<a href="#" ng-click="idea.upvote(ideaBubble._id)" class="btn btn-primary">Upvote</a>
-			</td>
-			<td>
-				<a ng-if="ideaBubble.meta.flag" href="#" ng-click="idea.unflag(ideaBubble._id)" class="btn btn-primary">Unflag</a>
-				<a ng-if="!ideaBubble.meta.flag" href="#" ng-click="idea.flag(ideaBubble._id)" class="btn btn-primary">Flag</a>
+				<a href="#" ng-href="/boards/board.code" class="btn btn-primary">See Board</a>
 			</td>
 		</tr>
 	</tbody>
