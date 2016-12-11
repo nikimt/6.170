@@ -1,4 +1,4 @@
-// Tests for the User model
+// Tests for the Idea model
 //
 // Main author: mslaught
 
@@ -7,11 +7,11 @@ var mongoose = require("mongoose");
 var should = require('chai').should();
 var expect = require('chai').expect;
 
-var ideas = require('../app/models/idea.js');
+var ideas = require('../../app/models/idea.js');
 
 var db = mongoose.connect('mongodb://localhost/test');
 
-describe('User Model Tests', function() {
+describe('Idea Model Tests', function() {
     
     // Holds a board to use in each test
     var currentIdea = null;
@@ -31,8 +31,8 @@ describe('User Model Tests', function() {
         });
     });
 
-    it ('creates a new board', function(done) {
-        boards.addBoard({ 'moderator': moderatorId }, function(err, doc) {
+    it ('creates a new idea', function(done) {
+        ideas.addBoard({ 'moderator': moderatorId }, function(err, doc) {
             doc.moderator.should.equal(moderatorId);
             
             expect(doc.ideas).to.have.length(0);
