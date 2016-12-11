@@ -284,12 +284,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	}
 
 	vm.flag = function(obj){
-		debugger;
 		var clickedFlagIdStr = obj.target.id;
 		if(clickedFlagIdStr.charAt(0) == 'f'){
 			var clickedFlagId = parseInt(clickedFlagIdStr.substring(1,clickedFlagIdStr.length))
 			if (flagTexts[clickedFlagId].attr("text") == '') {
-				debugger;
 				var ideaId = vm.ideas[clickedFlagId]._id
 				idea.flag($routeParams.board_id,ideaId).then(function(data){
 						idea.all($routeParams.board_id)
@@ -298,13 +296,11 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 								vm.ideas = data.data.data.ideas;
 								var flagText = '!';
 								flagTexts[clickedFlagId].attr("text",flagText)
-								debugger;
 							});
 				})
 			} else if (flagTexts[clickedFlagId].attr("text") == '!') {
 				var ideaId = vm.ideas[clickedFlagId]._id
 				idea.unflag($routeParams.board_id,ideaId).then(function(data){
-					debugger;
 					idea.all($routeParams.board_id)
 						.then(function(data) {
 							vm.processing = false;
@@ -315,35 +311,6 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 				})
 			}
 		}
-	}
-
-	vm.unflag = function(obj){
-		debugger;
-		var clickedFlagIdStr = obj.target.id;
-		if(clickedFlagIdStr.charAt(0) == 'f'){
-			debugger;
-			var clickedFlagId = parseInt(clickedFlagIdStr.substring(1,clickedFlagIdStr.length))
-			if (flagTexts[clickedFlagId].attr("text") == '') {
-				var ideaId = vm.ideas[clickedFlagId]._id
-				idea.unflag($routeParams.board_id,ideaId).then(function(data){
-					debugger;
-					idea.all($routeParams.board_id)
-						.then(function(data) {
-							vm.processing = false;
-							vm.ideas = data.data.data.ideas;
-							var flagText = '';
-							flagTexts[clickedFlagId].attr("text",flagText)
-						});
-				})
-			}
-		}
-		// idea.unflag($routeParams.board_id,ideaId).then(function(data){
-		// 		idea.all($routeParams.board_id)
-		// 			.then(function(data) {
-		// 				vm.processing = false;
-		// 				vm.ideas = data.data.data.ideas;
-		// 			});
-		// })
 	}
 
 });
