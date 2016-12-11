@@ -9,7 +9,7 @@ angular.module('ideaCtrl', ['ideaService'])
 	vm.boardId = $routeParams.board_id
 	vm.playing = true;
 
-	var paper, circs, flags, flagTexts, texts, i, nowX, nowY, timer, props = {}, toggler = 0, elie, dx, dy, rad, cur, opa; 
+	var paper, circs, flags, flagTexts, deletes, deleteTexts, texts, i, nowX, nowY, timer, props = {}, toggler = 0, elie, dx, dy, rad, cur, opa; 
 	var windowHeight = window.innerHeight / 1.45
 
     vm.toggle = function() {
@@ -102,6 +102,8 @@ angular.module('ideaCtrl', ['ideaService'])
 	            texts[i].attr({x: nowX, y: nowY})
 	            flags[i].attr({cx: nowX + circs[i].attr("r"), cy: nowY - circs[i].attr("r")})
 	            flagTexts[i].attr({x: nowX + circs[i].attr("r"), y: nowY - circs[i].attr("r")})
+	            deletes[i].attr({cx: nowX + circs[i].attr("r"), cy: nowY - circs[i].attr("r")})
+	            deleteTexts[i].attr({x: nowX + circs[i].attr("r"), y: nowY - circs[i].attr("r")})
 	            
 	            // Calc curve
 	            if (circs[i].curve > 0) circs[i].deg = circs[i].deg + 2;
@@ -128,7 +130,9 @@ angular.module('ideaCtrl', ['ideaService'])
         circs = paper.set();
         texts = paper.set(); 
         flags = paper.set();
-        flagTexts = paper.set();   	
+        flagTexts = paper.set();
+        deletes = paper.set();
+        deleteTexts = paper.set();   	
     }
 
     vm.ideaBubbles = []
@@ -154,12 +158,16 @@ angular.module('ideaCtrl', ['ideaService'])
 	            var exclamationMark = (vm.ideas[i].meta.flag == true ? "!" : "");
 	            var flagTextsCircle = paper.text(posX + circs[i].attr("r"), posY + circs[i].attr("r"), exclamationMark).attr({"fill": "white","font-size": 18})
 	            flagTexts.push(flagTextsCircle)
+	            var deleteCircle = paper.circle((posX*2) + circs[i].attr("r")+10, (posY*2) + circs[i].attr("r")+10, 15).attr({"fill-opacity": opa, "stroke-opacity": opa, fill: hex, stroke: hex});
+	            deleteCircle.node.id = 'd' + i;
+	            deletes.push(deleteCircle);
+	            var deleteTextsCircle = paper.text(posX + circs[i].attr("r"), posY + circs[i].attr("r"), "test").attr({"fill": "white", "font-size": 18});
+	            deleteTexts.push(deleteTextsCircle);
 	            vm.ideaBubbles.push(ideaCircle)
 	        }
 	        for(i = 0; i < circs.length; ++i){
 	            createCircle(circs[i]);
 	        }  
-
 	        moveIt();     
 	}
 

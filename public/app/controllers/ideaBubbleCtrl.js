@@ -9,7 +9,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	vm.boardId = $routeParams.board_id
 	vm.playing = true;
 
-	var paper, circs, flags, flagTexts, texts, i, nowX, nowY, timer, props = {}, toggler = 0, elie, dx, dy, rad, cur, opa; 
+	var paper, circs, flags, flagTexts, deleteTexts, texts, deletes, i, nowX, nowY, timer, props = {}, toggler = 0, elie, dx, dy, rad, cur, opa; 
 	var windowHeight = window.innerHeight / 1.45
 
     vm.toggle = function() {
@@ -123,8 +123,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	                // Render moved particle
 	            circs[i].attr({cx: nowX, cy: nowY});
 	            texts[i].attr({x: nowX, y: nowY})
-	            flags[i].attr({cx: nowX + circs[i].attr("r"), cy: nowY - circs[i].attr("r")})
+	            flags[i].attr({cx: nowX + circs[i].attr("r"), cy: nowY - circs[i].attr("r"), r: (vm.ideas[i].meta.upvotes.upvote_count + 1)*13})
 	            flagTexts[i].attr({x: nowX + circs[i].attr("r"), y: nowY - circs[i].attr("r")})
+	            deletes[i].attr({cx: nowX + circs[i].attr("r")*1.35, cy: nowY - circs[i].attr("r")*.4, r: (vm.ideas[i].meta.upvotes.upvote_count + 1)*13});
+	            deleteTexts[i].attr({x: nowX + circs[i].attr("r")*1.35, y: nowY - circs[i].attr("r")*.4});
 	            
 	            // Calc curve
 	            if (circs[i].curve > 0) circs[i].deg = circs[i].deg + 2;
@@ -151,7 +153,9 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         circs = paper.set();
         texts = paper.set(); 
         flags = paper.set();
-        flagTexts = paper.set();   	
+        flagTexts = paper.set();
+        deletes = paper.set();
+        deleteTexts = paper.set();   	
     }
 
     vm.ideaBubbles = []
@@ -171,12 +175,17 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	            circs.push(ideaCircle);
 	            var text = vm.ideas[i].content
 	            texts.push(paper.text(posX, posY, text).attr({"fill": "white"}))
-	            var flagCircle = paper.circle(posX + circs[i].attr("r"), posY + circs[i].attr("r"), 15).attr({"fill-opacity": opa, "stroke-opacity": opa, fill: hex, stroke: hex})
-	            flagCircle.node.id = 'f' + i
-	            flags.push(flagCircle)
 	            var exclamationMark = (vm.ideas[i].meta.flag == true ? "!" : "");
 	            var flagTextsCircle = paper.text(posX + circs[i].attr("r"), posY + circs[i].attr("r"), exclamationMark).attr({"fill": "white","font-size": 18})
 	            flagTexts.push(flagTextsCircle)
+	            var flagCircle = paper.circle(posX + circs[i].attr("r"), posY + circs[i].attr("r"), 15).attr({"fill-opacity": opa, "stroke-opacity": opa, fill: hex, stroke: hex})
+	            flagCircle.node.id = 'f' + i
+	            flags.push(flagCircle)
+	            var deleteTextsCircle = paper.text(posX + circs[i].attr("r")-10, posY + circs[i].attr("r")-10, '\uf1f8').attr({"fill": "white", "font-size": 18, "font-family": "FontAwesome"});
+	            deleteTexts.push(deleteTextsCircle);
+	            var deleteCircle = paper.circle(posX + circs[i].attr("r")-10, posY + circs[i].attr("r")-10, 15).attr({"fill-opacity": opa, "stroke-opacity": opa, fill: hex, stroke: hex});
+	            deleteCircle.node.id = 'd' + i;
+	            deletes.push(deleteCircle);
 	            vm.ideaBubbles.push(ideaCircle)
 	        }
 	        for(i = 0; i < circs.length; ++i){
@@ -310,6 +319,24 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 						});
 				})
 			}
+		}
+	}
+
+	vm.delete = function(obj) {
+		var clickedDeleteIdStr = obj.target.id;
+		if(clickedDeleteIdStr.charAt(0) == 'd'){
+			debugger;
+			var clickedDeleteId = parseInt(clickedDeleteIdStr.substring(1,clickedDeleteIdStr.length))
+			var ideaId = vm.ideas[clickedDeleteId]._id
+			console.log(ideaId);
+			debugger;
+			idea.delete($routeParams.board_id,ideaId).then(function(data){
+					idea.all($routeParams.board_id)
+						.then(function(data) {
+							vm.processing = false;
+							vm.ideas = data.data.data.ideas;
+						});
+			})
 		}
 	}
 
