@@ -1,4 +1,6 @@
 // MongoDB data model for Board
+//
+// Main author: mslaught
 
 var mongoose = require('mongoose');
 var codeGenerator = require('../../utils/board_code.js');
