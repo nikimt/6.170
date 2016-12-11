@@ -22,7 +22,7 @@ module.exports = function(app, express) {
         var password = req.body.password;
         users.addUser({username: username, password: password}, function(err, user){
             if (err){
-                res.status(500).json({success: false});
+                res.status(500).json({success: false, err: err});
             }
             else{
                 req.session.user = {name: username, id: user._id};
