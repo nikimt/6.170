@@ -3,7 +3,8 @@
   "main": "server.js",
   "dependencies": {
     "assert": "^1.4.1",
-    "bcrypt-nodejs": "0.0.3",
+    // "bcrypt-nodejs": "0.0.3",
+    "bcrypt": "^0.8.7",
     "body-parser": "~1.15.1",
     "cookie-parser": "^1.4.3",
     "d3": "^4.4.0",

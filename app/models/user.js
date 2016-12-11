@@ -1,6 +1,6 @@
 // MongoDB data model for User
 
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
 var codeGenerator = require('../../utils/board_code.js');
 var ideas = require('../models/idea.js');
