@@ -9,7 +9,7 @@
 			<span ng-switch-when='true'><a href="#" ng-click="idea.toggleAnimation()" class="btn btn-primary">Stop</a></span>
 			<span ng-switch-when='false'><a href="#" ng-click="idea.toggleAnimation()" class="btn btn-primary">Start</a></span>
 		</span>
-		<span ng-switch="idea.boardSaved">
+		<span ng-switch="idea.boardSaved" ng-if="idea.isModerator">
 			<span ng-switch-when='true'><span>Board Saved</span></span>
 			<span ng-switch-when='false'><a ng-click="idea.saveBoard()" class="btn btn-primary">Save board</a></span>
 		</span>
@@ -26,10 +26,10 @@
 	</div>
 	<h5> Options for <i>{{idea.ideas[idea.ideaToShow].content}}</i>:</h5>
 	<a href="#" ng-click="idea.upvote()" class="btn btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Upvote</a>
-	<a href="#" ng-click="idea.flag()" class="btn btn-primary"> &#9873;{{idea.flagState}}</a>
-	<a href="#" ng-click="idea.showExplanationClick()" class="btn btn-primary"><span class="glyphicon glyphicon-list"></span> Explanation</a>
+	<a href="#" ng-if="idea.showFlag" ng-click="idea.flag()" class="btn btn-primary"> &#9873;{{idea.flagState}}</a>
+	<a href="#" ng-if="idea.hasExplanation" ng-click="idea.showExplanationClick()" class="btn btn-primary"><span class="glyphicon glyphicon-list"></span> Explanation</a>
 	<a href="#" ng-click="idea.showNotesClick()" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Notes</a>
-	<a href="#" ng-click="idea.delete()" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+	<a href="#" ng-if="idea.canDelete" ng-click="idea.delete()" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>
 </div>
 
 <div ng-if="!idea.hideExplanation" id="explanation">

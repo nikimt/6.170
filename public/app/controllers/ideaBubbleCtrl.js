@@ -25,7 +25,12 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     vm.hideNotes = true;
     vm.hideOptions = true;
     vm.boardSaved = false;
+    vm.hasExplanation = false;
+    
     vm.isModerator = false;
+    vm.isOwner = false;
+    vm.canDelete = (vm.isModerator || vm.isOwner);
+    vm.showFlag = true;
 
     vm.flagState = "Flag";
 
@@ -38,6 +43,26 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
             vm.flagState = "Unflag";
         } else {
             vm.flagState = "Flag";
+        }
+    }
+
+    var updateHasExplanation = function() {
+        if (vm.ideas[vm.ideaToShow].explanation) {
+            vm.hasExplanation = true;
+        } else {
+            vm.hasExplanation = false;
+        }
+    }
+
+    var updateShowFlag = function() {
+        if (vm.ideas[vm.ideaToShow].meta.flag == true) {
+            if (vm.isModerator) {
+                vm.showFlag = true;
+            } else {
+                vm.showFlag = false;
+            }
+        } else {
+            vm.showFlag = true;
         }
     }
 
@@ -133,8 +158,15 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         if (vm.ideas[clickedCircleId]) {
         	vm.ideaToShow = clickedCircleId
         	vm.hideOptions = false;
+
+            idea.isOwner(vm.boardId, vm.ideas[vm.ideaToShow]._id).then(function(data) {
+                vm.isOwner = data.data.is_user_owner;
+                vm.canDelete = (vm.isModerator || vm.isOwner);
+            });
+
     		var ideaId = vm.ideas[vm.ideaToShow]._id
     		updateFlagText();
+            updateShowFlag();
     		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
     			vm.noteToShow = data.data.notes
     			idea.all($routeParams.board_id)

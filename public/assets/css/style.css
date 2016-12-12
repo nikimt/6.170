@@ -11,6 +11,18 @@ body {
     padding-top: 20px;
 }
 
+#footer {
+    margin-top: 50px;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+}
+
+#footer .rinnegatos {
+    display: flex;
+    justify-content: center;
+}
+
 .nav-menu-item {
 	margin: 10px;
 

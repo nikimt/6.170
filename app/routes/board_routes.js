@@ -149,6 +149,28 @@ module.exports = function(app, express) {
         });
     });
 
+    /**
+    * GET request handler for retrieving the owner of an idea.
+    *
+    * Sends JSON response with the following information:
+    *     success: true if idea data successfully retrieved, else false
+    *     is_user_moderator: Boolean, true if current user is owner of idea
+    */
+    router.get("/boards/:boardId/ideas/:ideaId/owner", function(req, res){
+        var boardId = req.params.boardId;
+        var ideaId = req.params.ideaId;
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+        ideas.findIdea(ideaId, function(err, idea) {
+            if (err) {
+                res.status(404).json({ success: false });
+            } else {
+                var isOwner = (idea.creatorId == userId)
+                res.status(200).json(
+                  { success: true, is_user_owner: isOwner });
+            }
+        })
+    });
+
     /** DELETE request handler for removing an idea. */
     router.delete("/boards/:boardId/ideas/:ideaId", function(req, res){
         var boardId = req.params.boardId;

@@ -123,6 +123,15 @@ angular.module('ideaService', [])
 		return $http.get('/board/boards/' + boardId + '/moderator');
 	};
 
+	/**
+	* Retrieves the owner of an idea.
+	* @param boardId
+	* @return true if the user is the owner of this idea, otherwise false
+	*/
+	ideaFactory.isOwner = function(boardId, ideaId){
+		return $http.get('/board/boards/' + boardId + '/ideas/' + ideaId + '/owner');
+	};
+
 	// return our entire ideaFactory object
 	return ideaFactory;
 
