@@ -12,6 +12,7 @@ angular.module('boardCtrl', ['boardService'])
 	vm.join = false;
 	vm.either = (vm.create || vm.join);
 	vm.homepage = true;
+	vm.successfulCode = true;
 
 	/**
 	* Create a board
@@ -40,19 +41,17 @@ angular.module('boardCtrl', ['boardService'])
 	* Retrieve a board
 	*/
 	vm.getBoard = function() {
-		vm.successfulCode = '';
-
 		Board.get(vm.boardData)
 			.error(function(data) {
-				vm.successfulCode = 'false';
+				vm.successfulCode = false;
 			})
 			.then(function(data) {
 				vm.success = data.data.success;
-				var boardCode = data.data.board.boardId;
 				if(vm.success){
+					var boardCode = data.data.board.boardId;
 					$location.path('/boards/' + boardCode);
 				} else {
-					vm.successfulCode = 'false';
+					vm.successfulCode = false;
 				}
 			});		
 	};
