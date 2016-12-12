@@ -8,22 +8,26 @@ angular.module('boardCtrl', ['boardService'])
 	
 	var vm = this;
 
-	vm.create = false
-	vm.join = false
-	vm.both = (vm.create && vm.join)
-	vm.homepage = true
+	vm.create = false;
+	vm.join = false;
+	vm.either = (vm.create || vm.join);
+	vm.homepage = true;
 
 	vm.createBoard = function(){
 
-		vm.create = true
+		vm.create = true;
+		vm.join = false;
+		vm.either = (vm.create || vm.join);
 
 		Board.create().then(function(data){
-			vm.boardCode = data.data.id
+			vm.boardCode = data.data.id;
 		});
 	};
 
 	vm.joinBoard = function(){
-		vm.join = true
+		vm.join = true;
+		vm.create = false;
+		vm.either = (vm.create || vm.join);
 	}
 
 	vm.getBoard = function() {
@@ -44,6 +48,12 @@ angular.module('boardCtrl', ['boardService'])
 				}
 			});
 			
-	};		
+	};
+
+	vm.reset = function(){
+		vm.create = false;
+		vm.join = false;
+		vm.either = (vm.create || vm.join);
+	}	
 
 });

@@ -53,22 +53,24 @@
 		        	<span class="icon-bar"></span>
 		        	<span class="icon-bar"></span>                        
 		      	</button>
-			<div class="navbar-header">
-				<a href="/" class="navbar-brand">Ideate</a>
-			</div>	
+				<div class="navbar-header">
+					<a href="/" class="navbar-brand">Ideate</a>
+				</div>	
 		    </div>
 		    <div class="collapse navbar-collapse" id="myNavbar">
 		    	<ul class="nav navbar-nav navbar-right">
-					<span ng-switch="main.loggedIn">
-						<span ng-switch-when='true'>
-		    				<a ng-href="/profile" ng-if="main.loggedIn" class="btn btn-primary buttons-navbar">View your boards</a>
-							<span ng-if="main.loggedIn" class="logout">Welcome {{ main.username }}</span>
-		    				<a ng-if="main.loggedIn" ng-click="main.doLogout()" class="logout">Logout</a>
+					<li>
+						<span ng-switch="main.loggedIn">
+							<span ng-switch-when='true'>
+								<span ng-if="main.loggedIn" class="nav-menu-item">Welcome {{ main.username }}</span>
+								<a ng-href="/profile" ng-if="main.loggedIn" class="nav-menu-item">View your boards</a>
+			    				<a ng-if="main.loggedIn" ng-click="main.doLogout()" class="nav-menu-item">Logout</a>
+							</span>
+							<span ng-switch-when='false'>
+								<a ng-href="/home" ng-if="!main.loggedIn" class="nav-menu-item">Login/Register</a>
+							</span>
 						</span>
-						<span ng-switch-when='false'>
-							<a ng-href="/home" ng-if="!main.loggedIn" class="btn btn-primary buttons-navbar">Login/Register to Save Boards</a>
-						</span>
-					</span>
+					</li>
 		      	</ul>
 			</div>
 		</div>

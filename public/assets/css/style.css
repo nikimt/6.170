@@ -7,10 +7,38 @@ body {
 	margin-top: 40px;
 }
 
-.logout {
-	margin: 50px;
-	top: 10px;
-	position: relative;
+.nav-menu-item {
+	margin: 10px;
+}
+
+.welcome-page-flex {
+    display: flex;
+    align-items: center;
+}
+
+.welcome-page-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.welcome-page-icon a {
+    text-transform: uppercase;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 18px;
+}
+
+.welcome-page-icon a:hover {
+    text-decoration: none;
+}
+
+.welcome-page.form-horizontal .form-group {
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .jumbotron {
