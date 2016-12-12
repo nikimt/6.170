@@ -17,6 +17,13 @@
 
 </div>
 
+	<div class="alert alert-danger" ng-if="idea.saveBoardError">
+		<div class="img-wrap">
+			<span class="close" ng-click="idea.hideSaveErrorClick()">&times;</span>
+		</div>
+		{{ idea.saveBoardError }}
+	</div>
+
 <h6><i>Click on an idea bubble for more options</i></h6>
 
 <div ng-if="!idea.hideOptions" id="explanation">
@@ -25,11 +32,24 @@
 	</div>
 	<h5> Options for <i>{{idea.ideas[idea.ideaToShow].content}}</i>:</h5>
 	<a href="#" ng-click="idea.upvote()" class="btn btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Upvote</a>
-	<a href="#" ng-click="idea.flag()" class="btn btn-primary"> &#9873;{{idea.flagState}}</a>
+	<a href="#" ng-click="idea.flag()" class="btn btn-primary"> &#9873; Flag</a>
 	<a href="#" ng-click="idea.showExplanationClick()" class="btn btn-primary"><span class="glyphicon glyphicon-list"></span> Explanation</a>
 	<a href="#" ng-click="idea.showNotesClick()" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Notes</a>
 	<a href="#" ng-click="idea.delete()" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+	<div class="alert alert-danger" ng-if="idea.flagError">
+		<div class="img-wrap">
+			<span class="close" ng-click="idea.hideFlagErrorClick()">&times;</span>
+		</div>
+		{{ idea.flagError }}
+	</div>
+	<div class="alert alert-danger" ng-if="idea.deleteError">
+		<div class="img-wrap">
+			<span class="close" ng-click="idea.hideDeleteErrorClick()">&times;</span>
+		</div>
+		{{ idea.deleteError }}
+	</div>
 </div>
+
 
 <div ng-if="!idea.hideExplanation" id="explanation">
 	<div class="img-wrap">

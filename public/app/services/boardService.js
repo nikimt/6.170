@@ -26,7 +26,6 @@ angular.module('boardService', [])
 	};
 
 	/**
-	* TODO
 	* Delete a single board
 	* @param id, board id to delete
 	* @return the message if sucessfull or not

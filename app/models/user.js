@@ -37,9 +37,9 @@ var minPasswordLength = 6;
 
 userSchema.path("username").validate(function(value) {
     // This validates that the length of a username is at least
-    // 6 characters
+    // 4 characters
     return (value.length >= 4);
-}, "Invalid username length");
+}, "Invalid username length. Username must be at least 4 characters");
 
 var userModel = mongoose.model('user', userSchema);
 

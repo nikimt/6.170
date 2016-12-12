@@ -139,7 +139,7 @@ module.exports = function(app, express) {
           });
         }
         else{
-            res.status(403).json({success: false});
+            res.json({success: false, errMsg: "You are not logged in. Log in or register to save a board."});
         }
     });
     

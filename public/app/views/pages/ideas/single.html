@@ -8,9 +8,9 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Idea</label>
 		<div class="col-sm-6">
-			<input type="text" name="content" class="form-control home-text" ng-model="idea.ideaData.text" required ng-minlength="1" ng-maxlength="50">
-			<p ng-show="ideaForm.content.$error.minlength" class="help-block">Idea is too short.</p>
-			<p ng-show="ideaForm.content.$error.maxlength" class="help-block">Ideas can only be up to 50 characters.</p>
+			<input type="text" name="content" class="form-control home-text" ng-model="idea.ideaData.text" required ng-minlength="1" ng-maxlength="15">
+			<p ng-show="ideaForm.content.$error.minlength" class="help-block home-text">Idea is too short.</p>
+			<p ng-show="ideaForm.content.$error.maxlength" class="help-block home-text">Ideas can only be up to 15 characters. Use the 'Idea Explanation' to enter longer content.</p>
 		</div>
 	</div>
 

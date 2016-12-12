@@ -158,7 +158,7 @@ module.exports = function(app, express) {
         var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         modelHelpers.deleteIdea(boardId, ideaId, userId, function(err) {
             if (err) {
-                res.status(400).json({ success: false });
+                res.json({ success: false, err: err });
             } else {
                 res.status(200).json({success: true});
             }
@@ -215,8 +215,7 @@ module.exports = function(app, express) {
         var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         modelHelpers.unflagIdea(boardId, ideaId, userId, function(err) {
             if (err) {
-                console.log(err);
-                res.status(400).json({success: false});
+                res.json({success: false, err: err});
             } else {
                 res.status(200).json({success: true});
             }

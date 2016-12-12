@@ -60,7 +60,7 @@ var ideaSchema = new mongoose.Schema({
 });
 
 // -------- Validators --------
-var max_content_len = 50;
+var max_content_len = 15;
 var min_content_len = 1;
 
 ideaSchema.path("content").validate(function(value) {

@@ -46,10 +46,12 @@ angular.module('mainCtrl', [])
 				vm.processing = false;		
 
 				// if a user successfully logs in, redirect to users page
-				if (data.data.success)			
+				if (data.data.success){	
 					$location.path('/profile');
-				else 
+				}
+				else {
 					vm.error = data.data.message;
+				}
 				
 			});
 	};
