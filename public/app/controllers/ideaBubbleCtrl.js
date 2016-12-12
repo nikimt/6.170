@@ -176,6 +176,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 						.then(function(data) {
 							vm.processing = false;
 							vm.ideas = data.data.data.ideas;
+                            updateFlagText();
 						});
 				})
 			}
