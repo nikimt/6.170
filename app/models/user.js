@@ -58,7 +58,7 @@ var Users = (function(userModel) {
     // before storing. If error, we send an error message
     // back to the router.
     that.addUser = function(userInfo, callback) {
-        if (userInfo.password.length > minPasswordLength) {
+        if (userInfo.password.length >= minPasswordLength) {
             bcrypt.hash(userInfo.password, saltRounds, function(err, hash) {
                 if (err) { callback(err, { msg: err }); }
                 else {

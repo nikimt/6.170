@@ -66,7 +66,7 @@ angular.module('mainCtrl', [])
 
 		Auth.register(vm.registerData.username, vm.registerData.password)
 			.then(function(data) {
-				vm.processing = false;		
+				vm.processing = false;	
 
 				// if a user successfully logs in, redirect to users page
 				if (data.data.success) {		
