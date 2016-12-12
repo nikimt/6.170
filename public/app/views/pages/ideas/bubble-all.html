@@ -6,8 +6,8 @@
 			New Idea
 		</a>
 		<span ng-switch="idea.playing">
-			<span ng-switch-when='true'><a href="#" ng-click="idea.toggle()" class="btn btn-primary">Stop</a></span>
-			<span ng-switch-when='false'><a href="#" ng-click="idea.toggle()" class="btn btn-primary">Start</a></span>
+			<span ng-switch-when='true'><a href="#" ng-click="idea.toggleAnimation()" class="btn btn-primary">Stop</a></span>
+			<span ng-switch-when='false'><a href="#" ng-click="idea.toggleAnimation()" class="btn btn-primary">Start</a></span>
 		</span>
 		<span ng-switch="idea.boardSaved">
 			<span ng-switch-when='true'><span>Board Saved</span></span>
@@ -15,6 +15,20 @@
 		</span>
 	</h3>
 
+</div>
+
+<h6><i>Click on a bubble for more options</i></h6>
+
+<div ng-if="!idea.hideOptions" id="explanation">
+	<div class="img-wrap">
+		<span class="close" ng-click="idea.hideOptionsClick()">&times;</span>
+	</div>
+	<h5> Options for <i>{{idea.ideas[idea.ideaToShow].content}}</i>:</h5>
+	<a href="#" ng-click="idea.upvote()" class="btn btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Upvote</a>
+	<a href="#" ng-click="idea.flag()" class="btn btn-primary"> &#9873; Flag</a>
+	<a href="#" ng-click="idea.showExplanationClick()" class="btn btn-primary"><span class="glyphicon glyphicon-list"></span> Explanation</a>
+	<a href="#" ng-click="idea.showNotesClick()" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Notes</a>
+	<a href="#" ng-click="idea.delete()" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>
 </div>
 
 <div ng-if="!idea.hideExplanation" id="explanation">
@@ -42,7 +56,7 @@
 					<input type="text" class="form-control home-text" ng-model="idea.noteData.text" ng-value=''>					
 			</div>
 			<div class="col-sm-2">
-				<button type="submit" class="btn btn-primary btn-block">Create Note</button>
+				<button type="submit" class="btn btn-primary">Create Note</button>
 			</div>
 		</div>
 		
@@ -55,5 +69,5 @@
 	<p>Loading Ideas...</p>
 </div>
 
-<div id="canvas" ng-click="idea.upvoteBubble($event); idea.flag($event); idea.delete($event)" ng-mouseover="idea.showExplanation($event)">
+<div id="canvas" ng-click="idea.showExplanation($event)">
 </div>
