@@ -45,9 +45,9 @@ angular.module('mainCtrl', [])
 			.then(function(data) {
 				vm.processing = false;		
 
-				// if a user successfully logs in, redirect to users page
+				// if a user successfully logs in, redirect to home page
 				if (data.data.success)			
-					$location.path('/profile');
+					$location.path('/');
 				else 
 					vm.error = data.data.message;
 				
@@ -68,9 +68,9 @@ angular.module('mainCtrl', [])
 			.then(function(data) {
 				vm.processing = false;	
 
-				// if a user successfully logs in, redirect to users page
+				// if a user successfully logs in, redirect to home page
 				if (data.data.success) {		
-					vm.message = "Successfully registered. Now you can "
+					$location.path('/');
 				}	
 				else {
 					vm.error = data.data.message
