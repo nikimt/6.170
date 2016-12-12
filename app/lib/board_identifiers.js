@@ -17,23 +17,23 @@ var BoardIdentifier = (function(){
     * @param {String} boardId - the unique identifier for the board
     * @param {String} value (optional) - the desired value for the identifier
     */
-    that.setSessionIdentifier = function(req, boardId, value){ // TODO: move to separate file(?)
-        if (req.session.identifiers == null){
+    that.setSessionIdentifier = function(req, boardId, value){
+        if (req.session.identifiers == null){ // ensure identifiers object exists
             req.session.identifiers = {};
         }
-        if (req.session.identifiers[boardId] == null){
+        if (req.session.identifiers[boardId] == null){ // set session identifier if it is absent
             if (value){
                 req.session.identifiers[boardId] = value;
             }
-            else if (req.session.user){
+            else if (req.session.user){ // if user is logged in, use their unique id
                 req.session.identifiers[boardId] = req.session.user.id;
             }
-            else{
+            else{ // if user is anonymous, need a different unique id
                 boards.incrementBoardUserCount(boardId, function(err, count){
-                    if (err){
-                        req.session.identifiers[boardId] = 100000 + Math.floor(Math.random()*999999999);
+                    if (err){ // set a random identifier to prioritize responsiveness in the case of error
+                        req.session.identifiers[boardId] = 1000000 + Math.floor(Math.random()*999999999);
                     }
-                    else{
+                    else{ // if no database error, returns a guaranteed-unique anonymous identifier
                         req.session.identifiers[boardId] = count;
                     }
                 });
