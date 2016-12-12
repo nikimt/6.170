@@ -8,7 +8,7 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Idea</label>
 		<div class="col-sm-6">
-			<input type="text" name="content" class="form-control home-text" ng-model="idea.ideaData.text" required ng-minlength="1" ng-maxlength="50">
+			<input type="text" name="content" class="form-control home-text" ng-model="idea.ideaData.text" required ng-minlength="1" ng-maxlength="15">
 			<p ng-show="ideaForm.content.$dirty && ideaForm.content.$error.required" class="help-block">Idea needs content.</p>
 			<p ng-show="idea.submitted && ideaForm.content.$error.required" class="help-block">Idea needs content</p>
 			<p ng-show="ideaForm.content.$error.minlength" class="help-block">Idea is too short</p>
