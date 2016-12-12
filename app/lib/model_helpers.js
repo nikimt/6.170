@@ -7,6 +7,7 @@
 var boards = require('../models/board.js');
 var ideas = require('../models/idea.js');
 var notes = require('../models/note.js');
+var users = require('../models/user.js');
 
 var ModelHelper = function() {
     var that = {};
@@ -136,6 +137,18 @@ var ModelHelper = function() {
         });
     }
 
+    // Exposed function that takes an ideaId, a userId, and a callback.
+    // Notes can only be accessed by the owner of the note.
+    that.saveBoardToUser = function(userId, boardId, callback) {
+        boards.findBoard(boardId, function(err, board) {
+            if (err) { callback({ msg: err }); }
+            else if (board.moderator != userId) {
+                callback({ msg: "user not the moderator of the board"});
+            } else {
+                users.addBoardToUser(userId, boardId, callback);
+            }
+        });
+    }
 
     Object.freeze(that);
     return that;

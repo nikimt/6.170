@@ -4,6 +4,7 @@ var session = require('express-session');
 
 var users = require('../models/user.js');
 var boards = require('../models/board.js');
+var modelHelpers = require('../lib/model_helpers.js');
 
 module.exports = function(app, express) {
   
@@ -123,21 +124,14 @@ module.exports = function(app, express) {
     router.put("/boards", function(req, res){
         var boardId = req.body.boardId;
         if (req.session.user != null){
-            boards.findBoard(boardId, function(err){
-                if (err){
-                    res.status(400).json({success: false});
-                }
-                else{
-                    users.addBoardToUser(req.session.user.id, boardId, function(err){
-                        if (err){
-                            res.status(500).json({success: false});
-                        }
-                        else{
-                            res.status(200).json({success: true});
-                        }
-                    });
-                }
-            });
+          modelHelpers.saveBoardToUser(req.session.user.id, boardId, function(err){
+            if (err){
+              res.status(500).json({success: false});
+            }
+            else{
+              res.status(200).json({success: true});
+            }
+          });
         }
         else{
             res.status(403).json({success: false});
