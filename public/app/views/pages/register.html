@@ -6,18 +6,20 @@
 
 		<h2>Register</h2>		
 
-		<form name="registerForm" novalidate ng-submit="registerForm.$valid && register.doRegister()">
+		<form name="registerForm" novalidate ng-submit="register.canSubmit(registerForm.$valid) && register.doRegister()">
 			
 			<div class="form-group">
 				<label>Username</label>
 				<input type="text" name="username" class="form-control home-text" ng-model="register.registerData.username" required ng-minlength="4">
-				<p ng-show="registerForm.username.$error.minlength" class="help-block">Username is too short.</p>
+				<p ng-show="register.submitted && registerForm.username.$error.required" class="help-block">Need a username</p>
+				<p ng-show="registerForm.username.$error.minlength" class="help-block">Username is too short</p>
 			</div>
 
 			<div class="form-group">
 				<label>Password</label>
 				<input type="password" name="password" class="form-control home-text" ng-model="register.registerData.password" required ng-minlength="6">
-				<p ng-show="registerForm.password.$error.minlength" class="help-block">Password is too short.</p>
+				<p ng-show="register.submitted && registerForm.password.$error.required" class="help-block">Need a password</p>
+				<p ng-show="registerForm.password.$error.minlength" class="help-block">Password is too short</p>
 			</div>
 
 			<div class="alert alert-danger" ng-if="register.error">

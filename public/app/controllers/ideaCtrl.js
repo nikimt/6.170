@@ -12,6 +12,8 @@ angular.module('ideaCtrl', ['ideaService'])
 	vm.boardId = $routeParams.board_id
 	vm.playing = true;
 
+	vm.submitted = false;
+
 	var paper, circs, flags, flagTexts, deletes, deleteTexts, texts, i, nowX, nowY, timer, props = {}, toggler = 0, elie, dx, dy, rad, cur, opa; 
 	var windowHeight = window.innerHeight / 1.45
 
@@ -220,6 +222,11 @@ angular.module('ideaCtrl', ['ideaService'])
 			});
 	};
 
+	vm.canSubmit = function(valid) {
+		vm.submitted = true;
+		return valid;
+	}
+
 	/**
 	* Save an idea
 	*/
@@ -231,7 +238,7 @@ angular.module('ideaCtrl', ['ideaService'])
 		idea.create($routeParams.board_id, vm.ideaData)
 			.success(function (data) {
 			    $location.path('/boards/' + $routeParams.board_id);
-			});	
+			});
 	};
 
 	vm.upvote = function(ideaId){

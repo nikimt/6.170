@@ -7,6 +7,8 @@ angular.module('mainCtrl', [])
 
 	var vm = this;
 
+	vm.submitted = false;
+
 	// get info if a person is logged in
 	Auth.isLoggedIn()
 		.then(function(data){
@@ -30,6 +32,11 @@ angular.module('mainCtrl', [])
 				vm.user = data.data;
 			});	
 	});
+
+	vm.canSubmit = function(valid) {
+		vm.submitted = true;
+		return valid;
+	}
 
 	/**
 	* Handles login form
