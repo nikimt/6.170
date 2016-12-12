@@ -58,7 +58,7 @@ var Users = (function(userModel) {
     // before storing. If error, we send an error message
     // back to the router.
     that.addUser = function(userInfo, callback) {
-        if (len(userInfo.password) > minPasswordLength) {
+        if (userInfo.password.length > minPasswordLength) {
             bcrypt.hash(userInfo.password, saltRounds, function(err, hash) {
                 if (err) { callback(err, { msg: err }); }
                 else {
@@ -130,7 +130,7 @@ var Users = (function(userModel) {
                 } else {
                     userModel.update({ _id: userId },
                         { $push: { "saved_boards": boardId } }, function(err, result) {
-                            if (err) { callback(err, { msg: err }) }
+                            if (err) { callback({ msg: err }); }
                             else {
                                 callback(null);
                             }

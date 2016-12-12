@@ -119,9 +119,9 @@ var Ideas = (function(ideaModel) {
 
             idea.save(function(err, newIdea) {
                 if (err) {
-                    callback(err,null)
+                    callback({ msg: err });
                 } else {
-                    callback(null, newIdea)
+                    callback(null, newIdea);
                 }
             });
         } else {
@@ -134,19 +134,15 @@ var Ideas = (function(ideaModel) {
     //
     // Returns an idea if the idea exists, otherwise an error.
     that.findIdea = function(ideaId, callback) {
-        if (ideaId.match(/^[0-9a-fA-F]{24}$/)) {
-            ideaModel.findOne({ _id: ideaId }, function(err, result) {
-                if (err) {
-                    callback({ msg: err });
-                } else if (result !== null) {
-                    callback(null, result);
-                } else {
-                    callback({ msg: 'No such idea!' });
-                }
-            });
-        } else {
-            callback({ msg: 'No such idea!' });
-        }
+        ideaModel.findOne({ _id: ideaId }, function(err, result) {
+            if (err) {
+                callback({ msg: err });
+            } else if (result !== null) {
+                callback(null, result);
+            } else {
+                callback({ msg: 'No such idea!' });
+            }
+        });
     }
 
     // Exposed function that takes an array of ideaIds (as strings) and
@@ -224,7 +220,7 @@ var Ideas = (function(ideaModel) {
             var upvote_users = idea.meta.upvotes.users;
             if (upvote_users.indexOf(userId) != -1) {
                 // User has already upvoted this idea
-                callback(null, { msg: "user has already upvoted" });
+                callback({ msg: "user has already upvoted" });
             } else {
                 ideaModel.update({ _id: ideaId },
                     { $inc: { "meta.upvotes.upvote_count": 1 },
@@ -256,7 +252,7 @@ var Ideas = (function(ideaModel) {
                         callback(null);
                 });
             } else {
-                callback(null, { msg: "user has not upvoted" });
+                callback({ msg: "user has not upvoted" });
             }
         });
     }
@@ -287,28 +283,6 @@ var Ideas = (function(ideaModel) {
                 callback({ msg: err });
             } else {
                 callback(null);
-            }
-        });
-    }
-
-    // Exposed function that takes an ideaId and a callback.
-    //
-    // If the ideaId exists, we toggle the flagged field of the idea 
-    // corresponding to that Id in the _store. Otherwise, we return
-    // an error.
-    that.toggleFlag = function(ideaId, callback){
-        ideaModel.findOne({ _id: ideaId }, function(err,idea){
-            if(err) {
-                callback({ msg: err });
-            } else {
-                ideaModel.update({ _id: ideaId }, {"meta.flag": !idea.meta.flag}, function(err, result){
-                    if(err){
-                        callback({ msg: err });
-                    } else {
-
-                        callback(null);
-                    }
-                });
             }
         });
     }

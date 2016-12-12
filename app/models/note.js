@@ -130,7 +130,7 @@ var Notes = (function(noteModel) {
     //
     // If the noteIds exist, we delete the notes corresponding to
     // those Ids in the _store. Otherwise, we return an error.
-    that.removeIdeasByIds = function(noteIds, callback) {
+    that.removeNotesByIds = function(noteIds, callback) {
         noteModel.remove({ _id: { $in: noteIds } }, function(err, result) {
             if (err) callback({ msg: err });
             if (result !== null) {

@@ -15,7 +15,7 @@ describe('Board Model Tests', function() {
     
     // Holds a board to use in each test
     var currentBoard = null;
-    var currentIdea = null
+    var currentIdea = null;
 
     // Constants
     var moderatorId = '0';
@@ -38,32 +38,37 @@ describe('Board Model Tests', function() {
 
     // Drop boards and ideas collection between tests
     afterEach(function(done) {
-        mongoose.connection.db.dropCollection('boards', function(err) {});
-        mongoose.connection.db.dropCollection('ideas', function(err) {});
-        done();
-    });
-
-    it ('creates a new board', function(done) {
-        boards.addBoard({ 'moderator': moderatorId }, function(err, doc) {
-            doc.moderator.should.equal(moderatorId);
-            
-            expect(doc.ideas).to.have.length(0);
-            expect(doc.boardId).to.have.length(6);
-            expect(doc.name).to.have.length(6);
-            
-            done();
+        mongoose.connection.collections['boards'].drop( function(err) {
+            mongoose.connection.collections['ideas'].drop( function(err) {
+                done();
+            });
         });
     });
 
-    it ('creates a new board with a name', function(done) {
-        boards.addBoard({ 'moderator': moderatorId, 'name': 'Name' }, function(err, doc) {
-            doc.moderator.should.equal(moderatorId);
-            doc.name.should.equal('Name');
-            
-            expect(doc.ideas).to.have.length(0);
-            expect(doc.boardId).to.have.length(6);
-            
-            done();
+    describe ('Creates a new board', function() {
+
+        it ('with no name', function(done) {
+            boards.addBoard({ 'moderator': moderatorId }, function(err, doc) {
+                doc.moderator.should.equal(moderatorId);
+                
+                expect(doc.ideas).to.have.length(0);
+                expect(doc.boardId).to.have.length(6);
+                expect(doc.name).to.have.length(6);
+                
+                done();
+            });
+        });
+
+        it ('with a name', function(done) {
+            boards.addBoard({ 'moderator': moderatorId, 'name': 'Name' }, function(err, doc) {
+                doc.moderator.should.equal(moderatorId);
+                doc.name.should.equal('Name');
+                
+                expect(doc.ideas).to.have.length(0);
+                expect(doc.boardId).to.have.length(6);
+                
+                done();
+            });
         });
     });
 
@@ -131,6 +136,7 @@ describe('Board Model Tests', function() {
         });
     });
 
+
     it ('removes an idea from a board', function(done) {
         boards.removeIdeaFromBoard(currentBoard.boardId, currentIdea._id, function(err) {
             
@@ -153,5 +159,5 @@ describe('Board Model Tests', function() {
                 done();
             });
         });
-    })
+    });
 });
