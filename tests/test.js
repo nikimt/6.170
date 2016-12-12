@@ -12,6 +12,8 @@ describe("Model Testing:", function(){
 
     importTest('Board Model Testing:', './models/test_board.js');
     importTest('Idea Model Testing:', './models/test_idea.js');
+    importTest('Note Model Testing:', './models/test_note.js');
+    importTest('User Model Testing:', './models/test_user.js');
 
     after(function() {
         mongoose.disconnect();
