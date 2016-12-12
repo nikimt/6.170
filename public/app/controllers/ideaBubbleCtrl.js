@@ -2,6 +2,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 
 .controller('ideaBubbleController', function($scope,idea, $routeParams) {
 
+	$scope.reloadRoute = function() {
+  	location.reload();
+	}
+
 	var vm = this;
 
 	// INITIALIZE VARIABLES
@@ -50,7 +54,15 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	* Upvote an idea
 	*/
 	vm.upvote = function(){
-		var ideaId = vm.ideas[vm.ideaToShow]._id
+		var ideaId = vm.ideas[vm.ideaToShow]._id;
+		debugger;
+		idea.unupvote($routeParams.board_id,ideaId).then(function(data){
+				idea.all($routeParams.board_id)
+					.then(function(data) {
+						vm.processing = false;
+						vm.ideas = data.data.data.ideas;
+					});
+		});
 		idea.upvote($routeParams.board_id,ideaId).then(function(data){
 				idea.all($routeParams.board_id)
 					.then(function(data) {
@@ -74,6 +86,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 					});
 		})
         updateFlagText();
+        $scope.reloadRoute();
 	}
 
 	/**
@@ -139,14 +152,22 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     * Show an explanation for an idea when it is clicked
     */
     vm.showExplanationClick = function(){
-    	vm.hideExplanation = false;
+    	if (vm.hideExplanation == true) {
+    		vm.hideExplanation = false;
+    	} else {
+    		vm.hideExplanation = true;
+    	}
     }
 
     /**
     * Show notes for an idea when it is clicked
     */
     vm.showNotesClick = function(){
-    	vm.hideNotes = false;
+    	if (vm.hideNotes == true) {
+    		vm.hideNotes = false;
+    	} else {
+    		vm.hideNotes = true;
+    	}
     }
 
     /**

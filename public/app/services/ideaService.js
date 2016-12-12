@@ -33,6 +33,16 @@ angular.module('ideaService', [])
 	}
 
 	/**
+	* Un-upvote an idea
+	* @param ideaId
+	* @param boardId
+	* @return the idea
+	*/
+	ideaFactory.unupvote = function(boardId,ideaId){
+		return $http.delete('board/boards/' + boardId + '/ideas/' + ideaId + '/upvote');
+	}
+
+	/**
 	* Flag an idea
 	* @param ideaId
 	* @param boardId
