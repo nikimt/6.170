@@ -29,6 +29,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     vm.hideOptions = true;
     vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
 
+    vm.saveBoardError = false;
     vm.boardSaved = false;
     vm.hasExplanation = false;
     
@@ -270,6 +271,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
     }
 
+    vm.hideSaveErrorClick = function(){
+        vm.saveBoardError = false;
+    }
+
 	/**
 	* Get the ideas
 	*/
@@ -379,7 +384,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 			if(data.data.success){
 				vm.boardSaved = true;
 			} else {
-				vm.saveBoardError = data.data.errMsg
+				vm.saveBoardError = data.data.errMsg;
 			}
 		})
 	}
