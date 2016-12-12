@@ -35,19 +35,17 @@ angular.module('boardCtrl', ['boardService'])
 
 		Board.get(vm.boardData)
 			.error(function(data) {
-				console.log(data);
 				vm.successfulCode = 'false';
 			})
 			.then(function(data) {
-				console.log(data)
 				vm.success = data.data.success;
+				var boardCode = data.data.board.boardId;
 				if(vm.success){
-					$location.path('/boards/' + vm.boardCode);
+					$location.path('/boards/' + boardCode);
 				} else {
 					vm.successfulCode = 'false';
 				}
-			});
-			
+			});		
 	};
 
 	vm.reset = function(){

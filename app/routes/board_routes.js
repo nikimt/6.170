@@ -81,18 +81,16 @@ module.exports = function(app, express) {
     */
     router.get("/boards/:boardId/moderator", function(req, res){
         var boardId = req.params.boardId;
-        var CODE_LENGTH = 6;
-        if (boardId && boardId.length == CODE_LENGTH){
-            boards.findBoard(boardId, function(err, board) {
-                if (err) {
-                    res.status(404).json({ success: false });
-                } else {
-                    var isModerator = (board.moderator == req.session.user.id)
-                    res.status(200).json(
-                      { success: true, is_user_moderator: isModerator });
-                }
-            });
-        }
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+        boards.findBoard(boardId, function(err, board) {
+            if (err) {
+                res.status(404).json({ success: false });
+            } else {
+                var isModerator = (board.moderator == userId)
+                res.status(200).json(
+                  { success: true, is_user_moderator: isModerator });
+            }
+        });
     });
     
     /**
@@ -116,7 +114,7 @@ module.exports = function(app, express) {
                     }
                     else{
                         boardIdentifiers.setSessionIdentifier(req, boardId);
-                        res.status(200).json({success: true, data: {ideas: data}});
+                        res.status(200).json({ success: true, board: data });
                     }
                 }
             });

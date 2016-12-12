@@ -114,6 +114,15 @@ angular.module('ideaService', [])
 		return $http.put('/users/boards/' + boardId)
 	};
 
+	/**
+	* Retrieves the permissions level of a user
+	* @param boardId
+	* @return true if the user is the moderator of this board, otherwise false
+	*/
+	ideaFactory.isModerator = function(boardId){
+		return $http.get('/board/boards/' + boardId + '/moderator');
+	};
+
 	// return our entire ideaFactory object
 	return ideaFactory;
 

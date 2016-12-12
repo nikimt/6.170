@@ -25,6 +25,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     vm.hideNotes = true;
     vm.hideOptions = true;
     vm.boardSaved = false;
+    vm.isModerator = false;
 
     vm.flagState = "Flag";
 
@@ -409,7 +410,6 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	*/
 	vm.getNote = function(ideaId){
 		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
-			console.log(data.data.notes)
 			vm.noteToShow = data.data.notes
 			idea.all($routeParams.board_id)
 				.then(function(data) {
@@ -422,11 +422,14 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 
 	vm.saveBoard = function(){
 		idea.saveUserBoard($routeParams.board_id).then(function(data){
-			console.log(data)
 			if(data.data.success){
 				vm.boardSaved = true;
 			}
 		})
 	}
+
+    idea.isModerator($routeParams.board_id).then(function(data) {
+        vm.isModerator = data.data.is_user_moderator;
+    });
 
 });
