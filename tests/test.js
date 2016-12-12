@@ -1,5 +1,22 @@
-/* Data model and helper function testing suite. Information on route testing can
-   be found in their respective files. */
+ // Data model and helper function testing suite. Information on route testing can
+ //   be found in their respective files. 
+
+ // Front end code was tested through visual checks and user testing. We tested the 
+ //   following functionality and ensured that pages looked and behaved as they should:
+ //     - creating board
+ //     - joining board
+ //     - adding idea
+ //     - idea actions
+//          - upvote
+//          - unupvote
+//          - flag/unflag
+//          - show notes/explanation
+//          - delete idea
+//      - refreshing pages
+//      - creating an account
+//      - logging in
+//      - saving boards
+//      - viewing saved boards
 
 var mongoose = require('mongoose');
 
