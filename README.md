@@ -1,7 +1,7 @@
 # Ideate
 ### Made with <3 by the Rinnegatos
 
-[ideate-rinnegatos.herokuapp.com](https://ideate-rinnegatos.herokuapp.com)
+[ideate-app.herokuapp.com](https://ideate-rinnegatos.herokuapp.com)
 
 ###To install & run:
 1. npm install
