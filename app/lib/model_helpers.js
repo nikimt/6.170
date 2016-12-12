@@ -73,7 +73,7 @@ var ModelHelper = function() {
                         callback({ msg: err });
                     } else if (idea.creatorId != userId 
                         && board.moderator != userId) {
-                        callback({ msg: err });
+                        callback({ msg: err, msgToUser: "Only moderators can delete ideas. You are not a moderator of this board." });
                     } else {
                         removeIdea(boardId, ideaId, callback);
                     }
@@ -98,7 +98,7 @@ var ModelHelper = function() {
             else if (board.moderator == userId) {
                 ideas.unflagIdea(ideaId, callback);
             } else {
-                callback({ msg: "user not the moderator of the board" });
+                callback({ msg: "user not the moderator of the board", msgToUser: "Only moderators of a board can unflag an idea. You are not a moderator of this board" });
             }
         });
     }

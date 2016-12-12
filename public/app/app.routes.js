@@ -1,3 +1,5 @@
+// Contributor: Jessica
+
 angular.module('app.routes', ['ngRoute'])
 
 .config(function($routeProvider, $locationProvider) {
@@ -16,12 +18,6 @@ angular.module('app.routes', ['ngRoute'])
 		/**
 		* Route for the board
 		*/
-		// .when('/boards/:board_id',{
-		// 	templateUrl: 'app/views/pages/ideas/all.html',
-		// 	controller: 'ideaController',
-		// 	controllerAs: 'idea'
-		// })
-
 		.when('/boards/:board_id',{
 			templateUrl: 'app/views/pages/ideas/bubble-all.html',
 			controller: 'ideaBubbleController',
@@ -37,24 +33,36 @@ angular.module('app.routes', ['ngRoute'])
 			controllerAs: 'idea'
 		})
 
+		/**
+		* Route for registering and logging in
+		*/
 		.when('/home',{
 			templateUrl: 'app/views/pages/home.html',
 			controller: 'ideaController',
 			controllerAs: 'idea'
 		})
 
+		/**
+		* Route for registering
+		*/
 		.when('/register',{
 			templateUrl: 'app/views/pages/register.html',
 			controller: 'mainController',
 			controllerAs: 'register'
 		})
 
+		/**
+		* Route for logging in
+		*/
 		.when('/login',{
 			templateUrl: 'app/views/pages/login.html',
 			controller: 'mainController',
 			controllerAs: 'login'
 		})
 
+		/**
+		* Route for profile of saved boards
+		*/
 		.when('/profile', {
 			templateUrl: 'app/views/pages/users/all.html',
 			controller: 'userController',

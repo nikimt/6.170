@@ -9,29 +9,11 @@ angular.module('userService', [])
 	var userFactory = {};
 
 	/**
-	* Get all users
-	* @return all users
+	* Get all boards associated with a user
+	* @return all boards
 	*/
 	userFactory.all = function() {
 		return $http.get('users/boards/');
-	};
-
-	/**
-	* Create a single user
-	* @param userData, the user text
-	* @return the new user
-	*/
-	userFactory.create = function(id,userData) {
-		return $http.post('/board/boards/' + id + '/users', userData);
-	};
-
-	/**
-	* Delete a single user
-	* @param id, user
-	* @return the message if sucessfull or not
-	*/
-	userFactory.delete = function(id) {
-		return $http.delete('/user/users/' + id);
 	};
 
 	// return our entire userFactory object

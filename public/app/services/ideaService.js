@@ -98,6 +98,14 @@ angular.module('ideaService', [])
 	}
 
 	/**
+	* See whether user is logged in
+	* @return true if user is logged in, false otherwise
+	*/
+	ideaFactory.isLoggedIn = function() {
+		return $http.get('users/session/');
+	};
+
+	/**
 	* Delete a single idea
 	* @param id, idea
 	* @return the message if sucessfull or not
@@ -106,10 +114,19 @@ angular.module('ideaService', [])
 		return $http.delete('board/boards/' + boardId + '/ideas/' + ideaId);
 	}
 
+	/** 
+	* Get all the boards associated with a user
+	* @return all boards
+	*/
 	ideaFactory.getBoards = function(){
 		return $http.get('/users/boards/')
 	}
 
+	/**
+	* Save a board
+	* @param boardId, board id of the board
+	* @return board saved
+	*/
 	ideaFactory.saveUserBoard = function(boardId){
 		return $http.put('/users/boards/' + boardId)
 	};
