@@ -63,7 +63,7 @@ var ideaSchema = new mongoose.Schema({
 var max_content_len = 15;
 var min_content_len = 1;
 
-var max_explanation_len = 50;
+var max_explanation_len = 10000;
 var min_explanation_len = 1;
 
 ideaSchema.path("content").validate(function(value) {
