@@ -9,6 +9,10 @@
 			<span ng-switch-when='true'><a href="#" ng-click="idea.toggle()" class="btn btn-primary">Stop</a></span>
 			<span ng-switch-when='false'><a href="#" ng-click="idea.toggle()" class="btn btn-primary">Start</a></span>
 		</span>
+		<span ng-switch="idea.boardSaved">
+			<span ng-switch-when='true'><span>Board Saved</span></span>
+			<span ng-switch-when='false'><a ng-click="idea.saveBoard()" class="btn btn-primary">Save board</a></span>
+		</span>
 	</h3>
 
 </div>

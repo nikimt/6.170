@@ -91,6 +91,14 @@ angular.module('ideaService', [])
 	*/
 	ideaFactory.delete = function(boardId, ideaId) {
 		return $http.delete('board/boards/' + boardId + '/ideas/' + ideaId);
+	}
+
+	ideaFactory.getBoards = function(){
+		return $http.get('/users/boards/')
+	}
+
+	ideaFactory.saveUserBoard = function(boardId){
+		return $http.put('/users/boards/' + boardId)
 	};
 
 	// return our entire ideaFactory object

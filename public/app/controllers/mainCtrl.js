@@ -13,10 +13,11 @@ angular.module('mainCtrl', [])
 
 	// check to see if a user is logged in on every request
 	$rootScope.$on('$routeChangeStart', function() {
+		vm.currentPath = $location.path()
+		vm.onBoardPage = vm.currentPath.substring(0,8) === '/boards/'
 		Auth.isLoggedIn()
 			.then(function(data){
 				vm.loggedIn = data.data.loggedIn
-				console.log(vm.loggedIn)
 				if(vm.loggedIn) vm.username = data.data.user.name
 		})	
 
@@ -25,7 +26,7 @@ angular.module('mainCtrl', [])
 			.then(function(data) {
 				vm.user = data.data;
 			});	
-	});	
+	});
 
 	/**
 	* Handles login form

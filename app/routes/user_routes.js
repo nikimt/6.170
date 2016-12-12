@@ -121,8 +121,8 @@ module.exports = function(app, express) {
       * Returns JSON object with the following information:
       *     success: true if board was successfully added, else false
       */
-    router.put("/boards", function(req, res){
-        var boardId = req.body.boardId;
+    router.put("/boards/:boardId", function(req, res){
+        var boardId = req.params.boardId;
         if (req.session.user != null){
           modelHelpers.saveBoardToUser(req.session.user.id, boardId, function(err){
             if (err){

@@ -9,17 +9,15 @@
 	<thead>
 		<tr>
 			<th>Board Code</th>
-			<th>Number of Ideas</th>
 			<th></th>
 			<th></th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr ng-repeat="board in user.boards">
-			<td>{{ board.code }}</td>
-			<td>{{ board.numberOfIdeas }}</td>
+			<td>{{ board }}</td>
 			<td>
-				<a href="#" ng-href="/boards/board.code" class="btn btn-primary">See Board</a>
+				<a href="#" ng-href="/boards/{{board}}" class="btn btn-primary">See Board</a>
 			</td>
 		</tr>
 	</tbody>

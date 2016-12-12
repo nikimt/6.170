@@ -61,8 +61,8 @@
 		    	<ul class="nav navbar-nav navbar-right">
 					<span ng-switch="main.loggedIn">
 						<span ng-switch-when='true'>
-							<span ng-if="main.loggedIn" class="logout">Welcome {{ main.username }}</span>
 		    				<a ng-href="/profile" ng-if="main.loggedIn" class="btn btn-primary buttons-navbar">View your boards</a>
+							<span ng-if="main.loggedIn" class="logout">Welcome {{ main.username }}</span>
 		    				<a ng-if="main.loggedIn" ng-click="main.doLogout()" class="logout">Logout</a>
 						</span>
 						<span ng-switch-when='false'>
