@@ -1,3 +1,6 @@
+// Service for users
+// Contributer: Jessica, Niki
+
 angular.module('userService', [])
 
 .factory('user', function($http) {

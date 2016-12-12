@@ -1,3 +1,6 @@
+// Service for ideas
+// Contributer: Jessica, Niki
+
 angular.module('ideaService', [])
 
 .factory('idea', function($http) {

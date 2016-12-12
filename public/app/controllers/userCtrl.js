@@ -1,3 +1,6 @@
+// Controller for users
+// Contributer: Jessica, Niki
+
 angular.module('userCtrl', ['userService'])
 
 .controller('userController', function($scope, user, $routeParams, $location) {

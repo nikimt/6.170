@@ -1,3 +1,6 @@
+// Service for authentication
+// Contributer: Jessica
+
 angular.module('authService', [])
 
 // ===================================================

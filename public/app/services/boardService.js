@@ -1,3 +1,6 @@
+// Service for board
+// Contributer: Jessica, Niki
+
 angular.module('boardService', [])
 
 .factory('Board', function($http) {

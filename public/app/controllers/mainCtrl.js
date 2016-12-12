@@ -1,3 +1,6 @@
+// Main angular controller
+// Contributer: Jessica, Niki
+
 angular.module('mainCtrl', [])
 
 .controller('mainController', function($rootScope, $location, Auth) {

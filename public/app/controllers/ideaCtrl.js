@@ -1,3 +1,6 @@
+// Controller for ideas
+// Contributer: Jessica, Niki
+
 angular.module('ideaCtrl', ['ideaService'])
 
 .controller('ideaController', function($scope, idea, $routeParams, $location) {

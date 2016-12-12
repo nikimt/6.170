@@ -1,3 +1,6 @@
+// Controller for board
+// Contributer: Jessica, Niki
+
 angular.module('boardCtrl', ['boardService'])
 
 // controller applied to board creation page

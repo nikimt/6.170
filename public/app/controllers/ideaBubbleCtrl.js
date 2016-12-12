@@ -1,3 +1,6 @@
+// Controller for idea bubbles
+// Contributer: Jessica, Niki
+
 angular.module('ideaBubbleCtrl', ['ideaService'])
 
 .controller('ideaBubbleController', function($scope,idea, $routeParams) {
