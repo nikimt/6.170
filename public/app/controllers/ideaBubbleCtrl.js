@@ -18,9 +18,19 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     vm.hideOptions = true;
     vm.boardSaved = false;
 
+    vm.flagState = "Flag";
+
 	// variables for moving bubble animation
 	var paper, circs, flags, flagTexts, deleteTexts, texts, deletes, i, nowX, nowY, timer, props = {}, toggler = 0, elie, dx, dy, rad, cur, opa; 
 	var windowHeight = window.innerHeight / 1.45
+
+    var updateFlagText = function() {
+        if (vm.ideas[vm.ideaToShow].meta.flag == true) {
+            vm.flagState = "Unflag";
+        } else {
+            vm.flagState = "Flag";
+        }
+    }
 
 	/**
 	* Toggle function for playing and stopping the animation of the moving bubbles
@@ -48,6 +58,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 						vm.ideas = data.data.data.ideas;
 					});
 		})
+        updateFlagText();
 	}
 
 	vm.delete = function() {
@@ -59,6 +70,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 						vm.ideas = data.data.data.ideas;
 					});
 		})
+        updateFlagText();
 	}
 
 	vm.flag = function(obj){
@@ -71,8 +83,9 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 							vm.ideas = data.data.data.ideas;
 							var flagText = '\u2691';
 							flagTexts[vm.ideaToShow].attr("text",flagText)
+                            updateFlagText();
 						});
-			})
+			});
 			} else {
 				var ideaId = vm.ideas[vm.ideaToShow]._id
 				idea.unflag($routeParams.board_id,ideaId).then(function(data){
@@ -82,9 +95,11 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 							vm.ideas = data.data.data.ideas;
 							var flagText = '';
 							flagTexts[vm.ideaToShow].attr("text",flagText)
+                            updateFlagText();
 						});
 				})
 			}
+            updateFlagText();
 		}
 
     /**
@@ -97,6 +112,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     		var clickedCircleId = parseInt(clickedCircleIdStr.substring(1,clickedCircleIdStr.length))
     		vm.ideaToShow = clickedCircleId
     		vm.hideOptions = false;
+            updateFlagText();
     		//vm.hideExplanation = false;
     		//vm.hideNotes = false;
     	}
@@ -348,6 +364,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		vm.processing = true
 
 		var ideaId = vm.ideas[vm.ideaToShow]._id
+        updateFlagText();
 		vm.getNote(ideaId)
 
 		idea.createNote($routeParams.board_id,ideaId,vm.noteData).then(function(data){
