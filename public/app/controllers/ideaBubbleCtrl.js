@@ -43,6 +43,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	// variables for moving bubble animation
 	var paper, circs, flags, flagTexts, deleteTexts, texts, deletes, i, nowX, nowY, timer, props = {}, toggler = 0, elie, dx, dy, rad, cur, opacity; 
 	var ideaTimer = 2000;
+	var ideasToCircs = {}
 
     /**
     * Get all the ideas at page load
@@ -59,7 +60,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
             getBubbles();
             moveIt();
             grabIdeas();
-            //updateCircs();
+            checkBubbles();
         });
 
 	/**
@@ -110,28 +111,35 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	* Upvote an idea
 	*/
 	vm.upvote = function(){
-		var ideaId = vm.ideas[vm.ideaToShow]._id;
-		idea.unupvote($routeParams.board_id,ideaId).then(function(data){
-				idea.all($routeParams.board_id)
-					.then(function(data) {
-						vm.processing = false;
-						vm.ideas = data.data.data.ideas;
-					});
-		});
-		idea.upvote($routeParams.board_id,ideaId).then(function(data){
-				idea.all($routeParams.board_id)
-					.then(function(data) {
-						vm.processing = false;
-						vm.ideas = data.data.data.ideas;
-					});
-		})
+		var ideaId = vm.ideaToShow
+		if(!vm.upvoted){
+			idea.upvote($routeParams.board_id,ideaId).then(function(data){
+					vm.upvoted = true;
+					idea.all($routeParams.board_id)
+						.then(function(data) {
+							vm.processing = false;
+							vm.ideas = data.data.data.ideas;
+						});
+			})
+		}
+		if(vm.upvoted){
+			idea.unupvote($routeParams.board_id,ideaId).then(function(data){
+					vm.upvoted = false;
+					idea.all($routeParams.board_id)
+						.then(function(data) {
+							vm.processing = false;
+							vm.ideas = data.data.data.ideas;
+						});
+			});
+		}
+        updateFlagText();
 	}
 
 	/**
 	* Delete an idea
 	*/
 	vm.delete = function() {
-		var ideaId = vm.ideas[vm.ideaToShow]._id
+		var ideaId = vm.ideaToShow
 		idea.delete($routeParams.board_id,ideaId).then(function(data){
 				idea.all($routeParams.board_id)
 					.then(function(data) {
@@ -139,7 +147,15 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 						vm.ideas = data.data.data.ideas;
 					});
 				if(data.data.success){
-					$scope.reloadRoute();
+					var bubble = ideasToCircs[ideaId].bubble
+					bubble.remove()
+					var text = ideasToCircs[ideaId].text
+					text.remove()
+					var flagText = ideasToCircs[ideaId].flagText
+					flagText.remove()
+					var flag = ideasToCircs[ideaId].flag
+					flag.remove()
+					vm.showPanel = false;
 				} else {
 					vm.deleteError = data.data.err.msgToUser
 				}
@@ -151,38 +167,52 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	* Flag an idea
 	*/
 	vm.flag = function(){
-		if (vm.ideas[vm.ideaToShow].meta.flag == false) {
-			var ideaId = vm.ideas[vm.ideaToShow]._id
+		var index = getIdeas(vm.ideaToShow)
+		if (vm.ideas[index].meta.flag == false) {
+			var ideaId = vm.ideaToShow
 			idea.flag($routeParams.board_id,ideaId).then(function(data){
 					idea.all($routeParams.board_id)
 						.then(function(data) {
 							vm.processing = false;
 							vm.ideas = data.data.data.ideas;
 							var flagText = '\u2691';
-							flagTexts[vm.ideaToShow].attr("text",flagText)
+							var flagTextBubble = ideasToCircs[ideaId].flagText
+							flagTextBubble.attr("text",flagText)
                             updateFlagText();
 						});
 			});
 			} else {
-				var ideaId = vm.ideas[vm.ideaToShow]._id
+				var ideaId = vm.ideaToShow
 				idea.unflag($routeParams.board_id,ideaId).then(function(data){
 					if(!data.data.success){
 						vm.flagError = data.data.err.msgToUser
 					} else {
 						var flagText = '';
-						flagTexts[vm.ideaToShow].attr("text",flagText)
+						var flagTextBubble = ideasToCircs[ideaId].flagText
+						flagTextBubble.attr("text",flagText)
                         updateFlagText();						
 					}
 					idea.all($routeParams.board_id)
 						.then(function(data) {
 							vm.processing = false;
 							vm.ideas = data.data.data.ideas;
-                            updateFlagText();
 						});
 				})
 			}
             updateFlagText();
 		}
+
+	/**
+	* Get an idea from its id
+	* @param id of the idea
+	*/
+	var getIdeas = function(id){
+		for(var i = 0; i < vm.ideas.length; i ++){
+			if(vm.ideas[i]._id == id){
+				return i
+			}
+		}
+	}
 
     /**
     * Show the options for an idea
@@ -190,18 +220,20 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     */
     vm.showOptions = function(obj){
     	vm.hideOptions = true;
-    	var clickedCircleId= obj.target.id
-        if (vm.ideas[clickedCircleId]) {
-        	vm.ideaToShow = clickedCircleId
+    	var clickedCircleId = obj.target.id
+    	vm.ideaToShow = clickedCircleId
+        if (vm.ideaToShow) {
         	vm.hideOptions = false;
             vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
 
-            idea.isOwner(vm.boardId, vm.ideas[vm.ideaToShow]._id).then(function(data) {
+    		var ideaId = vm.ideaToShow
+    		vm.ideaToShowIndex = getIdeas(ideaId)
+			vm.ideaTitle = ideasToCircs[ideaId].content
+
+            idea.isOwner(vm.boardId, vm.ideas[vm.ideaToShowIndex]._id).then(function(data) {
                 vm.isOwner = data.data.is_user_owner;
                 vm.canDelete = (vm.isModerator || vm.isOwner);
             });
-
-    		var ideaId = vm.ideas[vm.ideaToShow]._id
 
     		updateFlagText();
             updateShowFlag();
@@ -333,15 +365,15 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	/**
 	* Save a note
 	*/
-	vm.saveNote = function(){
+	vm.saveNote= function(){
 		vm.processing = true
 
-		var ideaId = vm.ideas[vm.ideaToShow]._id
-        updateFlagText();
+		var ideaId = vm.ideaToShow
 		vm.getNote(ideaId)
 
 		idea.createNote($routeParams.board_id,ideaId,vm.noteData).then(function(data){
 			vm.noteData = {}
+			vm.getNote(ideaId)
 		})
 	}
 
@@ -413,12 +445,11 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	/**
 	* Create a bubble from an idea
 	*/ 
-	var createBubble = function(i){
-        var clientHeight = document.getElementById('canvas').clientHeight;
+	var createBubble = function(idea){
+		var clientHeight = document.getElementById('canvas').clientHeight;
         var clientWidth = document.getElementById('canvas').clientWidth;
 
         var opacity = 0.6;
-        //var posXMin = 100;
         var posXMin = clientWidth / 3;
         var posXMax = clientWidth / 1.5;
         var posYMin = clientHeight / 3;
@@ -429,8 +460,8 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         var heightScale = 8;
         var radiusOfCircle = clientHeight/heightScale
         var ideaCircle = paper.circle(posX, posY, radiusOfCircle).attr({"fill-opacity": opacity, "stroke-opacity": opacity, fill: color, stroke: color})
-        ideaCircle.node.id = i
-        var text = vm.ideas[i].content
+        ideaCircle.node.id = idea._id
+        var text = idea.content
         var ideaText = paper.text(posX, posY, text).attr({"fill": "white"})
         return {
         	"ideaCircle": ideaCircle,
@@ -441,13 +472,22 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         }		
 	}
 
-	var createFlagBubble = function(i,color,posX,posY){
+
+	/**
+	* Create a flag bubble
+	* @param idea
+	* @param color of the bubble
+	* @param posX
+	* @param posY
+	* @param circBubble
+	*/
+	var createFlagBubble = function(idea,color,posX,posY,circBubble){
 		var opacity = 0.5;
 		var textFontSize = 18;
 		var radiusOfFlagCircle = 15;
-        var flagMark = (vm.ideas[i].meta.flag == true ? '\u2691' : '');
-        var flagTextsCircle = paper.text(posX + circs[i].attr("r"), posY + circs[i].attr("r"), flagMark).attr({"fill": "white","font-size": textFontSize})
-        var flagCircle = paper.circle(posX + circs[i].attr("r"), posY + circs[i].attr("r"),radiusOfFlagCircle).attr({"fill-opacity": opacity, "stroke-opacity": opacity, fill: color, stroke: color})
+        var flagMark = (idea.meta.flag == true ? '\u2691' : '');
+        var flagTextsCircle = paper.text(posX + circBubble.attr("r"), posY + circBubble.attr("r"), flagMark).attr({"fill": "white","font-size": textFontSize})
+        var flagCircle = paper.circle(posX + circBubble.attr("r"), posY + circBubble.attr("r"),radiusOfFlagCircle).attr({"fill-opacity": opacity, "stroke-opacity": opacity, fill: color, stroke: color})
         return {
         	"flagTextsCircle": flagTextsCircle,
         	"flagCircle": flagCircle
@@ -455,17 +495,70 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	}
 
 	/**
+	* Checks whether the ideas and bubbles are consistent
+	*/
+	var checkBubbles = function(){
+		var deleteIds = []
+		for(ideaBubble in ideasToCircs){
+			var ideaIds = [];
+			for(var j = 0; j < vm.ideas.length; j++){
+				ideaIds.push(vm.ideas[j]._id)
+			}
+			if(ideaIds.indexOf(ideaBubble) == -1){
+				deleteIds.push(ideaBubble)
+				var bubble = ideasToCircs[ideaBubble].bubble
+				bubble.remove()
+				var text = ideasToCircs[ideaBubble].text
+				text.remove()
+				var flagText = ideasToCircs[ideaBubble].flagText
+				flagText.remove()
+				var flag = ideasToCircs[ideaBubble].flag
+				flag.remove()
+			}
+		}
+
+		for(var i = 0; i < deleteIds.length; i ++){
+			delete ideasToCircs[deleteIds[i]]
+		}
+
+		setTimeout(checkBubbles,ideaTimer)
+	}
+
+
+	/**
 	* Move the bubbles
 	*/	    
+	/**
+	* Move the bubbles
+	*/	
 	var moveIt = function()
 	    {
-            var clientHeight = document.getElementById('canvas').clientHeight;
+	    	var clientHeight = document.getElementById('canvas').clientHeight;
             var clientWidth = document.getElementById('canvas').clientWidth;
 
 	    	var moveTimer = 60;
 
-	        for(i = 0; i < circs.length; ++i)
-	        {  
+	        for(var i = 0; i < vm.ideas.length; i ++)
+	        {  	
+	        	var idea = vm.ideas[i]
+	        	var ideaBubbleId = vm.ideas[i]._id
+	        	if(!(ideaBubbleId in ideasToCircs)){
+		        	var bubble = createBubble(idea)
+		        	circs.push(bubble.ideaCircle);
+			        texts.push(bubble.ideaText)
+			        var flagBubble = createFlagBubble(idea,bubble.color,bubble.posX,bubble.posY,bubble.ideaCircle)
+			        flagTexts.push(flagBubble.flagTextsCircle)		       
+			        flags.push(flagBubble.flagCircle)
+			        ideasToCircs[idea._id] = {"bubble": bubble.ideaCircle, "text": bubble.ideaText, "flagText": flagBubble.flagTextsCircle, "flag": flagBubble.flagCircle,"content": idea.content}
+			        initCircle(ideasToCircs[idea._id].bubble);
+	        	}
+
+	        	var ideaBubble = ideasToCircs[ideaBubbleId]
+
+	        	var circBubble = ideaBubble.bubble
+	        	var textBubble = ideaBubble.text
+	        	var flagBubble = ideaBubble.flag
+	        	var flagTextBubble = ideaBubble.flagText
 
 	            var degXMin = 175;
 	            var degXMax = 180; 
@@ -482,58 +575,58 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	            if(radius > maxRadius){
 	            	radius = maxRadius
 	            }
-	            circs[i].attr("r",radius);
-	            circs[i].curve = ran(0,1);  
+	            circBubble.attr("r",radius);
+	            circBubble.curve = ran(0,1);  
 
 	            // Get position
-	            nowX = circs[i].attr("cx");
-	            nowY = circs[i].attr("cy");
+	            nowX = circBubble.attr("cx");
+	            nowY = circBubble.attr("cy");
 
 	            // Calc movement
-	            dx = circs[i].vel * Math.cos(circs[i].deg * Math.PI/semiCircDeg);
-	            dy = circs[i].vel * Math.sin(circs[i].deg * Math.PI/semiCircDeg);
+	            dx = circBubble.vel * Math.cos(circBubble.deg * Math.PI/semiCircDeg);
+	            dy = circBubble.vel * Math.sin(circBubble.deg * Math.PI/semiCircDeg);
 
 	            // Calc new position
 	            nowX += dx;
 	            nowY += dy;
 
 	            // Bounce off walls
-	            if (nowX < (paddingMin + circs[i].attr("r")))
+	            if (nowX < (paddingMin + circBubble.attr("r")))
 	            {
-	                circs[i].vel = circs[i].vel * -1
-	                circs[i].deg   = ran(degXMin,degXMax);
+	                circBubble.vel = circBubble.vel * -1
+	                circBubble.deg   = ran(degXMin,degXMax);
 	            }
 
-	            else if(nowX > ( clientWidth - (paddingMax + circs[i].attr("r"))))
+	            else if(nowX > (clientWidth - (paddingMax + circBubble.attr("r"))))
 	            {
-	                circs[i].vel = circs[i].vel * -1
-	                circs[i].deg   = ran(degXMin,degXMax);
+	                circBubble.vel = circBubble.vel * -1
+	                circBubble.deg   = ran(degXMin,degXMax);
 	            }
 
-	            if (nowY < (paddingMin + circs[i].attr("r")))
+	            if (nowY < (paddingMin + circBubble.attr("r")))
 	            {
-	                circs[i].vel = circs[i].vel * -1
-	                circs[i].deg   = ran(degYMin,degYMax);
+	                circBubble.vel = circBubble.vel * -1
+	                circBubble.deg   = ran(degYMin,degYMax);
 	            }
 
-	            else if(nowY > (clientHeight - (paddingMax + circs[i].attr("r"))))
+	            else if(nowY > (clientHeight - (paddingMax + circBubble.attr("r"))))
 	            {
-	                circs[i].vel = circs[i].vel * -1 
-	                circs[i].deg   = ran(degYMin,degYMax);
+	                circBubble.vel = circBubble.vel * -1 
+	                circBubble.deg   = ran(degYMin,degYMax);
 	            }         
 	            
 	            // Render moved particle
-	            circs[i].attr({cx: nowX, cy: nowY});
-	            texts[i].attr({x: nowX, y: nowY})
-	            flags[i].attr({cx: nowX + circs[i].attr("r"), cy: nowY - circs[i].attr("r"), r: (vm.ideas[i].meta.upvotes.upvote_count + 1)*flagIncreaseScale})
-	            flagTexts[i].attr({x: nowX + circs[i].attr("r"), y: nowY - circs[i].attr("r")})
+	            circBubble.attr({cx: nowX, cy: nowY});
+	            textBubble.attr({x: nowX, y: nowY})
+	            flagBubble.attr({cx: nowX + circBubble.attr("r"), cy: nowY - circBubble.attr("r"), r: (vm.ideas[i].meta.upvotes.upvote_count + 1)*flagIncreaseScale})
+	            flagTextBubble.attr({x: nowX + circBubble.attr("r"), y: nowY - circBubble.attr("r")})
 	            
 	            // Calc curve so that bubble curves slightly when moving
-	            if (circs[i].curve > 0){
-	            	circs[i].deg = circs[i].deg + 1;
+	            if (circBubble.curve > 0){
+	            	circBubble.deg = circBubble.deg + 1;
 	            }
 	            else {
-	            	circs[i].deg = circs[i].deg - 1;
+	            	circBubble.deg = circBubble.deg - 1;
 	            }
 
 	            // Update whether idea is flagged
@@ -541,7 +634,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	            flagTexts[i].attr({"text": flagMark})
 
 	            // Progress timer for particle
-	            circs[i].time = circs[i].time - 1;            	       
+	            circBubble.time = circBubble.time - 1;            	       
 	        }
 
 	        timer = setTimeout(moveIt, moveTimer);
@@ -579,15 +672,18 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 
 	        for (i = 0; i < vm.ideas.length; ++i)
 	        {
-	        	var bubble = createBubble(i)
+	        	var idea = vm.ideas[i]
+	        	var bubble = createBubble(idea)
 	        	circs.push(bubble.ideaCircle);
 		        texts.push(bubble.ideaText)
-		        var flagBubble = createFlagBubble(i,bubble.color,bubble.posX,bubble.posY)
+		        var flagBubble = createFlagBubble(idea,bubble.color,bubble.posX,bubble.posY,bubble.ideaCircle)
 		        flagTexts.push(flagBubble.flagTextsCircle)		       
 		        flags.push(flagBubble.flagCircle)
+		        ideasToCircs[idea._id] = {"bubble": bubble.ideaCircle, "text": bubble.ideaText, "flagText": flagBubble.flagTextsCircle, "flag": flagBubble.flagCircle,"content": idea.content}
 	        }
-	        for(i = 0; i < circs.length; ++i){
-	            initCircle(circs[i]);
+	        for(ideaBubble in ideasToCircs){
+	        	var ideaBubbleContent = ideasToCircs[ideaBubble]
+	            initCircle(ideaBubbleContent.bubble);
 	        }      
 	}
 

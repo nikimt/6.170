@@ -32,7 +32,7 @@
 		<div class="img-wrap">
 			<span class="close" ng-click="idea.hideOptionsClick()">&times;</span>
 		</div>
-		<h5> Options for <i>{{idea.ideas[idea.ideaToShow].content}}</i>:</h5>
+		<h5> Options for <i>{{idea.ideaTitle}}</i>:</h5>
 		<a href="#" ng-click="idea.upvote()" class="btn btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Upvote</a>
 		<a href="#" ng-if="idea.showFlag" ng-click="idea.flag()" class="btn btn-primary"> &#9873;{{idea.flagState}}</a>
 		<a href="#" ng-if="idea.hasExplanation" ng-click="idea.showExplanationClick()" class="btn btn-primary"><span class="glyphicon glyphicon-list"></span> Explanation</a>
@@ -44,8 +44,8 @@
 		<div class="img-wrap">
 			<span class="close" ng-click="idea.hideExplanationClick()">&times;</span>
 		</div>
-		<h5> Explanation for <i>{{idea.ideas[idea.ideaToShow].content}}</i>:</h5>
-		{{idea.ideas[idea.ideaToShow].explanation}}
+		<h5> Explanation for <i>{{idea.ideaTitle}}</i>:</h5>
+		{{idea.ideas[idea.ideaToShowIndex].explanation}}
 	</div>
 
 	<div ng-if="!idea.hideNotes">
