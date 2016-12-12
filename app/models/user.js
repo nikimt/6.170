@@ -32,10 +32,13 @@ var userSchema = new mongoose.Schema({
 });
 
 // -------- Validators --------
+var minUsernameLength = 4;
+var minPasswordLength = 6;
+
 userSchema.path("username").validate(function(value) {
     // This validates that the length of a username is at least
     // 6 characters
-    return (value.length >= 6);
+    return (value.length >= 4);
 }, "Invalid username length");
 
 var userModel = mongoose.model('user', userSchema);
@@ -55,19 +58,23 @@ var Users = (function(userModel) {
     // before storing. If error, we send an error message
     // back to the router.
     that.addUser = function(userInfo, callback) {
-        bcrypt.hash(userInfo.password, saltRounds, function(err, hash) {
-            if (err) { callback(err, { msg: err }); }
-            else {
-                var user = new userModel({
-                    username: userInfo.username,
-                    password: hash,
-                });
-                user.save(function(err, newuser) {
-                    if (err) { callback(err, { msg: err }); }
-                    else { callback(null, newuser); }
-                });
-            }
-        });
+        if (len(userInfo.password) > minPasswordLength) {
+            bcrypt.hash(userInfo.password, saltRounds, function(err, hash) {
+                if (err) { callback(err, { msg: err }); }
+                else {
+                    var user = new userModel({
+                        username: userInfo.username,
+                        password: hash,
+                    });
+                    user.save(function(err, newuser) {
+                        if (err) { callback({ msg: err }); }
+                        else { callback(null, newuser); }
+                    });
+                }
+            });
+        } else {
+            callback({ msg: "Password must be at least " + minPasswordLength + " characters" });
+        }
     }
 
     // Exposed function that takes a user and a callback.
