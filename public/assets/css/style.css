@@ -7,9 +7,31 @@ body {
 	margin-top: 40px;
 }
 
+.main.container {
+    padding-top: 20px;
+}
+
 .nav-menu-item {
 	margin: 10px;
+
+    text-transform: uppercase;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 14px;
 }
+
+.nav-menu-item.welcome {
+    text-transform: inherit;
+    margin-right: 70px;
+}
+
+.nav-menu-item:hover {
+    text-decoration: none;
+}
+
+.nav-menu
 
 .welcome-page-flex {
     display: flex;

@@ -62,7 +62,7 @@
 					<li>
 						<span ng-switch="main.loggedIn">
 							<span ng-switch-when='true'>
-								<span ng-if="main.loggedIn" class="nav-menu-item">Welcome {{ main.username }}</span>
+								<span ng-if="main.loggedIn" class="nav-menu-item welcome">Welcome {{ main.username }}</span>
 								<a ng-href="/profile" ng-if="main.loggedIn" class="nav-menu-item">View your boards</a>
 			    				<a ng-if="main.loggedIn" ng-click="main.doLogout()" class="nav-menu-item">Logout</a>
 							</span>
@@ -78,7 +78,7 @@
 </div>
 
 
-<div class="container">
+<div class="container main">
 	<!-- ANGULAR VIEWS -->
 	<div ng-view></div>
 </div>
