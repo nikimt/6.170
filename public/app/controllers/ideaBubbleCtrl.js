@@ -244,6 +244,8 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	*/	    
 	var moveIt = function()
 	    {
+            var clientHeight = document.getElementById('canvas').clientHeight;
+            var clientWidth = document.getElementById('canvas').clientWidth;
 	        for(i = 0; i < circs.length; ++i)
 	        {    
 	            circs[i].curve = ran(0,1);  
@@ -264,7 +266,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	                circs[i].vel = circs[i].vel * -1
 	                circs[i].deg   = ran(175,180);
 	            }
-	            else if(nowX > ( window.innerWidth - (0 + circs[i].attr("r"))))
+	            else if(nowX > ( clientWidth - (0 + circs[i].attr("r"))))
 	            {
 	                circs[i].vel = circs[i].vel * -1
 	                circs[i].deg   = ran(175,180);
@@ -274,7 +276,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	                circs[i].vel = circs[i].vel * -1
 	                circs[i].deg   = ran(90,95);
 	            }
-	            else if(nowY > (windowHeight - circs[i].attr("r")))
+	            else if(nowY > (clientHeight - circs[i].attr("r")))
 	            {
 	                circs[i].vel = circs[i].vel * -1 
 	                circs[i].deg   = ran(90,95);
@@ -311,7 +313,9 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     *
     */
     var initCanvas = function(){
-        paper = Raphael("canvas", window.innerWidth, windowHeight);
+        var clientHeight = document.getElementById('canvas').clientHeight;
+        var clientWidth = document.getElementById('canvas').clientWidth;
+        paper = Raphael("canvas", clientHeight, clientWidth);
         circs = paper.set();
         texts = paper.set(); 
         flags = paper.set();
@@ -324,14 +328,13 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     * Get the bubbles from the ideas
     */
     var getBubbles = function(){
-	        // paper = Raphael("canvas", window.innerWidth, windowHeight);
-	        // circs = paper.set();
-	        // texts = paper.set();
+	        var clientHeight = document.getElementById('canvas').clientHeight;
+            var clientWidth = document.getElementById('canvas').clientWidth;
 	        for (i = 0; i < vm.ideas.length; ++i)
 	        {
 	            opa = 0.6;
-	            posX = ran(100,1000);
-	            posY = ran(100,400);
+	            posX = ran(100,clientWidth - 100);
+	            posY = ran(100,clientHeight - 100);
 	            var hex = randomColor({luminosity: 'dark'});
 	            var ideaCircle = paper.circle(posX, posY, window.innerHeight/8).attr({"fill-opacity": opa, "stroke-opacity": opa, fill: hex, stroke: hex})
 	            ideaCircle.node.id = i
