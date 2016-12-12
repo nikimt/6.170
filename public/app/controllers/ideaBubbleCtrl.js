@@ -5,6 +5,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	var vm = this;
 
 	// INITIALIZE VARIABLES
+
 	// set a processing variable to show loading things
 	vm.processing = true;
 	// current board
@@ -22,7 +23,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 
 	// variables for moving bubble animation
 	var paper, circs, flags, flagTexts, deleteTexts, texts, deletes, i, nowX, nowY, timer, props = {}, toggler = 0, elie, dx, dy, rad, cur, opa; 
-	var windowHeight = window.innerHeight / 1.45
+	var windowHeight = window.innerHeight / 1.8
 
     var updateFlagText = function() {
         if (vm.ideas[vm.ideaToShow].meta.flag == true) {
@@ -47,7 +48,6 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 
 	/**
 	* Upvote an idea
-	* @param ideaId, id of the idea to upvote
 	*/
 	vm.upvote = function(){
 		var ideaId = vm.ideas[vm.ideaToShow]._id
@@ -61,6 +61,9 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         updateFlagText();
 	}
 
+	/**
+	* Delete an idea
+	*/
 	vm.delete = function() {
 		var ideaId = vm.ideas[vm.ideaToShow]._id
 		idea.delete($routeParams.board_id,ideaId).then(function(data){
@@ -73,7 +76,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         updateFlagText();
 	}
 
-	vm.flag = function(obj){
+	/**
+	* Flag an idea
+	*/
+	vm.flag = function(){
 		if (vm.ideas[vm.ideaToShow].meta.flag == false) {
 			var ideaId = vm.ideas[vm.ideaToShow]._id
 			idea.flag($routeParams.board_id,ideaId).then(function(data){
@@ -103,20 +109,15 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		}
 
     /**
-    * Show the explanation for an idea
+    * Show the options for an idea
     * @param obj, the event obj that was clicked
     */
-    vm.showExplanation = function(obj){
-    	var clickedCircleIdStr = obj.target.id
-    	if(clickedCircleIdStr.charAt(0) == 'b'){
-    		var clickedCircleId = parseInt(clickedCircleIdStr.substring(1,clickedCircleIdStr.length))
-    		vm.ideaToShow = clickedCircleId
-    		vm.hideOptions = false;
-            updateFlagText();
-    		//vm.hideExplanation = false;
-    		//vm.hideNotes = false;
-    	}
+    vm.showOptions = function(obj){
+    	var clickedCircleId= obj.target.id
+    	vm.ideaToShow = clickedCircleId
+    	vm.hideOptions = false;
 		var ideaId = vm.ideas[vm.ideaToShow]._id
+		updateFlagText();
 		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
 			vm.noteToShow = data.data.notes
 			idea.all($routeParams.board_id)
@@ -155,6 +156,9 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     	vm.hideNotes = true;
     }
 
+    /**
+    * Hide options for an idea when it is clicked
+	*/
     vm.hideOptionsClick = function(){
     	vm.hideOptions = true;
     }
@@ -269,8 +273,8 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	            posX = ran(100,1000);
 	            posY = ran(100,400);
 	            var hex = randomColor({luminosity: 'dark'});
-	            var ideaCircle = paper.circle(posX, posY, window.innerHeight/7).attr({"fill-opacity": opa, "stroke-opacity": opa, fill: hex, stroke: hex})
-	            ideaCircle.node.id = 'b' + i
+	            var ideaCircle = paper.circle(posX, posY, window.innerHeight/8).attr({"fill-opacity": opa, "stroke-opacity": opa, fill: hex, stroke: hex})
+	            ideaCircle.node.id = i
 	            circs.push(ideaCircle);
 	            var text = vm.ideas[i].content
 	            texts.push(paper.text(posX, posY, text).attr({"fill": "white"}))
