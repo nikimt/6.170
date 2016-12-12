@@ -15,7 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Set up a secret to encrypt cookies
-app.use(session({ secret : '6170', resave : true, saveUninitialized : true, cookie : {maxAge: 86400000} }));
+var DAY_LENGTH_MS = 86400000
+app.use(session({ secret : '6170', resave : true, saveUninitialized : true, cookie : {maxAge: DAY_LENGTH_MS} }));
 
 /**
 * configure our app to handle CORS requests

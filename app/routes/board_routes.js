@@ -1,8 +1,11 @@
 /* Router module that handles requests that pertain to boards and their ideas.
    Primary contributor: Ethan 
-   Secondary contributor: Melissa */
+   Secondary contributor: Melissa 
+   
+   Routes were all tested with Postman (https://www.getpostman.com/) to determine
+   their validity and ensure proper responses are being sent. */
 
-var bodyParser = require('body-parser'); 
+var bodyParser = require('body-parser');
 var express = require('express');
 var session = require('express-session');
 
@@ -95,7 +98,14 @@ module.exports = function(app, express) {
             });
         }
     });
-
+    
+    /**
+    * GET request handler that checks if a code matches an existing board.
+    *
+    * Sends JSON object to the client with the following information:
+    *     success: true if the code is valid, else false
+    *     ideas: if the code is valid, a JSON object representing board information
+    */
     router.get("/boards/validate/:boardId", function(req, res){
         var boardId = req.params.boardId;
         var CODE_LENGTH = 6;

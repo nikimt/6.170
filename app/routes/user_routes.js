@@ -1,6 +1,9 @@
 /* Routing module that handles requests that pertain to users and user accounts.
    Primary contributor: Ethan 
-   Secondary contributor: Melissa */
+   Secondary contributor: Melissa
+   
+   Routes were all tested with Postman (https://www.getpostman.com/) to determine
+   their validity and ensure proper responses are being sent. */
 
 var bodyParser = require('body-parser'); 
 var express = require('express');
