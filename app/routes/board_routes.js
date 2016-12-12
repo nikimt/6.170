@@ -1,3 +1,7 @@
+/* Router module that handles requests that pertain to boards and their ideas.
+   Primary contributor: Ethan 
+   Secondary contributor: Melissa */
+
 var bodyParser = require('body-parser'); 
 var express = require('express');
 var session = require('express-session');

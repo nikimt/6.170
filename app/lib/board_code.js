@@ -1,4 +1,5 @@
-/* Methods for generating random unique codes for boards. */
+/* Methods for generating and checking random unique codes for boards.
+   Primary contributor: Ethan */
 
 var CodeGenerator = (function(){
     

@@ -1,3 +1,7 @@
+/* Routing module that handles requests that pertain to users and user accounts.
+   Primary contributor: Ethan 
+   Secondary contributor: Melissa */
+
 var bodyParser = require('body-parser'); 
 var express = require('express');
 var session = require('express-session');
