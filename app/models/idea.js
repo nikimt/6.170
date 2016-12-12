@@ -63,6 +63,9 @@ var ideaSchema = new mongoose.Schema({
 var max_content_len = 15;
 var min_content_len = 1;
 
+var max_explanation_len = 50;
+var min_explanation_len = 1;
+
 ideaSchema.path("content").validate(function(value) {
     // This validates that the length of content is between min_content_len
     // and max_content_len
@@ -74,13 +77,12 @@ ideaSchema.path("explanation").validate(function(value) {
     // This validates that the length of explanation is between min_content_len
     // and max_content_len
 
-    return (value.length >= min_content_len) && (value.length <= max_content_len);
+    return (value.length >= min_explanation_len) && (value.length <= max_explanation_len);
 }, "Invalid Explanation length");
 
 ideaSchema.path("boardId").validate(function(value) {
-    // This validates that the length of content is between min_content_len
-    // and max_content_len
-    return (value.length >= 0) && (value.length <= 6);
+    // This validates that the length of content is equal to 6
+    return (value.length == 6);
 }, "Invalid boardId length");
 
 
