@@ -58,7 +58,6 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	*/
 	vm.upvote = function(){
 		var ideaId = vm.ideas[vm.ideaToShow]._id;
-		debugger;
 		idea.unupvote($routeParams.board_id,ideaId).then(function(data){
 				idea.all($routeParams.board_id)
 					.then(function(data) {
@@ -130,18 +129,22 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     */
     vm.showOptions = function(obj){
     	var clickedCircleId= obj.target.id
-    	vm.ideaToShow = clickedCircleId
-    	vm.hideOptions = false;
-		var ideaId = vm.ideas[vm.ideaToShow]._id
-		updateFlagText();
-		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
-			vm.noteToShow = data.data.notes
-			idea.all($routeParams.board_id)
-				.then(function(data) {
-					vm.processing = false;
-					vm.ideas = data.data.data.ideas;
-				});
-		})
+        if (vm.ideas[clickedCircleId]) {
+        	vm.ideaToShow = clickedCircleId
+        	vm.hideOptions = false;
+    		var ideaId = vm.ideas[vm.ideaToShow]._id
+    		updateFlagText();
+    		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
+    			vm.noteToShow = data.data.notes
+    			idea.all($routeParams.board_id)
+    				.then(function(data) {
+    					vm.processing = false;
+    					vm.ideas = data.data.data.ideas;
+    				});
+    		});
+        } else {
+            vm.hideOptions = true;
+        }
     }
 
     /**
@@ -415,16 +418,6 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 				});
 		})
 	}
-
-	idea.getBoards().then(function(data){
-		var allBoards = data.data.boards
-		for(var i = 0; i < allBoards.length; i ++){
-			if(allBoards[i] === vm.boardId){
-				vm.boardSaved = true;
-			}
-		}
-
-	})
 
 
 	vm.saveBoard = function(){

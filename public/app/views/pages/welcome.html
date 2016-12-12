@@ -34,16 +34,12 @@
                 </div>
                 
                 <div class="form-group">
-                <div class="home-text">
-                    <button type="submit" class="btn btn-success btn-lg btn-block">Join Board</button>
-                </div>
+                    <div class="home-text">
+                        <button type="submit" class="btn btn-success btn-lg btn-block">Join Board</button>
+                    </div>
                 </div>
 
             </form>
-
-            <div class="home-text" ng-if="board.successfulCode == 'true'">
-                Valid Code! Now you can join the <a ng-href="/boards/{{ board.boardData }}" class="btn btn-warning">board</a>
-            </div>
 
             <div class="home-text" ng-if="board.successfulCode == 'false'">
                 Invalid Code
@@ -56,7 +52,4 @@
         </div>
 
     </div>
-</div>
-<div id="footer" style="margin-top: 50px;">
-	<img src="../../../assets/img/home footer.jpg" width="100%" height="40px" style="position: fixed; bottom:0;">
 </div>

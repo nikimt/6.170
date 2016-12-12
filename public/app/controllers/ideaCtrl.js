@@ -287,11 +287,9 @@ angular.module('ideaCtrl', ['ideaService'])
 	vm.delete = function(obj) {
 		var clickedDeleteIdStr = obj.target.id;
 		if(clickedDeleteIdStr.charAt(0) == 'd'){
-			debugger;
 			var clickedDeleteId = parseInt(clickedDeleteIdStr.substring(1,clickedDeleteIdStr.length))
 			var ideaId = vm.ideas[clickedDeleteId]._id
 			console.log(ideaId);
-			debugger;
 			idea.delete($routeParams.board_id,ideaId).then(function(data){
 					idea.all($routeParams.board_id)
 						.then(function(data) {
