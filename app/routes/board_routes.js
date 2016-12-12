@@ -1,11 +1,9 @@
-/* Router module that handles requests that pertain to boards and their ideas.
-   Primary contributor: Ethan 
-   Secondary contributor: Melissa 
+/* Routing module that handles requests that pertain to boards and their ideas.
+   Main author: epw  
    
    Routes were all tested with Postman (https://www.getpostman.com/) to determine
    their validity and ensure proper responses are being sent. */
 
-var bodyParser = require('body-parser');
 var express = require('express');
 var session = require('express-session');
 
@@ -14,9 +12,6 @@ var ideas = require('../models/idea.js');
 var notes = require('../models/note.js');
 var boardIdentifiers = require('../lib/board_identifiers.js');
 var modelHelpers = require('../lib/model_helpers.js');
-
-var config = require('../../config');
-var superSecret = config.secret;
 
 module.exports = function(app, express) {
   
@@ -40,6 +35,7 @@ module.exports = function(app, express) {
                 res.status(500).json({success: false});
             }
             else{
+                // give the moderator their unique board identifier
                 boardIdentifiers.setSessionIdentifier(req, board.boardId, moderatorId);
                 res.status(201).json({success: true, id: board.boardId});
             }

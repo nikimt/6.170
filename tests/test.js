@@ -1,3 +1,6 @@
+/* Data model and helper function testing suite. Information on route testing can
+   be found in their respective files. */
+
 var mongoose = require('mongoose');
 
 var db = mongoose.connect('mongodb://localhost/test');

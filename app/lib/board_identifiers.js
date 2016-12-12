@@ -1,5 +1,5 @@
 /* Methods for identifying anonymous users based on their requests. 
-   Primary contributor: Ethan */
+   Main author: epw */
 
 var express = require('express');
 var session = require('express-session');
