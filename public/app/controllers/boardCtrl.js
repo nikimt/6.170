@@ -4,7 +4,7 @@
 angular.module('boardCtrl', ['boardService'])
 
 // controller applied to board creation page
-.controller('boardCreateController', function(Board) {
+.controller('boardCreateController', function($location, Board) {
 	
 	var vm = this;
 
@@ -27,16 +27,20 @@ angular.module('boardCtrl', ['boardService'])
 	}
 
 	vm.getBoard = function() {
-		vm.successfulCode = ''
+		vm.successfulCode = '';
 
 		Board.get(vm.boardData)
+			.error(function(data) {
+				console.log(data);
+				vm.successfulCode = 'false';
+			})
 			.then(function(data) {
 				console.log(data)
 				vm.success = data.data.success;
 				if(vm.success){
-					vm.successfulCode = 'true'
+					$location.path('/boards/' + vm.boardCode);
 				} else {
-					vm.successfulCode = 'false'
+					vm.successfulCode = 'false';
 				}
 			});
 			
