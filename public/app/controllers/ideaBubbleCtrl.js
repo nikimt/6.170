@@ -4,14 +4,26 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 
 	var vm = this;
 
+	// INITIALIZE VARIABLES
 	// set a processing variable to show loading things
 	vm.processing = true;
+	// current board
 	vm.boardId = $routeParams.board_id
+	// set a playing variable for stopping/playing the animation of moving bubbles
 	vm.playing = true;
+	// idea to show the additional options
+    vm.ideaToShow;
+    vm.hideExplanation = true;
+    vm.hideNotes = true;
+    vm.boardSaved = false;
 
+	// variables for moving bubble animation
 	var paper, circs, flags, flagTexts, deleteTexts, texts, deletes, i, nowX, nowY, timer, props = {}, toggler = 0, elie, dx, dy, rad, cur, opa; 
 	var windowHeight = window.innerHeight / 1.45
 
+	/**
+	* Toggle function for playing and stopping the animation of the moving bubbles
+	*/
     vm.toggle = function() {
     	if(vm.playing){
     		vm.playing = false;
@@ -22,12 +34,17 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     	}
     }
 
+    /**
+    * Upvote function to make a bubble larger when it is upvoted
+    * @param obj, the event obj that was clicked
+    */
     vm.upvoteBubble = function(obj){
     	var clickedCircleIdStr = obj.target.id
 		if(clickedCircleIdStr.charAt(0) == 'b'){
 			var clickedCircleId = parseInt(clickedCircleIdStr.substring(1,clickedCircleIdStr.length))
 	    	var ideaId = vm.ideas[clickedCircleId]._id
 			idea.upvote($routeParams.board_id,ideaId).then(function(data){
+				grabIdeas();
 					idea.all($routeParams.board_id)
 						.then(function(data) {
 							vm.processing = false;
@@ -39,10 +56,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		}
     }
 
-    vm.ideaToShow;
-    vm.hideExplanation = true;
-    vm.hideNotes = true;
-
+    /**
+    * Show the explanation for an idea
+    * @param obj, the event obj that was clicked
+    */
     vm.showExplanation = function(obj){
     	var clickedCircleIdStr = obj.target.id
     	if(clickedCircleIdStr.charAt(0) == 'b'){
@@ -62,15 +79,25 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		})
     }
 
+    /**
+    * Hide an explanation for an idea when it is clicked
+    */
     vm.hideExplanationClick = function(){
     	vm.hideExplanation = true;
     }
 
+    /**
+    * Hide notes for an idea when it is clicked
+	*/
     vm.hideNotesClick = function(){
     	vm.hideNotes = true;
     }
 
-	function createCircle(circle)
+    /**
+    * Create the bubbles from a circle
+    * @param circle
+    */
+	var createCircle = function(circle)
 	    {    
 	        // Reset when time is at zero
 	        if (! circle.time) 
@@ -81,8 +108,11 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	            circle.curve = 0.5;
 	        }       
 	    } 
-	    
-	    function moveIt()
+	
+	/**
+	* Move the bubbles
+	*/	    
+	var moveIt = function()
 	    {
 	        for(i = 0; i < circs.length; ++i)
 	        {    
@@ -148,6 +178,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         return Math.floor(Math.random() * (max - min + 1)) + min;  
     }
 
+    /**
+    * Initialize the canvas for the moving bubbles
+    *
+    */
     var initCanvas = function(){
         paper = Raphael("canvas", window.innerWidth, windowHeight);
         circs = paper.set();
@@ -158,8 +192,9 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         deleteTexts = paper.set();   	
     }
 
-    vm.ideaBubbles = []
-
+    /**
+    * Get the bubbles from the ideas
+    */
     var getBubbles = function(){
 	        // paper = Raphael("canvas", window.innerWidth, windowHeight);
 	        // circs = paper.set();
@@ -186,7 +221,6 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	            var deleteCircle = paper.circle(posX + circs[i].attr("r")-10, posY + circs[i].attr("r")-10, 15).attr({"fill-opacity": opa, "stroke-opacity": opa, fill: hex, stroke: hex});
 	            deleteCircle.node.id = 'd' + i;
 	            deletes.push(deleteCircle);
-	            vm.ideaBubbles.push(ideaCircle)
 	        }
 	        for(i = 0; i < circs.length; ++i){
 	            createCircle(circs[i]);
@@ -195,6 +229,9 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	        moveIt();     
 	}
 
+	/**
+	* Get the ideas
+	*/
 	var grabIdeas = function(){	
 		idea.all($routeParams.board_id)
 		.then(function(data) {
@@ -207,7 +244,9 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		});
 	}
 
-	// grab all the ideas at page load
+	/**
+	* Get all the ideas at page load
+	*/
 	idea.all($routeParams.board_id)
 		.then(function(data) {
 
@@ -221,7 +260,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		});
 
 	/**
-	* Delete a idea
+	* Delete an idea
 	* @param id, id of the idea to delete
 	*/
 	vm.deleteidea = function(id) {
@@ -254,10 +293,14 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 				vm.processing = false;
 				vm.ideaData = {};
 				vm.message = 'Successfully created an idea'
+				grabIdeas();
 			});
 			
 	}
 
+	/**
+	* Save a note
+	*/
 	vm.saveNote = function(){
 		vm.processing = true
 
@@ -269,7 +312,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		})
 	}
 
-
+	/**
+	* Retrieve the notes for a specific idea
+	* @param ideaId, id of the idea to get the notes of
+	*/
 	vm.getNote = function(ideaId){
 		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
 			console.log(data.data.notes)
@@ -282,6 +328,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		})
 	}
 
+	/**
+	* Upvote an idea
+	* @param ideaId, id of the idea to upvote
+	*/
 	vm.upvote = function(ideaId){
 		idea.upvote($routeParams.board_id,ideaId).then(function(data){
 				idea.all($routeParams.board_id)
@@ -292,6 +342,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		})
 	}
 
+	/**
+	* Flag an idea
+	* @param obj, of the idea to flag
+	*/
 	vm.flag = function(obj){
 		var clickedFlagIdStr = obj.target.id;
 		if(clickedFlagIdStr.charAt(0) == 'f'){
@@ -322,6 +376,30 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		}
 	}
 
+	idea.getBoards().then(function(data){
+		var allBoards = data.data.boards
+		for(var i = 0; i < allBoards.length; i ++){
+			if(allBoards[i] === vm.boardId){
+				vm.boardSaved = true;
+			}
+		}
+
+	})
+
+
+	vm.saveBoard = function(){
+		idea.saveUserBoard($routeParams.board_id).then(function(data){
+			console.log(data)
+			if(data.data.success){
+				vm.boardSaved = true;
+			}
+		})
+	}
+
+	/**
+	* Delete an idea, 
+	* @obj, event obj of the idea to delete
+	*/
 	vm.delete = function(obj) {
 		var clickedDeleteIdStr = obj.target.id;
 		if(clickedDeleteIdStr.charAt(0) == 'd'){

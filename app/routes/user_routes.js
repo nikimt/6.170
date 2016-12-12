@@ -120,17 +120,19 @@ module.exports = function(app, express) {
       * Returns JSON object with the following information:
       *     success: true if board was successfully added, else false
       */
-    router.put("/boards", function(req, res){
-        var boardId = req.body.boardId;
+    router.put("/boards/:boardId", function(req, res){
+        var boardId = req.params.boardId;
         if (req.session.user != null){
             boards.findBoard(boardId, function(err){
                 if (err){
-                    res.status(400).json({success: false});
+                    console.log("err")
+                    console.log(err)
+                    res.status(400).json({success: false, err: err});
                 }
                 else{
                     users.addBoardToUser(req.session.user.id, boardId, function(err){
                         if (err){
-                            res.status(500).json({success: false});
+                            res.status(500).json({success: false, err: err});
                         }
                         else{
                             res.status(200).json({success: true});
