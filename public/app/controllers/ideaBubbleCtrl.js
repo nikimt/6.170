@@ -197,8 +197,11 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
             });
 
     		var ideaId = vm.ideas[vm.ideaToShow]._id
+
     		updateFlagText();
             updateShowFlag();
+            updateHasExplanation();
+
     		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
     			vm.noteToShow = data.data.notes
     			idea.all($routeParams.board_id)
