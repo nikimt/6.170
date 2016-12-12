@@ -35,6 +35,10 @@ var boardSchema = new mongoose.Schema({
         type: Date, 
         default: Date.now 
     },
+    anonymousUserCount: {
+        type: Number,
+        default: 0
+    }
 });
 
 // -------- Validators --------
@@ -224,11 +228,37 @@ var Boards = (function(boardModel) {
             }
         });
     }
+    
+    // Exposed function that takes a boardId and a callback.
+    //
+    // If the boardId exists, the board's anonymousUserCount property increases
+    // by one and the callback is passed the updated count. Otherwise, we
+    // return an error.
+    that.incrementBoardUserCount = function(boardId, callback){
+        boardModel.findOne({boardId: boardId}, function(err, result){
+            if (err){
+                callback(err, null);
+            }
+            else if (result){
+                result.update({$inc: {anonymousUserCount: 1}}, function(err, result){
+                    if (err) {
+                        callback(err, null);
+                    }
+                    else {
+                        callback(null, result.anonymousUserCount);
+                    }
+                });
+            }
+            else{
+                callback({msg: 'No such board!'}, null);
+            }
+        });
+    }
 
     Object.freeze(that);
     return that;
 
-}) (boardModel);
+})(boardModel);
 
 module.exports = Boards;
 

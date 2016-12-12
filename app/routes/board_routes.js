@@ -5,40 +5,15 @@ var session = require('express-session');
 var boards = require('../models/board.js');
 var ideas = require('../models/idea.js');
 var notes = require('../models/note.js');
+var boardIdentifiers = require('../lib/board_identifiers.js');
 var modelHelpers = require('../lib/model_helpers.js');
 
 var config = require('../../config');
 var superSecret = config.secret;
 
-module.exports = function(app,express) {
+module.exports = function(app, express) {
   
     var router = express.Router();
-
-    var getIdentifierFromRequest = function(req, boardId){
-      setSessionIdentifier(req, boardId);
-      return req.session.identifiers[boardId];
-    }
-
-    /** 
-    * Ensures that a user has a unique, anonymous identifier for each board they contribute to.
-    * This allows ideas, upvotes, and flags to be tied to a specific client.
-    *
-    * @param {Object} req - express request object of the relevant client
-    * @param {String} boardId - the unique identifier for the board
-    */
-    var setSessionIdentifier = function(req, boardId){ // TODO: move to separate file(?)
-        if (req.session.identifiers == null){
-            req.session.identifiers = {};
-        }
-        if (req.session.identifiers[boardId] == null){
-            if (req.session.user){
-                req.session.identifiers[boardId] = req.session.user.id;
-            }
-            else{
-                req.session.identifiers[boardId] = Math.floor(Math.random()*999999999); // TODO: replace with unique anonymous id
-            }
-        }
-    }
 
     /**
     * POST request handler for the creation of new boards.
@@ -58,10 +33,7 @@ module.exports = function(app,express) {
                 res.status(500).json({success: false});
             }
             else{
-                if (req.session.identifiers == null){
-                    req.session.identifiers = {};
-                }
-                req.session.identifiers[board.boardId] = moderatorId;
+                boardIdentifiers.setSessionIdentifier(req, board.boardId, moderatorId);
                 res.status(201).json({success: true, id: board.boardId});
             }
         });
@@ -90,7 +62,7 @@ module.exports = function(app,express) {
                 if (err) {
                     res.status(404).json({ success: false });
                 } else {
-                    setSessionIdentifier(req, boardId);
+                    boardIdentifiers.setSessionIdentifier(req, boardId);
                     res.status(200).json({ success: true, data: { ideas: data } });
                 }
             });
@@ -133,7 +105,7 @@ module.exports = function(app,express) {
                         res.json({success: false})
                     }
                     else{
-                        setSessionIdentifier(req, boardId);
+                        boardIdentifiers.setSessionIdentifier(req, boardId);
                         res.status(200).json({success: true, data: {ideas: data}});
                     }
                 }
@@ -153,7 +125,7 @@ module.exports = function(app,express) {
         var boardId = req.params.boardId;
         var ideaText = req.body.text;
         var explanation = req.body.explanation;
-        var userId = getIdentifierFromRequest(req, boardId);
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         var idea = { 
           boardId: boardId,
           content: ideaText,
@@ -173,7 +145,7 @@ module.exports = function(app,express) {
     router.delete("/boards/:boardId/ideas/:ideaId", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = getIdentifierFromRequest(req, boardId);
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         modelHelpers.deleteIdea(boardId, ideaId, userId, function(err) {
             if (err) {
                 res.status(400).json({ success: false });
@@ -187,7 +159,7 @@ module.exports = function(app,express) {
     router.put("/boards/:boardId/ideas/:ideaId/upvote", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = getIdentifierFromRequest(req, boardId);
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         ideas.addUpvoteToIdea(ideaId, userId, function(err) {
             if (err) {
                 res.status(400).json({success: false});
@@ -201,7 +173,7 @@ module.exports = function(app,express) {
     router.delete("/boards/:boardId/ideas/:ideaId/upvote", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = getIdentifierFromRequest(req, boardId);
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         ideas.removeUpvoteFromIdea(ideaId, userId, function(err){
             if (err) {
                 res.status(400).json({success: false});
@@ -216,7 +188,7 @@ module.exports = function(app,express) {
     router.put("/boards/:boardId/ideas/:ideaId/flag", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = getIdentifierFromRequest(req, boardId);
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         modelHelpers.flagIdea(ideaId, function(err){
             if (err) {
                 res.status(400).json({success: false})
@@ -230,7 +202,7 @@ module.exports = function(app,express) {
     router.delete("/boards/:boardId/ideas/:ideaId/flag", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = getIdentifierFromRequest(req, boardId);
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         modelHelpers.unflagIdea(boardId, ideaId, userId, function(err) {
             if (err) {
                 console.log(err);
@@ -250,7 +222,7 @@ module.exports = function(app,express) {
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
         var explanation = req.body.explanation;
-        var userId = getIdentifierFromRequest(req, boardId);
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         modelHelpers.updateIdeaExplanation(ideaId, userId, explanation, function(err){
             if (err) {
                 res.status(400).json({success: false})
@@ -274,7 +246,7 @@ module.exports = function(app,express) {
     router.get("/boards/:boardId/ideas/:ideaId/notes", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = getIdentifierFromRequest(req, boardId);
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         modelHelpers.findNotesByIdea(ideaId, userId, function(err, result){
             if (err) {
                 res.status(400).json({err: err, success: false})
@@ -299,7 +271,7 @@ module.exports = function(app,express) {
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
         var content = req.body.text;
-        var userId = getIdentifierFromRequest(req, boardId);
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         notes.addNote({content: content, ideaId: ideaId, creatorId: userId}, function(err, result){
             if (err) {
                 res.status(400).json({success: false, err: err})
@@ -319,7 +291,7 @@ module.exports = function(app,express) {
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
         var noteId = req.params.noteId;
-        var userId = getIdentifierFromRequest(req, boardId);
+        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
         // TODO: Only the creator of a note should be able to remove it.
         notes.removeNote(noteId, function(err){
             if (err) {
