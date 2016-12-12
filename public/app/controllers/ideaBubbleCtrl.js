@@ -27,6 +27,8 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     vm.hideExplanation = true;
     vm.hideNotes = true;
     vm.hideOptions = true;
+    vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
+
     vm.boardSaved = false;
     vm.hasExplanation = false;
     
@@ -190,6 +192,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         if (vm.ideas[clickedCircleId]) {
         	vm.ideaToShow = clickedCircleId
         	vm.hideOptions = false;
+            vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
 
             idea.isOwner(vm.boardId, vm.ideas[vm.ideaToShow]._id).then(function(data) {
                 vm.isOwner = data.data.is_user_owner;
@@ -212,6 +215,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     		});
         } else {
             vm.hideOptions = true;
+            vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
         }
     }
 
@@ -220,6 +224,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     */
     vm.hideExplanationClick = function(){
     	vm.hideExplanation = true;
+        vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
     }
 
     /**
@@ -228,8 +233,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     vm.showExplanationClick = function(){
     	if (vm.hideExplanation == true) {
     		vm.hideExplanation = false;
+            vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
     	} else {
     		vm.hideExplanation = true;
+            vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
     	}
     }
 
@@ -239,8 +246,10 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     vm.showNotesClick = function(){
     	if (vm.hideNotes == true) {
     		vm.hideNotes = false;
+            vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
     	} else {
     		vm.hideNotes = true;
+            vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
     	}
     }
 
@@ -249,6 +258,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	*/
     vm.hideNotesClick = function(){
     	vm.hideNotes = true;
+        vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
     }
 
     /**
@@ -256,6 +266,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	*/
     vm.hideOptionsClick = function(){
     	vm.hideOptions = true;
+        vm.showPanel = (!vm.hideExplanation || !vm.hideNotes || !vm.hideOptions);
     }
 
 	/**
