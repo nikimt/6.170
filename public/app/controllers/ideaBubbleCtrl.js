@@ -67,7 +67,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	* Update the flag text
 	*/	
     var updateFlagText = function() {
-        if (vm.ideas[vm.ideaToShow].meta.flag == true) {
+        if (vm.ideas[vm.ideaToShowIndex].meta.flag == true) {
             vm.flagState = "Unflag";
         } else {
             vm.flagState = "Flag";
@@ -75,7 +75,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     }
 
     var updateHasExplanation = function() {
-        if (vm.ideas[vm.ideaToShow].explanation) {
+        if (vm.ideas[vm.ideaToShowIndex].explanation) {
             vm.hasExplanation = true;
         } else {
             vm.hasExplanation = false;
@@ -83,7 +83,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
     }
 
     var updateShowFlag = function() {
-        if (vm.ideas[vm.ideaToShow].meta.flag == true) {
+        if (vm.ideas[vm.ideaToShowIndex].meta.flag == true) {
             if (vm.isModerator) {
                 vm.showFlag = true;
             } else {
