@@ -157,6 +157,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             var idea = { 
@@ -192,6 +196,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             ideas.findIdea(ideaId, function(err, idea) {
@@ -217,6 +225,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             modelHelpers.deleteIdea(boardId, ideaId, userId, function(err) {
@@ -240,6 +252,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             ideas.addUpvoteToIdea(ideaId, userId, function(err) {
@@ -263,6 +279,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             ideas.removeUpvoteFromIdea(ideaId, userId, function(err){
@@ -287,6 +307,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             modelHelpers.flagIdea(ideaId, function(err){
@@ -310,6 +334,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             modelHelpers.unflagIdea(boardId, ideaId, userId, function(err) {
@@ -338,6 +366,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             modelHelpers.updateIdeaExplanation(ideaId, userId, explanation, function(err){
@@ -371,6 +403,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             modelHelpers.findNotesByIdea(ideaId, userId, function(err, result){
@@ -405,6 +441,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             notes.addNote({content: content, ideaId: ideaId, creatorId: userId}, function(err, result){
@@ -434,6 +474,10 @@ module.exports = function(app, express) {
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
             var uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             notes.removeNote(noteId, function(err){

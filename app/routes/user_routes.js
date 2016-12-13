@@ -74,6 +74,7 @@ module.exports = function(app, express) {
     /** POST request to log out of the site. */
     router.post("/logout", function(req, res){
         req.session.user = null;
+        req.session.identifiers = null;
         res.json({success: true});
     });
     
