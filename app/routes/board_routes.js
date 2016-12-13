@@ -17,6 +17,9 @@ module.exports = function(app, express) {
   
     var router = express.Router();
 
+    // random number for unique identifiers
+    var ranNum = 1000000 + Math.floor(Math.random()*999999999);
+
     /**
     * POST request handler for the creation of new boards.
     *
@@ -81,16 +84,25 @@ module.exports = function(app, express) {
     */
     router.get("/boards/:boardId/moderator", function(req, res){
         var boardId = req.params.boardId;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        boards.findBoard(boardId, function(err, board) {
-            if (err) {
-                res.status(404).json({ success: false });
-            } else {
-                var isModerator = (board.moderator == userId)
-                res.status(200).json(
-                  { success: true, is_user_moderator: isModerator });
-            }
-        });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            boards.findBoard(boardId, function(err, board) {
+                if (err) {
+                    res.status(404).json({ success: false });
+                } else {
+                    var isModerator = (board.moderator == userId)
+                    res.status(200).json(
+                      { success: true, is_user_moderator: isModerator });
+                }
+            });
+        })
     });
     
     /**
@@ -135,12 +147,10 @@ module.exports = function(app, express) {
         var explanation = req.body.explanation;
         boards.incrementBoardUserCount(boardId, function(err, count){
             var returnCount;
-            if (err){ // set a random identifier to prioritize responsiveness in the case of error
-                returnCount = 1000000 + Math.floor(Math.random()*999999999);
-            }
-            else{ // if no database error, returns a guaranteed-unique anonymous identifier
-                returnCount = count;
-            }
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
             var uniqueId = returnCount;
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
@@ -170,15 +180,24 @@ module.exports = function(app, express) {
     router.get("/boards/:boardId/ideas/:ideaId/owner", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        ideas.findIdea(ideaId, function(err, idea) {
-            if (err) {
-                res.status(404).json({ success: false });
-            } else {
-                var isOwner = (idea.creatorId == userId)
-                res.status(200).json(
-                  { success: true, is_user_owner: isOwner });
-            }
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            ideas.findIdea(ideaId, function(err, idea) {
+                if (err) {
+                    res.status(404).json({ success: false });
+                } else {
+                    var isOwner = (idea.creatorId == userId)
+                    res.status(200).json(
+                      { success: true, is_user_owner: isOwner });
+                }
+            })
         })
     });
 
@@ -186,71 +205,116 @@ module.exports = function(app, express) {
     router.delete("/boards/:boardId/ideas/:ideaId", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        modelHelpers.deleteIdea(boardId, ideaId, userId, function(err) {
-            if (err) {
-                res.json({ success: false, err: err });
-            } else {
-                res.status(200).json({success: true});
-            }
-        });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            modelHelpers.deleteIdea(boardId, ideaId, userId, function(err) {
+                if (err) {
+                    res.json({ success: false, err: err });
+                } else {
+                    res.status(200).json({success: true});
+                }
+            });
+        })
     });
 
     /** PUT request handler for upvoting an idea. */
     router.put("/boards/:boardId/ideas/:ideaId/upvote", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        ideas.addUpvoteToIdea(ideaId, userId, function(err) {
-            if (err) {
-                res.status(400).json({success: false});
-            } else {
-                res.status(200).json({success: true});
-            }
-        });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            ideas.addUpvoteToIdea(ideaId, userId, function(err) {
+                if (err) {
+                    res.status(400).json({success: false});
+                } else {
+                    res.status(200).json({success: true});
+                }
+            });
+        })
     });
 
     /** DELETE request handler for removing the upvote on an idea. */
     router.delete("/boards/:boardId/ideas/:ideaId/upvote", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        ideas.removeUpvoteFromIdea(ideaId, userId, function(err){
-            if (err) {
-                res.status(400).json({success: false});
-            }
-            else{
-                res.status(200).json({success: true});
-            }
-        });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            ideas.removeUpvoteFromIdea(ideaId, userId, function(err){
+                if (err) {
+                    res.status(400).json({success: false});
+                }
+                else{
+                    res.status(200).json({success: true});
+                }
+            });
+        })
     });
 
     /** PUT request handler for flagging an idea. */
     router.put("/boards/:boardId/ideas/:ideaId/flag", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        modelHelpers.flagIdea(ideaId, function(err){
-            if (err) {
-                res.status(400).json({success: false})
-            } else {
-                res.status(200).json({success: true})
-            }
-        });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            modelHelpers.flagIdea(ideaId, function(err){
+                if (err) {
+                    res.status(400).json({success: false})
+                } else {
+                    res.status(200).json({success: true})
+                }
+            });
+        })
     });
 
     /** DELETE request handler for removing the flag on an idea. */
     router.delete("/boards/:boardId/ideas/:ideaId/flag", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        modelHelpers.unflagIdea(boardId, ideaId, userId, function(err) {
-            if (err) {
-                res.json({success: false, err: err});
-            } else {
-                res.status(200).json({success: true});
-            }
-        });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            modelHelpers.unflagIdea(boardId, ideaId, userId, function(err) {
+                if (err) {
+                    res.json({success: false, err: err});
+                } else {
+                    res.status(200).json({success: true});
+                }
+            });
+        })
     });
     
     /**
@@ -262,14 +326,23 @@ module.exports = function(app, express) {
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
         var explanation = req.body.explanation;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        modelHelpers.updateIdeaExplanation(ideaId, userId, explanation, function(err){
-            if (err) {
-                res.status(400).json({success: false})
-            } else {
-                res.status(200).json({success: true})
-            }
-        });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            modelHelpers.updateIdeaExplanation(ideaId, userId, explanation, function(err){
+                if (err) {
+                    res.status(400).json({success: false})
+                } else {
+                    res.status(200).json({success: true})
+                }
+            });
+        })
     });
     
     /** 
@@ -286,14 +359,23 @@ module.exports = function(app, express) {
     router.get("/boards/:boardId/ideas/:ideaId/notes", function(req, res){
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        modelHelpers.findNotesByIdea(ideaId, userId, function(err, result){
-            if (err) {
-                res.status(400).json({err: err, success: false})
-            } else {
-                res.status(200).json({success: true, notes: result})
-            }
-        });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            modelHelpers.findNotesByIdea(ideaId, userId, function(err, result){
+                if (err) {
+                    res.status(400).json({err: err, success: false})
+                } else {
+                    res.status(200).json({success: true, notes: result})
+                }
+            });
+        })
     });
     
     /** 
@@ -311,14 +393,23 @@ module.exports = function(app, express) {
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
         var content = req.body.text;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        notes.addNote({content: content, ideaId: ideaId, creatorId: userId}, function(err, result){
-            if (err) {
-                res.status(400).json({success: false, err: err})
-            } else {
-                res.status(201).json({success: true, note: result})
-            }
-        });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            notes.addNote({content: content, ideaId: ideaId, creatorId: userId}, function(err, result){
+                if (err) {
+                    res.status(400).json({success: false, err: err})
+                } else {
+                    res.status(201).json({success: true, note: result})
+                }
+            });
+        })
     });
     
     /** 
@@ -331,15 +422,23 @@ module.exports = function(app, express) {
         var boardId = req.params.boardId;
         var ideaId = req.params.ideaId;
         var noteId = req.params.noteId;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        // TODO: Only the creator of a note should be able to remove it.
-        notes.removeNote(noteId, function(err){
-            if (err) {
-                res.status(404).json({success: false})
-            } else {
-                res.status(200).json({success: true})
-            }
-        });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            // set a random identifier to prioritize responsiveness in the case of error
+            if (err){returnCount = ranNum;}
+            // if no database error, returns a guaranteed-unique anonymous identifier
+            else{returnCount = count;}
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            notes.removeNote(noteId, function(err){
+                if (err) {
+                    res.status(404).json({success: false})
+                } else {
+                    res.status(200).json({success: true})
+                }
+            });
+        })
     });
 
     return router;
