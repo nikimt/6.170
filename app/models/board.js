@@ -242,7 +242,7 @@ var Boards = (function(boardModel) {
                 callback(err, null);
             }
             else if (result){
-                result.update({$inc: {anonymousUserCount: 1}}, function(err, result){
+                result.update({$inc: {anonymousUserCount: 1}}, function(err, count){
                     if (err) {
                         callback(err, null);
                     }

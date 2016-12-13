@@ -74,6 +74,9 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         }
     }
 
+	/**
+	* Update whether an idea has an explanation
+	*/	
     var updateHasExplanation = function() {
         if (vm.ideas[vm.ideaToShowIndex].explanation) {
             vm.hasExplanation = true;
@@ -82,6 +85,9 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
         }
     }
 
+	/**
+	* Update whether an idea can be flagged or not
+	*/	
     var updateShowFlag = function() {
         if (vm.ideas[vm.ideaToShowIndex].meta.flag == true) {
             if (vm.isModerator) {
@@ -115,21 +121,13 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 		if(!vm.upvoted){
 			idea.upvote($routeParams.board_id,ideaId).then(function(data){
 					vm.upvoted = true;
-					idea.all($routeParams.board_id)
-						.then(function(data) {
-							vm.processing = false;
-							vm.ideas = data.data.data.ideas;
-						});
+					grabIdeas;
 			})
 		}
 		if(vm.upvoted){
 			idea.unupvote($routeParams.board_id,ideaId).then(function(data){
 					vm.upvoted = false;
-					idea.all($routeParams.board_id)
-						.then(function(data) {
-							vm.processing = false;
-							vm.ideas = data.data.data.ideas;
-						});
+					grabIdeas();
 			});
 		}
         updateFlagText();
@@ -145,7 +143,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 					.then(function(data) {
 						vm.processing = false;
 						vm.ideas = data.data.data.ideas;
-					});
+				});
 				if(data.data.success){
 					var bubble = ideasToCircs[ideaId].bubble
 					bubble.remove()
@@ -192,11 +190,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 						flagTextBubble.attr("text",flagText)
                         updateFlagText();						
 					}
-					idea.all($routeParams.board_id)
-						.then(function(data) {
-							vm.processing = false;
-							vm.ideas = data.data.data.ideas;
-						});
+					grabIdeas();
 				})
 			}
             updateFlagText();
@@ -241,11 +235,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 
     		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
     			vm.noteToShow = data.data.notes
-    			idea.all($routeParams.board_id)
-    				.then(function(data) {
-    					vm.processing = false;
-    					vm.ideas = data.data.data.ideas;
-    				});
+    			grabIdeas();
     		});
         } else {
             vm.hideOptions = true;
@@ -324,27 +314,6 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	}
 
 	/**
-	* Delete an idea
-	* @param id, id of the idea to delete
-	*/
-	vm.deleteidea = function(id) {
-
-		vm.processing = true;
-
-		idea.delete(id)
-			.then(function(data) {
-
-				// get all ideas to update the table
-				idea.all()
-					.then(function(data) {
-						vm.processing = false;
-						vm.ideas = data.data;
-					});
-
-			});
-	};
-
-	/**
 	* Save an idea
 	*/
 	vm.saveIdea = function() {
@@ -384,11 +353,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	vm.getNote = function(ideaId){
 		idea.getNotes($routeParams.board_id,ideaId).then(function(data){
 			vm.noteToShow = data.data.notes
-			idea.all($routeParams.board_id)
-				.then(function(data) {
-					vm.processing = false;
-					vm.ideas = data.data.data.ideas;
-				});
+			grabIdeas();
 		})
 	}
 

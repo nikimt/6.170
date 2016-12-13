@@ -133,19 +133,30 @@ module.exports = function(app, express) {
         var boardId = req.params.boardId;
         var ideaText = req.body.text;
         var explanation = req.body.explanation;
-        var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
-        var idea = { 
-          boardId: boardId,
-          content: ideaText,
-          creatorId: userId,
-          explanation: explanation
-        };
-        modelHelpers.addIdeaToBoard(boardId, idea, function(err, result) {
-            if (err) {
-                res.send(err);
-            } else {
-                res.status(201).json({ success: true, idea: result });
+        boards.incrementBoardUserCount(boardId, function(err, count){
+            var returnCount;
+            if (err){ // set a random identifier to prioritize responsiveness in the case of error
+                returnCount = 1000000 + Math.floor(Math.random()*999999999);
             }
+            else{ // if no database error, returns a guaranteed-unique anonymous identifier
+                returnCount = count;
+            }
+            var uniqueId = returnCount;
+            boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
+            var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
+            var idea = { 
+              boardId: boardId,
+              content: ideaText,
+              creatorId: userId,
+              explanation: explanation
+            };
+            modelHelpers.addIdeaToBoard(boardId, idea, function(err, result) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.status(201).json({ success: true, idea: result });
+                }
+            });
         });
     });
 

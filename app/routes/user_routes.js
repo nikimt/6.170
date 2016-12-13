@@ -131,7 +131,7 @@ module.exports = function(app, express) {
         if (req.session.user != null){
           modelHelpers.saveBoardToUser(req.session.user.id, boardId, function(err){
             if (err){
-              res.status(500).json({success: false});
+              res.json({success: false, err: err});
             }
             else{
               res.status(200).json({success: true});

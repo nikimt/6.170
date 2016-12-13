@@ -59,6 +59,7 @@ angular.module('ideaCtrl', ['ideaService'])
 		// use the create function in the ideaservice
 		idea.create($routeParams.board_id, vm.ideaData)
 			.success(function (data) {
+				console.log(data)
 			    $location.path('/boards/' + $routeParams.board_id);
 			});
 	};
