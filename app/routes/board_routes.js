@@ -90,7 +90,12 @@ module.exports = function(app, express) {
             if (err){returnCount = ranNum;}
             // if no database error, returns a guaranteed-unique anonymous identifier
             else{returnCount = count;}
-            var uniqueId = returnCount;
+            var uniqueId;
+            uniqueId = returnCount;
+            if(req.session.user){
+                req.session.identifiers[boardId] = null
+                uniqueId = req.session.user.id
+            }
             boardIdentifiers.setSessionIdentifier(req, boardId, uniqueId);
             var userId = boardIdentifiers.getIdentifierFromRequest(req, boardId);
             boards.findBoard(boardId, function(err, board) {
