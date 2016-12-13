@@ -173,6 +173,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 						.then(function(data) {
 							vm.processing = false;
 							vm.ideas = data.data.data.ideas;
+							// update flag icon
 							var flagText = '\u2691';
 							var flagTextBubble = ideasToCircs[ideaId].flagText
 							flagTextBubble.attr("text",flagText)
@@ -185,6 +186,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 					if(!data.data.success){
 						vm.flagError = data.data.err.msgToUser
 					} else {
+						// update flag icon
 						var flagText = '';
 						var flagTextBubble = ideasToCircs[ideaId].flagText
 						flagTextBubble.attr("text",flagText)
@@ -488,11 +490,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 
 		setTimeout(checkBubbles,ideaTimer)
 	}
-
-
-	/**
-	* Move the bubbles
-	*/	    
+	    
 	/**
 	* Move the bubbles
 	*/	
@@ -507,6 +505,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 	        {  	
 	        	var idea = vm.ideas[i]
 	        	var ideaBubbleId = vm.ideas[i]._id
+	        	// add new bubbles
 	        	if(!(ideaBubbleId in ideasToCircs)){
 		        	var bubble = createBubble(idea)
 		        	circs.push(bubble.ideaCircle);
@@ -637,6 +636,7 @@ angular.module('ideaBubbleCtrl', ['ideaService'])
 
 	        for (i = 0; i < vm.ideas.length; ++i)
 	        {
+	        	// create the bubbles
 	        	var idea = vm.ideas[i]
 	        	var bubble = createBubble(idea)
 	        	circs.push(bubble.ideaCircle);
